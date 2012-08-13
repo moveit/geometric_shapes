@@ -20,6 +20,7 @@
   <build_depends>libqhull</build_depends>
   <build_depends>console_bridge</build_depends>
   <build_depends>random_numbers</build_depends>
+  <build_depends>eigen_stl_containers</build_depends>
 
   <depends>boost</depends>
   <depends>common_msgs</depends>
@@ -30,5 +31,6 @@
   <depends>libqhull</depends>
   <depends>console_bridge</depends>
   <depends>random_numbers</depends>
+  <depends>eigen_stl_containers</depends>
 
 </stack>
