@@ -15,6 +15,9 @@ include_directories(include)
 find_package(Eigen REQUIRED)
 include_directories(${EIGEN_INCLUDE_DIRS})
 
+find_package(eigen_stl_containers REQUIRED)
+include_directories(${eigen_stl_containers_INCLUDE_DIRS})
+
 find_package(Boost REQUIRED system filesystem)
 include_directories(${Boost_INCLUDE_DIR})
 
