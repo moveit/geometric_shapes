@@ -53,15 +53,16 @@ endif()
 
 find_library(QHULL_LIB qhull)
 
-find_package(ROS COMPONENTS shape_msgs resource_retriever shape_tools random_numbers console_bridge)
-include_directories(${ROS_INCLUDE_DIRS})
+find_package(catkin COMPONENTS shape_msgs resource_retriever shape_tools random_numbers console_bridge)
+include_directories(${catkin_INCLUDE_DIRS})
+link_directories(${catkin_LIBRARY_DIRS})
 
 add_library(${PROJECT_NAME}
   src/shapes.cpp
   src/shape_operations.cpp
   src/bodies.cpp
   src/body_operations.cpp)
-target_link_libraries(${PROJECT_NAME} ${ASSIMP_LIBRARIES} ${OCTOMAP_LIBRARIES} ${QHULL_LIB} ${ROS_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${ASSIMP_LIBRARIES} ${OCTOMAP_LIBRARIES} ${QHULL_LIB} ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 
 
 # Unit tests
