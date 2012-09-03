@@ -1,6 +1,6 @@
 <stack>
   <name>geometric_shapes</name>
-  <version>0.1.1</version>
+  <version>0.1.2</version>
   <description brief="Representation of Geometric Shapes">This package contains generic definitions of geometric shapes and bodies.</description>
   <author email="isucan@willowgarage.edu">Ioan Sucan</author>
   <maintainer email="isucan@willowgarage.com">Ioan Sucan</maintainer>
