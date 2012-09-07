@@ -66,7 +66,7 @@ target_link_libraries(${PROJECT_NAME} ${ASSIMP_LIBRARIES} ${OCTOMAP_LIBRARIES} $
 
 
 # Unit tests
-add_gtest(test_point_inclusion test/test_point_inclusion.cpp)
+catkin_add_gtest(test_point_inclusion test/test_point_inclusion.cpp)
 target_link_libraries(test_point_inclusion ${PROJECT_NAME} ${Boost_LIBRARIES})
 
 
@@ -77,8 +77,4 @@ install(TARGETS ${PROJECT_NAME}
 install(DIRECTORY include/
         DESTINATION include
         FILES_MATCHING PATTERN "*.h")
-
-# for compatibility with old build system
-install(FILES manifest.xml
-        DESTINATION share/${PROJECT_NAME})
 
