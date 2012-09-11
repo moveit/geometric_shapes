@@ -7,7 +7,7 @@ catkin_stack()
 catkin_project(${PROJECT_NAME}
   LIBRARIES ${PROJECT_NAME}
   INCLUDE_DIRS include
-  DEPENDS console_bridge shape_tools common_msgs random_numbers Eigen
+  DEPENDS console_bridge shape_tools shape_msgs random_numbers
   )
 
 include_directories(include)
@@ -67,7 +67,7 @@ target_link_libraries(${PROJECT_NAME} ${ASSIMP_LIBRARIES} ${OCTOMAP_LIBRARIES} $
 
 # Unit tests
 catkin_add_gtest(test_point_inclusion test/test_point_inclusion.cpp)
-target_link_libraries(test_point_inclusion ${PROJECT_NAME} ${Boost_LIBRARIES})
+target_link_libraries(test_point_inclusion ${PROJECT_NAME} ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 
 
 install(TARGETS ${PROJECT_NAME}
