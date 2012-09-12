@@ -7,7 +7,7 @@ catkin_stack()
 catkin_project(${PROJECT_NAME}
   LIBRARIES ${PROJECT_NAME}
   INCLUDE_DIRS include
-  DEPENDS console_bridge shape_tools shape_msgs random_numbers
+  DEPENDS console_bridge shape_tools shape_msgs random_numbers eigen_stl_containers
   )
 
 include_directories(include)
