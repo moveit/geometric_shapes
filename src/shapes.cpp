@@ -37,7 +37,7 @@
 #include "geometric_shapes/shapes.h"
 #include <eigen_stl_containers/eigen_stl_containers.h>
 #include <octomap/octomap.h>
-#include <ros/console.h>
+#include <console_bridge/console.h>
 
 shapes::Shape* shapes::Sphere::clone(void) const
 {
@@ -91,12 +91,12 @@ shapes::Shape* shapes::OcTree::clone(void) const
 
 void shapes::OcTree::scaleAndPadd(double scale, double padd)
 {
-  ROS_WARN("OcTrees cannot be scaled or padded");
+  logWarn("OcTrees cannot be scaled or padded");
 }
 
 void shapes::Plane::scaleAndPadd(double scale, double padding)
 {
-  ROS_WARN("Planes cannot be scaled or padded");
+  logWarn("Planes cannot be scaled or padded");
 }
 
 void shapes::Shape::scale(double scale)

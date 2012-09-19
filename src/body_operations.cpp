@@ -36,7 +36,7 @@
 
 #include <geometric_shapes/body_operations.h>
 #include <geometric_shapes/shape_operations.h>
-#include <ros/console.h>
+#include <console_bridge/console.h>
 #include <Eigen/Geometry>
 
 bodies::Body* bodies::createBodyFromShape(const shapes::Shape *shape)
@@ -59,7 +59,7 @@ bodies::Body* bodies::createBodyFromShape(const shapes::Shape *shape)
       body = new bodies::ConvexMesh(shape);
       break;
     default:
-      ROS_ERROR("Creating body from shape: Unknown shape type %d", (int)shape->type);
+      logError("Creating body from shape: Unknown shape type %d", (int)shape->type);
       break;
     }
 
@@ -112,7 +112,7 @@ Body* constructBodyFromMsgHelper(const T &shape_msg, const geometry_msgs::Pose &
       Eigen::Quaterniond q(pose.orientation.w, pose.orientation.x, pose.orientation.y, pose.orientation.z);
       if (fabs(q.squaredNorm() - 1.0) > 1e-3)
       {
-        ROS_ERROR("Quaternion is not normalized. Assuming identity.");
+        logError("Quaternion is not normalized. Assuming identity.");
         q = Eigen::Quaterniond(1.0, 0.0, 0.0, 0.0);
       }
       Eigen::Affine3d af(Eigen::Translation3d(pose.position.x, pose.position.y, pose.position.z) * q.toRotationMatrix());

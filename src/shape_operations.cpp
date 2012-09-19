@@ -42,7 +42,7 @@
 #include <set>
 #include <float.h>
 
-#include <ros/console.h>
+#include <console_bridge/console.h>
 #include <resource_retriever/retriever.h>
 
 #if defined(IS_ASSIMP3)
@@ -59,6 +59,7 @@
 
 #include <shape_tools/shape_to_marker.h>
 #include <shape_tools/shape_extents.h>
+#include <shape_tools/solid_primitive_dims.h>
 
 namespace shapes
 {
@@ -134,7 +135,7 @@ Mesh* createMeshFromVertices(const EigenSTL::vector_Vector3d &source)
     return NULL;
   
   if (source.size() % 3 != 0)
-    ROS_ERROR("The number of vertices to construct a mesh from is not divisible by 3. Probably constructed triangles will not make sense.");
+    logError("The number of vertices to construct a mesh from is not divisible by 3. Probably constructed triangles will not make sense.");
   
   std::set<detail::LocalVertexType, detail::ltLocalVertexValue> vertices;
   std::vector<unsigned int> triangles;
@@ -218,13 +219,13 @@ Mesh* createMeshFromResource(const std::string& resource, const Eigen::Vector3d 
   } 
   catch (resource_retriever::Exception& e)
   {
-    ROS_ERROR("%s", e.what());
+    logError("%s", e.what());
     return NULL;
   }
 
   if (res.size == 0)
   {
-    ROS_WARN("Retrieved empty mesh for resource '%s'", resource.c_str());
+    logWarn("Retrieved empty mesh for resource '%s'", resource.c_str());
     return NULL;
   }
   
@@ -251,7 +252,7 @@ Mesh* createMeshFromResource(const std::string& resource, const Eigen::Vector3d 
                                                      aiProcess_OptimizeMeshes, hint.c_str());
   if (!scene)
   {
-    ROS_WARN_STREAM("Assimp reports no scene in " << resource);
+    logWarn("Assimp reports no scene in %s", resource.c_str());
     return NULL;
   }
   return createMeshFromAsset(scene, scale, resource);
@@ -294,7 +295,7 @@ Mesh* createMeshFromAsset(const aiScene* scene, const Eigen::Vector3d &scale, co
 {
   if (!scene->HasMeshes())
   {
-    ROS_WARN_STREAM("Assimp reports scene in " << resource_name << " has no meshes");
+    logWarn("Assimp reports scene in %s has no meshes", resource_name.c_str());
     return NULL;
   }
   EigenSTL::vector_Vector3d vertices;
@@ -302,12 +303,12 @@ Mesh* createMeshFromAsset(const aiScene* scene, const Eigen::Vector3d &scale, co
   extractMeshData(scene, scene->mRootNode, aiMatrix4x4(), scale, vertices, triangles);
   if (vertices.empty())
   {
-    ROS_WARN_STREAM("There are no vertices in the scene " << resource_name);
+    logWarn("There are no vertices in the scene %s", resource_name.c_str());
     return NULL;
   }
   if (triangles.empty())
   {
-    ROS_WARN_STREAM("There are no triangles in the scene " << resource_name);
+    logWarn("There are no triangles in the scene %s", resource_name.c_str());
     return NULL;
   }
   
@@ -323,7 +324,7 @@ Shape* constructShapeFromMsg(const shape_msgs::Mesh &shape_msg)
 {      
   if (shape_msg.triangles.empty() || shape_msg.vertices.empty())
   {
-    ROS_WARN("Mesh definition is empty");
+    logWarn("Mesh definition is empty");
     return NULL;
   }
   else
@@ -378,7 +379,7 @@ Shape* constructShapeFromMsg(const shape_msgs::SolidPrimitive &shape_msg)
                              shape_msg.dimensions[shape_msgs::SolidPrimitive::CONE_HEIGHT]);
         }
   if (shape == NULL)
-    ROS_ERROR("Unable to construct shape corresponding to shape_msgect of type %d", (int)shape_msg.type);
+    logError("Unable to construct shape corresponding to shape_msgect of type %d", (int)shape_msg.type);
   
   return shape;
 }
@@ -453,7 +454,7 @@ bool constructMarkerFromShape(const Shape* shape, visualization_msgs::Marker &ma
     }
     catch (std::runtime_error &ex)
     {
-      ROS_ERROR("%s", ex.what());
+      logError("%s", ex.what());
     }
     if (ok)
       return true;
@@ -508,7 +509,7 @@ bool constructMsgFromShape(const Shape* shape, ShapeMsg &shape_msg)
   {
     shape_msgs::SolidPrimitive s;
     s.type = shape_msgs::SolidPrimitive::SPHERE;
-    s.dimensions.resize(SolidPrimitiveDimCount<shape_msgs::SolidPrimitive::SPHERE>::value);
+    s.dimensions.resize(shape_tools::SolidPrimitiveDimCount<shape_msgs::SolidPrimitive::SPHERE>::value);
     s.dimensions[shape_msgs::SolidPrimitive::SPHERE_RADIUS] = static_cast<const Sphere*>(shape)->radius;
     shape_msg = s;
   }
@@ -518,7 +519,7 @@ bool constructMsgFromShape(const Shape* shape, ShapeMsg &shape_msg)
       shape_msgs::SolidPrimitive s;
       s.type = shape_msgs::SolidPrimitive::BOX;
       const double* sz = static_cast<const Box*>(shape)->size;
-      s.dimensions.resize(SolidPrimitiveDimCount<shape_msgs::SolidPrimitive::BOX>::value);
+      s.dimensions.resize(shape_tools::SolidPrimitiveDimCount<shape_msgs::SolidPrimitive::BOX>::value);
       s.dimensions[shape_msgs::SolidPrimitive::BOX_X] = sz[0];
       s.dimensions[shape_msgs::SolidPrimitive::BOX_Y] = sz[1];
       s.dimensions[shape_msgs::SolidPrimitive::BOX_Z] = sz[2];
@@ -529,7 +530,7 @@ bool constructMsgFromShape(const Shape* shape, ShapeMsg &shape_msg)
       { 
         shape_msgs::SolidPrimitive s;
         s.type = shape_msgs::SolidPrimitive::CYLINDER;  
-        s.dimensions.resize(SolidPrimitiveDimCount<shape_msgs::SolidPrimitive::CYLINDER>::value);
+        s.dimensions.resize(shape_tools::SolidPrimitiveDimCount<shape_msgs::SolidPrimitive::CYLINDER>::value);
         s.dimensions[shape_msgs::SolidPrimitive::CYLINDER_RADIUS] = static_cast<const Cylinder*>(shape)->radius;
         s.dimensions[shape_msgs::SolidPrimitive::CYLINDER_HEIGHT] = static_cast<const Cylinder*>(shape)->length;
         shape_msg = s;
@@ -539,7 +540,7 @@ bool constructMsgFromShape(const Shape* shape, ShapeMsg &shape_msg)
         {   
           shape_msgs::SolidPrimitive s;
           s.type = shape_msgs::SolidPrimitive::CONE;
-          s.dimensions.resize(SolidPrimitiveDimCount<shape_msgs::SolidPrimitive::CONE>::value);
+          s.dimensions.resize(shape_tools::SolidPrimitiveDimCount<shape_msgs::SolidPrimitive::CONE>::value);
           s.dimensions[shape_msgs::SolidPrimitive::CONE_RADIUS] = static_cast<const Cone*>(shape)->radius;
           s.dimensions[shape_msgs::SolidPrimitive::CONE_HEIGHT] = static_cast<const Cone*>(shape)->length;
           shape_msg = s;
@@ -582,7 +583,7 @@ bool constructMsgFromShape(const Shape* shape, ShapeMsg &shape_msg)
             }
             else
             {
-              ROS_ERROR("Unable to construct shape message for shape of type %d", (int)shape->type);
+              logError("Unable to construct shape message for shape of type %d", (int)shape->type);
               return false;
             }
   

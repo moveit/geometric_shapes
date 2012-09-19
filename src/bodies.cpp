@@ -37,7 +37,8 @@
 #include "geometric_shapes/bodies.h"
 #include "geometric_shapes/body_operations.h"
 
-#include <ros/console.h>
+#include <console_bridge/console.h>
+
 extern "C"
 {
 #include <qhull/qhull.h>
@@ -49,8 +50,10 @@ extern "C"
 #include <qhull/io.h>
 #include <qhull/stat.h>
 }
+
 #include <boost/math/constants/constants.hpp>
 #include <limits>
+#include <cstdio>
 #include <algorithm>
 #include <Eigen/Geometry>
 
@@ -750,8 +753,9 @@ void bodies::ConvexMesh::useDimensions(const shapes::Shape *shape)
   char flags[] = "qhull Tv";
   int exitcode = qh_new_qhull(3, mesh->vertex_count, points, true, flags, null, null);
   
-  if(exitcode != 0) {
-    ROS_WARN_STREAM("Convex hull creation failed");
+  if (exitcode != 0)
+  {
+    logWarn("Convex hull creation failed");
     qh_freeqhull (!qh_ALL);
     int curlong, totlong;
     qh_memfreeshort (&curlong, &totlong);
@@ -1072,7 +1076,7 @@ void bodies::BodyVector::setPose(unsigned int i, const Eigen::Affine3d& pose)
 {
   if (i >= bodies_.size())
   {
-    ROS_ERROR("There is no body at index %u", i);
+    logError("There is no body at index %u", i);
     return;
   }
 
@@ -1083,7 +1087,7 @@ const bodies::Body* bodies::BodyVector::getBody(unsigned int i) const
 {
   if (i >= bodies_.size())
   {
-    ROS_ERROR("There is no body at index %u", i);
+    logError("There is no body at index %u", i);
     return NULL;
   }
   else

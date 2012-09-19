@@ -4,12 +4,6 @@ project(geometric_shapes)
 find_package(catkin REQUIRED)
 catkin_stack()
 
-catkin_project(${PROJECT_NAME}
-  LIBRARIES ${PROJECT_NAME}
-  INCLUDE_DIRS include
-  DEPENDS console_bridge shape_tools shape_msgs random_numbers eigen_stl_containers
-  )
-
 include_directories(include)
 
 find_package(Eigen REQUIRED)
@@ -56,6 +50,12 @@ find_library(QHULL_LIB qhull)
 find_package(catkin COMPONENTS shape_msgs resource_retriever shape_tools random_numbers console_bridge)
 include_directories(${catkin_INCLUDE_DIRS})
 link_directories(${catkin_LIBRARY_DIRS})
+
+catkin_project(${PROJECT_NAME}
+  LIBRARIES ${PROJECT_NAME}
+  INCLUDE_DIRS include
+  DEPENDS console_bridge shape_tools shape_msgs random_numbers eigen_stl_containers Eigen
+  )
 
 add_library(${PROJECT_NAME}
   src/shapes.cpp
