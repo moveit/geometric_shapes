@@ -1,16 +1,10 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 2.8.3)
 project(geometric_shapes)
-
-find_package(catkin REQUIRED)
-catkin_stack()
 
 include_directories(include)
 
 find_package(Eigen REQUIRED)
 include_directories(${EIGEN_INCLUDE_DIRS})
-
-find_package(eigen_stl_containers REQUIRED)
-include_directories(${eigen_stl_containers_INCLUDE_DIRS})
 
 find_package(Boost REQUIRED system filesystem)
 include_directories(${Boost_INCLUDE_DIR})
@@ -47,11 +41,11 @@ endif()
 
 find_library(QHULL_LIB qhull)
 
-find_package(catkin COMPONENTS shape_msgs resource_retriever shape_tools random_numbers console_bridge)
+find_package(catkin COMPONENTS shape_msgs resource_retriever shape_tools random_numbers console_bridge eigen_stl_containers)
 include_directories(${catkin_INCLUDE_DIRS})
 link_directories(${catkin_LIBRARY_DIRS})
 
-catkin_project(${PROJECT_NAME}
+catkin_package(
   LIBRARIES ${PROJECT_NAME}
   INCLUDE_DIRS include
   DEPENDS console_bridge shape_tools shape_msgs random_numbers eigen_stl_containers Eigen
