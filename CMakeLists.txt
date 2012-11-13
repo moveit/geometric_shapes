@@ -29,7 +29,7 @@ if (ASSIMP_FOUND)
   include_directories(${ASSIMP_INCLUDE_DIRS})
   link_directories(${ASSIMP_LIBRARY_DIRS})
 else()
-  message(STATUS "could not find assimp (perhaps available thorugh ROS package?), so assimping assimp v2")
+  message(STATUS "could not find assimp (perhaps available thorugh ROS package?), so assuming assimp v2")
   set(ASSIMP_LIBRARIES assimp)
   set(ASSIMP_LIBRARY_DIRS)
   set(ASSIMP_CXX_FLAGS)
@@ -48,7 +48,8 @@ link_directories(${catkin_LIBRARY_DIRS})
 catkin_package(
   LIBRARIES ${PROJECT_NAME}
   INCLUDE_DIRS include
-  DEPENDS console_bridge shape_tools shape_msgs random_numbers eigen_stl_containers Eigen
+  CATKIN_DEPENDS console_bridge shape_tools shape_msgs random_numbers eigen_stl_containers
+  DEPENDS Eigen
   )
 
 add_library(${PROJECT_NAME}
