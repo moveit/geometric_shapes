@@ -1,6 +1,6 @@
 <package>
   <name>geometric_shapes</name>
-  <version>0.1.9</version>
+  <version>0.1.10</version>
   <description>This package contains generic definitions of geometric shapes and bodies.</description>
   <author email="isucan@willowgarage.edu">Ioan Sucan</author>
   <maintainer email="isucan@willowgarage.com">Ioan Sucan</maintainer>
@@ -19,7 +19,7 @@
   <build_depend>console_bridge</build_depend>
   <build_depend>random_numbers</build_depend>
   <build_depend>eigen_stl_containers</build_depend>
-  <build_depend>robot_model</build_depend>
+  <build_depend>resource_retriever</build_depend>
 
   <run_depend>boost</run_depend>
   <run_depend>shape_msgs</run_depend>
@@ -31,6 +31,6 @@
   <run_depend>console_bridge</run_depend>
   <run_depend>random_numbers</run_depend>
   <run_depend>eigen_stl_containers</run_depend>
-  <run_depend>robot_model</run_depend>
+  <run_depend>resource_retriever</run_depend>
 
 </package>
