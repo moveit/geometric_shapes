@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(geometric_shapes)
 
+if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Release)
+endif()
+
 include_directories(include)
 
 find_package(Eigen REQUIRED)
@@ -8,11 +12,6 @@ include_directories(${EIGEN_INCLUDE_DIRS})
 
 find_package(Boost REQUIRED system filesystem)
 include_directories(${Boost_INCLUDE_DIR})
-
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(OCTOMAP REQUIRED octomap)
-include_directories(${OCTOMAP_INCLUDE_DIRS})
-link_directories(${OCTOMAP_LIBRARY_DIRS})
 
 find_package(ASSIMP QUIET)
 if (NOT ASSIMP_FOUND)
@@ -41,14 +40,14 @@ endif()
 
 find_library(QHULL_LIB qhull)
 
-find_package(catkin COMPONENTS shape_msgs resource_retriever shape_tools random_numbers console_bridge eigen_stl_containers)
+find_package(catkin COMPONENTS shape_msgs resource_retriever shape_tools random_numbers console_bridge octomap eigen_stl_containers)
 include_directories(${catkin_INCLUDE_DIRS})
 link_directories(${catkin_LIBRARY_DIRS})
 
 catkin_package(
   LIBRARIES ${PROJECT_NAME}
   INCLUDE_DIRS include
-  CATKIN_DEPENDS console_bridge shape_tools shape_msgs random_numbers eigen_stl_containers
+  CATKIN_DEPENDS console_bridge shape_tools shape_msgs random_numbers eigen_stl_containers octomap
   DEPENDS Eigen
   )
 
@@ -57,7 +56,7 @@ add_library(${PROJECT_NAME}
   src/shape_operations.cpp
   src/bodies.cpp
   src/body_operations.cpp)
-target_link_libraries(${PROJECT_NAME} ${ASSIMP_LIBRARIES} ${OCTOMAP_LIBRARIES} ${QHULL_LIB} ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${ASSIMP_LIBRARIES} ${QHULL_LIB} ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 
 
 # Unit tests
