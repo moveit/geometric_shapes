@@ -40,14 +40,16 @@ endif()
 
 find_library(QHULL_LIB qhull)
 
-find_package(catkin COMPONENTS shape_msgs resource_retriever shape_tools random_numbers console_bridge octomap eigen_stl_containers)
+find_package(octomap REQUIRED)
+
+find_package(catkin COMPONENTS shape_msgs resource_retriever shape_tools random_numbers console_bridge eigen_stl_containers)
 include_directories(${catkin_INCLUDE_DIRS})
 link_directories(${catkin_LIBRARY_DIRS})
 
 catkin_package(
-  LIBRARIES ${PROJECT_NAME}
-  INCLUDE_DIRS include
-  CATKIN_DEPENDS console_bridge shape_tools shape_msgs random_numbers eigen_stl_containers octomap
+  INCLUDE_DIRS include ${OCTOMAP_INCLUDE_DIRS}
+  LIBRARIES ${PROJECT_NAME} ${OCTOMAP_LIBRARIES}
+  CATKIN_DEPENDS console_bridge shape_tools shape_msgs random_numbers eigen_stl_containers
   DEPENDS Eigen
   )
 
