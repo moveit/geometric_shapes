@@ -67,6 +67,9 @@ namespace shapes
 namespace detail
 {
 
+namespace
+{
+
 /// Local representation of a vertex that knows its position in an array (used for sorting)
 struct LocalVertexType
 {
@@ -110,6 +113,7 @@ struct ltLocalVertexIndex
   }
 };
 
+}
 }
 
 Mesh* createMeshFromVertices(const EigenSTL::vector_Vector3d &vertices, const std::vector<unsigned int> &triangles)
@@ -258,8 +262,10 @@ Mesh* createMeshFromResource(const std::string& resource, const Eigen::Vector3d 
   return createMeshFromAsset(scene, scale, resource);
 }
 
-static void extractMeshData(const aiScene *scene, const aiNode *node, const aiMatrix4x4 &parent_transform, const Eigen::Vector3d &scale,
-                            EigenSTL::vector_Vector3d &vertices, std::vector<unsigned int> &triangles)
+namespace
+{
+void extractMeshData(const aiScene *scene, const aiNode *node, const aiMatrix4x4 &parent_transform, const Eigen::Vector3d &scale,
+                     EigenSTL::vector_Vector3d &vertices, std::vector<unsigned int> &triangles)
 {
   aiMatrix4x4 transform = parent_transform;
   transform *= node->mTransformation;
@@ -283,6 +289,7 @@ static void extractMeshData(const aiScene *scene, const aiNode *node, const aiMa
   
   for (unsigned int n = 0; n < node->mNumChildren; ++n)
     extractMeshData(scene, node->mChildren[n], transform, scale, vertices, triangles);
+}
 }
 
 Mesh* createMeshFromAsset(const aiScene* scene, const std::string &resource_name)
@@ -384,6 +391,9 @@ Shape* constructShapeFromMsg(const shape_msgs::SolidPrimitive &shape_msg)
   return shape;
 }
 
+namespace
+{
+
 class ShapeVisitorAlloc : public boost::static_visitor<Shape*>
 {
 public:
@@ -404,10 +414,15 @@ public:
   }
 };
 
+}
+
 Shape* constructShapeFromMsg(const ShapeMsg &shape_msg)
 {
   return boost::apply_visitor(ShapeVisitorAlloc(), shape_msg);
 }
+
+namespace
+{
 
 class ShapeVisitorMarker : public boost::static_visitor<void>
 {
@@ -441,6 +456,8 @@ private:
   visualization_msgs::Marker *marker_;
 };
 
+}
+
 bool constructMarkerFromShape(const Shape* shape, visualization_msgs::Marker &marker, bool use_mesh_triangle_list)
 {
   ShapeMsg shape_msg;
@@ -461,6 +478,9 @@ bool constructMarkerFromShape(const Shape* shape, visualization_msgs::Marker &ma
   }
   return false;
 }
+
+namespace
+{
 
 class ShapeVisitorComputeExtents : public boost::static_visitor<Eigen::Vector3d>
 {
@@ -489,6 +509,8 @@ public:
   }
 };
 
+}
+  
 Eigen::Vector3d computeShapeExtents(const ShapeMsg &shape_msg)
 {
   return boost::apply_visitor(ShapeVisitorComputeExtents(), shape_msg);
@@ -590,4 +612,162 @@ bool constructMsgFromShape(const Shape* shape, ShapeMsg &shape_msg)
   return true;
 }
 
+void saveAsText(const Shape *shape, std::ostream &out)
+{
+  if (shape->type == SPHERE)
+  {
+    out << Sphere::STRING_NAME << std::endl;
+    out << static_cast<const Sphere*>(shape)->radius << std::endl;
+  }
+  else
+    if (shape->type == BOX)
+    {     
+      out << Box::STRING_NAME << std::endl;
+      const double* sz = static_cast<const Box*>(shape)->size;
+      out << sz[0] << " " << sz[1] << " " << sz[2] << std::endl;
+    }
+    else
+      if (shape->type == CYLINDER)
+      { 
+        out << Cylinder::STRING_NAME << std::endl;
+        out << static_cast<const Cylinder*>(shape)->radius << " " << static_cast<const Cylinder*>(shape)->length << std::endl;
+      }
+      else
+        if (shape->type == CONE)
+        {     
+          out << Cone::STRING_NAME << std::endl;
+          out << static_cast<const Cone*>(shape)->radius << " " << static_cast<const Cone*>(shape)->length << std::endl;
+        }
+        else
+          if (shape->type == PLANE)
+          {    
+            out << Plane::STRING_NAME << std::endl;
+            const Plane *p = static_cast<const Plane*>(shape);
+            out << p->a << " " << p->b << " " << p->c << " " << p->d << std::endl;
+          }
+          else
+            if (shape->type == MESH)
+            {     
+              out << Mesh::STRING_NAME << std::endl;
+              const Mesh *mesh = static_cast<const Mesh*>(shape);
+              out << mesh->vertex_count << " " << mesh->triangle_count << std::endl;
+              
+              for (unsigned int i = 0 ; i < mesh->vertex_count ; ++i)
+              {
+                unsigned int i3 = i * 3;
+                out << mesh->vertices[i3] << " " << mesh->vertices[i3 + 1] << " " << mesh->vertices[i3 + 2] << std::endl;
+              }
+              
+              for (unsigned int i = 0 ; i < mesh->triangle_count ; ++i)
+              { 
+                unsigned int i3 = i * 3;
+                out << mesh->triangles[i3] << " " << mesh->triangles[i3 + 1] << " " << mesh->triangles[i3 + 2] << std::endl;
+              }
+            }
+            else
+            {
+              logError("Unable to save shape of type %d", (int)shape->type);
+            }
 }
+
+Shape* constructShapeFromText(std::istream &in)
+{
+  Shape *result = NULL;
+  if (in.good() && !in.eof())
+  {    
+    std::string type;
+    in >> type;
+    if (in.good() && !in.eof())
+    {    
+      if (type == Sphere::STRING_NAME)
+      {
+        double radius;
+        in >> radius;
+        result = new Sphere(radius);
+      }
+      else
+        if (type == Box::STRING_NAME)
+        {
+          double x, y, z;
+          in >> x >> y >> z;
+          result = new Box(x, y, z);
+        }
+        else
+          if (type == Cylinder::STRING_NAME)
+          {
+            double r, l;
+            in >> r >> l;
+            result = new Cylinder(r, l);
+          }
+          else
+            if (type == Cone::STRING_NAME)
+            {
+              double r, l;
+              in >> r >> l;
+              result = new Cone(r, l);
+            }   
+            else
+              if (type == Plane::STRING_NAME)
+              {
+                double a, b, c, d;
+                in >> a >> b >> c >> d;
+                result = new Plane(a, b, c, d);
+              }
+              else
+                if (type == Mesh::STRING_NAME)
+                {
+                  unsigned int v, t;
+                  in >> v >> t;
+                  Mesh *m = new Mesh(v, t);
+                  result = m;
+                  for (unsigned int i = 0 ; i < m->vertex_count ; ++i)
+                  {
+                    unsigned int i3 = i * 3;
+                    in >> m->vertices[i3] >> m->vertices[i3 + 1] >> m->vertices[i3 + 2];
+                  }
+                  for (unsigned int i = 0 ; i < m->triangle_count ; ++i)
+                  { 
+                    unsigned int i3 = i * 3;
+                    in >> m->triangles[i3] >> m->triangles[i3 + 1] >> m->triangles[i3 + 2];
+                  }
+                  m->computeNormals();
+                }
+                else
+                  logError("Unknown shape type: '%s'", type.c_str());
+    }
+  }
+  return result;
+}
+
+const std::string& shapeStringName(const Shape *shape)
+{
+  static const std::string unknown = "unknown"; 
+  if (shape)
+    switch (shape->type)
+    {
+    case SPHERE:
+      return Sphere::STRING_NAME;
+    case CYLINDER:
+      return Cylinder::STRING_NAME;
+    case CONE:
+      return Cone::STRING_NAME;
+    case BOX:
+      return Box::STRING_NAME;
+    case PLANE:
+      return Plane::STRING_NAME;
+    case MESH:
+      return Mesh::STRING_NAME;
+    case OCTREE:
+      return OcTree::STRING_NAME;
+    default:
+      return unknown;
+    }
+  else
+  {
+    static const std::string empty;
+    return empty;
+  }
+}
+
+}
+

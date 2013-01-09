@@ -39,6 +39,14 @@
 #include <octomap/octomap.h>
 #include <console_bridge/console.h>
 
+const std::string shapes::Sphere::STRING_NAME = "sphere";
+const std::string shapes::Box::STRING_NAME = "box";
+const std::string shapes::Cylinder::STRING_NAME = "cylinder";
+const std::string shapes::Cone::STRING_NAME = "cone";
+const std::string shapes::Mesh::STRING_NAME = "mesh";
+const std::string shapes::Plane::STRING_NAME = "plane";
+const std::string shapes::OcTree::STRING_NAME = "octree";
+
 shapes::Shape* shapes::Sphere::clone(void) const
 {
   return new Sphere(radius);

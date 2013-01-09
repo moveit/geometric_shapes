@@ -41,6 +41,7 @@
 #include <vector>
 #include <iostream>
 #include <boost/shared_ptr.hpp>
+#include <string>
 
 namespace octomap
 {
@@ -75,7 +76,7 @@ public:
   
   /** \brief Print information about this shape */
   virtual void print(std::ostream &out = std::cout) const;
-  
+    
   /** \brief Scale this shape by a factor */
   void scale(double scale);
   
@@ -108,6 +109,8 @@ public:
     radius = r;
   }
   
+  static const std::string STRING_NAME;
+  
   virtual void scaleAndPadd(double scale, double padd);
   virtual Shape* clone(void) const;
   virtual void print(std::ostream &out = std::cout) const;
@@ -132,7 +135,9 @@ public:
     length = l;
     radius = r;
   }
-  
+
+  static const std::string STRING_NAME;
+
   virtual void scaleAndPadd(double scale, double padd);
   virtual Shape* clone(void) const;
   virtual void print(std::ostream &out = std::cout) const;
@@ -160,7 +165,9 @@ public:
     length = l;
     radius = r;
   }
-  
+
+  static const std::string STRING_NAME;
+
   virtual void scaleAndPadd(double scale, double padd);
   virtual Shape* clone(void) const;
   virtual void print(std::ostream &out = std::cout) const;
@@ -189,7 +196,9 @@ public:
     size[1] = y;
     size[2] = z;
   }
-  
+
+  static const std::string STRING_NAME;
+
   virtual void scaleAndPadd(double scale, double padd);
   virtual Shape* clone(void) const;
   virtual void print(std::ostream &out = std::cout) const;
@@ -231,7 +240,9 @@ public:
     if (normals)
       delete[] normals;
   }
-  
+
+  static const std::string STRING_NAME;
+
   virtual void scaleAndPadd(double scale, double padd);
   virtual Shape* clone(void) const;
   virtual void print(std::ostream &out = std::cout) const;
@@ -274,7 +285,9 @@ public:
     type = PLANE;
     a = pa; b = pb; c = pc; d = pd;
   }
-  
+
+  static const std::string STRING_NAME;
+
   virtual Shape* clone(void) const;
   virtual void print(std::ostream &out = std::cout) const;
   virtual void scaleAndPadd(double scale, double padd);
@@ -297,6 +310,8 @@ public:
   {
     type = OCTREE;
   }
+
+  static const std::string STRING_NAME;
 
   virtual Shape* clone(void) const;
   virtual void print(std::ostream &out = std::cout) const;

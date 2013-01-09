@@ -43,7 +43,7 @@
 #include <visualization_msgs/Marker.h>
 #include <vector>
 
-// forward declaration of aiScene (called needs to include assimp)
+// forward declaration of aiScene (caller needs to include assimp)
 class aiScene;
 
 namespace shapes
@@ -96,6 +96,15 @@ Eigen::Vector3d computeShapeExtents(const ShapeMsg &shape_msg);
 
 /** \brief Compute the extents of a shape */
 Eigen::Vector3d computeShapeExtents(const Shape *shape);
+
+/** \brief Get the string name of the shape */
+const std::string& shapeStringName(const Shape *shape);
+
+/** \brief Save all the information about this shape as plain text */
+void saveAsText(const Shape *shape, std::ostream &out);
+
+/** \brief Construct a shape from plain text description */
+Shape* constructShapeFromText(std::istream &in);
 
 }
 
