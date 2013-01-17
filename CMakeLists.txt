@@ -5,13 +5,8 @@ if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
 endif()
 
-include_directories(include)
-
 find_package(Eigen REQUIRED)
-include_directories(${EIGEN_INCLUDE_DIRS})
-
 find_package(Boost REQUIRED system filesystem)
-include_directories(${Boost_INCLUDE_DIR})
 
 find_package(ASSIMP QUIET)
 if (NOT ASSIMP_FOUND)
@@ -25,10 +20,10 @@ if (ASSIMP_FOUND)
   else()
     message(STATUS "Found assimp v2")
   endif()
-  include_directories(${ASSIMP_INCLUDE_DIRS})
-  link_directories(${ASSIMP_LIBRARY_DIRS})
 else()
   message(STATUS "could not find assimp (perhaps available thorugh ROS package?), so assuming assimp v2")
+  set(ASSIMP_INCLUDE_DIRS )
+  ste(ASSIMP_LIBRARY_DIRS )
   set(ASSIMP_LIBRARIES assimp)
   set(ASSIMP_LIBRARY_DIRS)
   set(ASSIMP_CXX_FLAGS)
@@ -39,12 +34,8 @@ else()
 endif()
 
 find_library(QHULL_LIB qhull)
-
 find_package(octomap REQUIRED)
-
 find_package(catkin COMPONENTS shape_msgs resource_retriever shape_tools random_numbers console_bridge eigen_stl_containers)
-include_directories(${catkin_INCLUDE_DIRS})
-link_directories(${catkin_LIBRARY_DIRS})
 
 catkin_package(
   INCLUDE_DIRS include ${OCTOMAP_INCLUDE_DIRS}
@@ -52,6 +43,11 @@ catkin_package(
   CATKIN_DEPENDS console_bridge shape_tools shape_msgs random_numbers eigen_stl_containers
   DEPENDS Eigen
   )
+
+include_directories(SYSTEM ${EIGEN_INCLUDE_DIRS} ${Boost_INCLUDE_DIR} ${ASSIMP_INCLUDE_DIRS})
+include_directories(include)
+include_directories(${catkin_INCLUDE_DIRS})
+link_directories(${catkin_LIBRARY_DIRS} ${ASSIMP_LIBRARY_DIRS})
 
 add_library(${PROJECT_NAME}
   src/shapes.cpp
