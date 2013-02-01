@@ -62,17 +62,17 @@ enum ShapeType { UNKNOWN_SHAPE, SPHERE, CYLINDER, CONE, BOX, PLANE, MESH, OCTREE
 class Shape
 {
 public:
-  Shape(void)
+  Shape()
   {
     type = UNKNOWN_SHAPE;
   }
   
-  virtual ~Shape(void)
+  virtual ~Shape()
   {
   }
   
   /** \brief Create a copy of this shape */
-  virtual Shape* clone(void) const = 0;
+  virtual Shape* clone() const = 0;
   
   /** \brief Print information about this shape */
   virtual void print(std::ostream &out = std::cout) const;
@@ -87,7 +87,7 @@ public:
   virtual void scaleAndPadd(double scale, double padd) = 0;
   
   /** \brief Return a flag indicating whether this shape can be scaled and/or padded */
-  virtual bool isFixed(void) const;
+  virtual bool isFixed() const;
   
   /** \brief The type of the shape */
   ShapeType type;
@@ -97,7 +97,7 @@ public:
 class Sphere : public Shape
 {
 public:
-  Sphere(void) : Shape()
+  Sphere() : Shape()
   {
     type   = SPHERE;
     radius = 0.0;
@@ -112,7 +112,7 @@ public:
   static const std::string STRING_NAME;
   
   virtual void scaleAndPadd(double scale, double padd);
-  virtual Shape* clone(void) const;
+  virtual Shape* clone() const;
   virtual void print(std::ostream &out = std::cout) const;
   
   /** \brief The radius of the sphere */
@@ -123,7 +123,7 @@ public:
 class Cylinder : public Shape
 {
 public:
-  Cylinder(void) : Shape()
+  Cylinder() : Shape()
   {
     type   = CYLINDER;
     length = radius = 0.0;
@@ -139,7 +139,7 @@ public:
   static const std::string STRING_NAME;
 
   virtual void scaleAndPadd(double scale, double padd);
-  virtual Shape* clone(void) const;
+  virtual Shape* clone() const;
   virtual void print(std::ostream &out = std::cout) const;
   
   /** \brief The length of the cylinder */
@@ -153,7 +153,7 @@ public:
 class Cone : public Shape
 {
 public:
-  Cone(void) : Shape()
+  Cone() : Shape()
   {
     type   = CONE;
     length = radius = 0.0;
@@ -169,7 +169,7 @@ public:
   static const std::string STRING_NAME;
 
   virtual void scaleAndPadd(double scale, double padd);
-  virtual Shape* clone(void) const;
+  virtual Shape* clone() const;
   virtual void print(std::ostream &out = std::cout) const;
   
   /** \brief The length (height) of the cone */
@@ -183,7 +183,7 @@ public:
 class Box : public Shape
 {
 public:
-  Box(void) : Shape()
+  Box() : Shape()
   {
     type = BOX;
     size[0] = size[1] = size[2] = 0.0;
@@ -200,7 +200,7 @@ public:
   static const std::string STRING_NAME;
 
   virtual void scaleAndPadd(double scale, double padd);
-  virtual Shape* clone(void) const;
+  virtual Shape* clone() const;
   virtual void print(std::ostream &out = std::cout) const;
   
   /** \brief x, y, z dimensions of the box (axis-aligned) */
@@ -211,7 +211,7 @@ public:
 class Mesh : public Shape
 {
 public:
-  Mesh(void) : Shape()
+  Mesh() : Shape()
   {
     type = MESH;
     vertex_count = 0;
@@ -231,7 +231,7 @@ public:
     normals = new double[t_count * 3];
   }
   
-  virtual ~Mesh(void)
+  virtual ~Mesh()
   {
     if (vertices)
       delete[] vertices;
@@ -244,11 +244,11 @@ public:
   static const std::string STRING_NAME;
 
   virtual void scaleAndPadd(double scale, double padd);
-  virtual Shape* clone(void) const;
+  virtual Shape* clone() const;
   virtual void print(std::ostream &out = std::cout) const;
   
   /** \brief The normals to each triangle can be computed from the vertices using cross products. This function performs this computation and allocates memory for normals if needed */
-  void computeNormals(void);
+  void computeNormals();
   
   /** \brief The number of available vertices */
   unsigned int  vertex_count;
@@ -274,7 +274,7 @@ class Plane : public Shape
 {
 public:
   
-  Plane(void) : Shape()
+  Plane() : Shape()
   {
     type = PLANE;
     a = b = c = d = 0.0;
@@ -288,10 +288,10 @@ public:
 
   static const std::string STRING_NAME;
 
-  virtual Shape* clone(void) const;
+  virtual Shape* clone() const;
   virtual void print(std::ostream &out = std::cout) const;
   virtual void scaleAndPadd(double scale, double padd);
-  virtual bool isFixed(void) const;
+  virtual bool isFixed() const;
 
   /** \brief The plane equation is ax + by + cz + d = 0 */
   double a, b, c, d;
@@ -301,7 +301,7 @@ public:
 class OcTree : public Shape
 {
 public:
-  OcTree(void) : Shape()
+  OcTree() : Shape()
   {
     type = OCTREE;
   }
@@ -313,10 +313,10 @@ public:
 
   static const std::string STRING_NAME;
 
-  virtual Shape* clone(void) const;
+  virtual Shape* clone() const;
   virtual void print(std::ostream &out = std::cout) const;
   virtual void scaleAndPadd(double scale, double padd);
-  virtual bool isFixed(void) const;
+  virtual bool isFixed() const;
   
   boost::shared_ptr<const octomap::OcTree> octree;
 };

@@ -47,27 +47,27 @@ const std::string shapes::Mesh::STRING_NAME = "mesh";
 const std::string shapes::Plane::STRING_NAME = "plane";
 const std::string shapes::OcTree::STRING_NAME = "octree";
 
-shapes::Shape* shapes::Sphere::clone(void) const
+shapes::Shape* shapes::Sphere::clone() const
 {
   return new Sphere(radius);
 }
 
-shapes::Shape* shapes::Cylinder::clone(void) const
+shapes::Shape* shapes::Cylinder::clone() const
 {
   return new Cylinder(radius, length);
 }
 
-shapes::Shape* shapes::Cone::clone(void) const
+shapes::Shape* shapes::Cone::clone() const
 {
   return new Cone(radius, length);
 }
 
-shapes::Shape* shapes::Box::clone(void) const
+shapes::Shape* shapes::Box::clone() const
 {
   return new Box(size[0], size[1], size[2]);
 }
 
-shapes::Shape* shapes::Mesh::clone(void) const
+shapes::Shape* shapes::Mesh::clone() const
 {
   Mesh *dest = new Mesh(vertex_count, triangle_count);
   unsigned int n = 3 * vertex_count;
@@ -87,12 +87,12 @@ shapes::Shape* shapes::Mesh::clone(void) const
   return dest;
 }
 
-shapes::Shape* shapes::Plane::clone(void) const
+shapes::Shape* shapes::Plane::clone() const
 {
   return new Plane(a, b, c, d);
 }
 
-shapes::Shape* shapes::OcTree::clone(void) const
+shapes::Shape* shapes::OcTree::clone() const
 {
   return new OcTree(octree);
 }
@@ -238,22 +238,22 @@ void shapes::OcTree::print(std::ostream &out) const
     out << "OcTree[NULL]" << std::endl;
 }
 
-bool shapes::Shape::isFixed(void) const
+bool shapes::Shape::isFixed() const
 {
   return false;
 }
 
-bool shapes::OcTree::isFixed(void) const
+bool shapes::OcTree::isFixed() const
 {
   return true;
 }
 
-bool shapes::Plane::isFixed(void) const
+bool shapes::Plane::isFixed() const
 {
   return true;
 }
 
-void shapes::Mesh::computeNormals(void)
+void shapes::Mesh::computeNormals()
 { 
   if (triangle_count && !normals)
     normals = new double[triangle_count * 3];

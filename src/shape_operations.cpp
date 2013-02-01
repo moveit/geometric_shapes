@@ -73,7 +73,7 @@ namespace
 /// Local representation of a vertex that knows its position in an array (used for sorting)
 struct LocalVertexType
 {
-  LocalVertexType(void) : x(0.0), y(0.0), z(0.0)
+  LocalVertexType() : x(0.0), y(0.0), z(0.0)
   {
   }
   

@@ -125,13 +125,13 @@ void bodies::Sphere::useDimensions(const shapes::Shape *shape) // radius
   radius_ = static_cast<const shapes::Sphere*>(shape)->radius;
 }
 
-std::vector<double> bodies::Sphere::getDimensions(void) const
+std::vector<double> bodies::Sphere::getDimensions() const
 {
   std::vector<double> d(1, radius_);
   return d;
 }
 
-void bodies::Sphere::updateInternalData(void)
+void bodies::Sphere::updateInternalData()
 {
   radiusU_ = radius_ * scale_ + padding_;
   radius2_ = radiusU_ * radiusU_;
@@ -149,7 +149,7 @@ boost::shared_ptr<bodies::Body> bodies::Sphere::cloneAt(const Eigen::Affine3d &p
   return boost::shared_ptr<Body>(s);
 }
 
-double bodies::Sphere::computeVolume(void) const
+double bodies::Sphere::computeVolume() const
 {
   return 4.0 * boost::math::constants::pi<double>() * radiusU_ * radiusU_ * radiusU_ / 3.0;
 }
@@ -270,7 +270,7 @@ void bodies::Cylinder::useDimensions(const shapes::Shape *shape) // (length, rad
   radius_ = static_cast<const shapes::Cylinder*>(shape)->radius;
 }
 
-std::vector<double> bodies::Cylinder::getDimensions(void) const
+std::vector<double> bodies::Cylinder::getDimensions() const
 {
   std::vector<double> d(2);
   d[0] = radius_;
@@ -278,7 +278,7 @@ std::vector<double> bodies::Cylinder::getDimensions(void) const
   return d;
 }
 
-void bodies::Cylinder::updateInternalData(void)
+void bodies::Cylinder::updateInternalData()
 {
   radiusU_ = radius_ * scale_ + padding_;
   radius2_ = radiusU_ * radiusU_;
@@ -324,7 +324,7 @@ boost::shared_ptr<bodies::Body> bodies::Cylinder::cloneAt(const Eigen::Affine3d 
   return boost::shared_ptr<Body>(c);
 }
 
-double bodies::Cylinder::computeVolume(void) const
+double bodies::Cylinder::computeVolume() const
 {
   return 2.0 * boost::math::constants::pi<double>() * radius2_ * length2_;
 }
@@ -479,7 +479,7 @@ void bodies::Box::useDimensions(const shapes::Shape *shape) // (x, y, z) = (leng
   height_ = size[2];
 }
 
-std::vector<double> bodies::Box::getDimensions(void) const
+std::vector<double> bodies::Box::getDimensions() const
 {
   std::vector<double> d(3);
   d[0] = length_;
@@ -488,7 +488,7 @@ std::vector<double> bodies::Box::getDimensions(void) const
   return d;
 }
 
-void bodies::Box::updateInternalData(void)
+void bodies::Box::updateInternalData()
 {
   double s2 = scale_ / 2.0;
   length2_ = length_ * s2 + padding_;
@@ -523,7 +523,7 @@ boost::shared_ptr<bodies::Body> bodies::Box::cloneAt(const Eigen::Affine3d &pose
   return boost::shared_ptr<Body>(b);
 }
 
-double bodies::Box::computeVolume(void) const
+double bodies::Box::computeVolume() const
 {
   return 8.0 * length2_ * width2_ * height2_;
 }
@@ -812,12 +812,12 @@ void bodies::ConvexMesh::useDimensions(const shapes::Shape *shape)
   qh_memfreeshort (&curlong, &totlong);
 }
 
-std::vector<double> bodies::ConvexMesh::getDimensions(void) const
+std::vector<double> bodies::ConvexMesh::getDimensions() const
 {
   return std::vector<double>();
 }
 
-void bodies::ConvexMesh::updateInternalData(void)
+void bodies::ConvexMesh::updateInternalData()
 {
   if (!mesh_data_)
     return;
@@ -852,19 +852,19 @@ void bodies::ConvexMesh::updateInternalData(void)
     }
   }
 }
-const std::vector<unsigned int>& bodies::ConvexMesh::getTriangles(void) const
+const std::vector<unsigned int>& bodies::ConvexMesh::getTriangles() const
 {
   static const std::vector<unsigned int> empty;
   return mesh_data_ ? mesh_data_->triangles_ : empty;
 }
 
-const EigenSTL::vector_Vector3d& bodies::ConvexMesh::getVertices(void) const
+const EigenSTL::vector_Vector3d& bodies::ConvexMesh::getVertices() const
 {
   static const EigenSTL::vector_Vector3d empty;
   return mesh_data_ ? mesh_data_->vertices_ : empty;
 }
 
-const EigenSTL::vector_Vector3d& bodies::ConvexMesh::getScaledVertices(void) const
+const EigenSTL::vector_Vector3d& bodies::ConvexMesh::getScaledVertices() const
 {
   return scaled_vertices_ ? *scaled_vertices_ : getVertices();
 }
@@ -924,7 +924,7 @@ unsigned int bodies::ConvexMesh::countVerticesBehindPlane(const Eigen::Vector4f&
   return result;
 }
 
-double bodies::ConvexMesh::computeVolume(void) const
+double bodies::ConvexMesh::computeVolume() const
 {
   double volume = 0.0;
   if (mesh_data_)
@@ -1027,7 +1027,7 @@ bool bodies::ConvexMesh::intersectsRay(const Eigen::Vector3d& origin, const Eige
   return result;
 }
 
-bodies::BodyVector::BodyVector(void)
+bodies::BodyVector::BodyVector()
 {
 }
 
@@ -1040,12 +1040,12 @@ bodies::BodyVector::BodyVector(const std::vector<shapes::Shape*>& shapes,
 }
 
 
-bodies::BodyVector::~BodyVector(void)
+bodies::BodyVector::~BodyVector()
 {
   clear();
 }
 
-void bodies::BodyVector::clear(void)
+void bodies::BodyVector::clear()
 {
   for(unsigned int i = 0; i < bodies_.size(); i++)
     delete bodies_[i];
@@ -1067,7 +1067,7 @@ void bodies::BodyVector::addBody(const shapes::Shape *shape, const Eigen::Affine
   addBody(body);
 }
 
-std::size_t bodies::BodyVector::getCount(void) const
+std::size_t bodies::BodyVector::getCount() const
 {
   return bodies_.size();
 }

@@ -86,17 +86,17 @@ class Body
 {
 public:
   
-  Body(void) : scale_(1.0), padding_(0.0), type_(shapes::UNKNOWN_SHAPE)
+  Body() : scale_(1.0), padding_(0.0), type_(shapes::UNKNOWN_SHAPE)
   {
     pose_.setIdentity();
   }
   
-  virtual ~Body(void)
+  virtual ~Body()
   {
   }
   
   /** \brief Get the type of shape this body represents */
-  shapes::ShapeType getType(void) const
+  shapes::ShapeType getType() const
   {
     return type_;
   }
@@ -110,7 +110,7 @@ public:
   }
   
   /** \brief Retrieve the current scale */
-  double getScale(void) const
+  double getScale() const
   {
     return scale_;
   }
@@ -124,7 +124,7 @@ public:
   }
   
   /** \brief Retrieve the current padding */
-  double getPadding(void) const
+  double getPadding() const
   {
     return padding_;
   }
@@ -137,13 +137,13 @@ public:
   }
   
   /** \brief Retrieve the pose of the body */
-  const Eigen::Affine3d& getPose(void) const
+  const Eigen::Affine3d& getPose() const
   {
     return pose_;
   }
   
   /** \brief Get the dimensions associated to this body (as read from corresponding shape) */
-  virtual std::vector<double> getDimensions(void) const = 0;
+  virtual std::vector<double> getDimensions() const = 0;
   
   /** \brief Set the dimensions of the body (from corresponding shape) */
   void setDimensions(const shapes::Shape *shape);
@@ -166,7 +166,7 @@ public:
   
   /** \brief Compute the volume of the body. This method includes
       changes induced by scaling and padding */
-  virtual double computeVolume(void) const = 0;
+  virtual double computeVolume() const = 0;
   
   /** \brief Sample a point that is included in the body using a given random number generator. Sometimes multiple attempts need to be generated;
       the function terminates with failure (returns false) after \e max_attempts attempts. If the call is successful (returns true) the point is
@@ -198,7 +198,7 @@ protected:
   /** \brief This function is called every time a change to the body
       is made, so that intermediate values stored for efficiency
       reasons are kept up to date. */
-  virtual void updateInternalData(void) = 0;
+  virtual void updateInternalData() = 0;
   
   /** \brief Depending on the shape, this function copies the relevant
       data to the body. */
@@ -224,7 +224,7 @@ public:
 class Sphere : public Body
 {
 public:
-  Sphere(void) : Body()
+  Sphere() : Body()
   {
     type_ = shapes::SPHERE;
   }
@@ -235,15 +235,15 @@ public:
     setDimensions(shape);
   }
   
-  virtual ~Sphere(void)
+  virtual ~Sphere()
   {
   }
   
   /** \brief Get the radius of the sphere */
-  virtual std::vector<double> getDimensions(void) const;
+  virtual std::vector<double> getDimensions() const;
   
   virtual bool containsPoint(const Eigen::Vector3d &p, bool verbose = false) const;
-  virtual double computeVolume(void) const;
+  virtual double computeVolume() const;
   virtual bool samplePointInside(random_numbers::RandomNumberGenerator &rng, unsigned int max_attempts, Eigen::Vector3d &result);
   virtual void computeBoundingSphere(BoundingSphere &sphere) const;
   virtual void computeBoundingCylinder(BoundingCylinder &cylinder) const;
@@ -254,7 +254,7 @@ public:
 protected:
   
   virtual void useDimensions(const shapes::Shape *shape);
-  virtual void updateInternalData(void);
+  virtual void updateInternalData();
   
   // shape-dependent data
   double          radius_;
@@ -272,7 +272,7 @@ public:
 class Cylinder : public Body
 {
 public:
-  Cylinder(void) : Body()
+  Cylinder() : Body()
   {
     type_ = shapes::CYLINDER;
   }
@@ -283,15 +283,15 @@ public:
     setDimensions(shape);
   }
   
-  virtual ~Cylinder(void)
+  virtual ~Cylinder()
   {
   }
   
   /** \brief Get the radius & length of the cylinder */
-  virtual std::vector<double> getDimensions(void) const;
+  virtual std::vector<double> getDimensions() const;
   
   virtual bool containsPoint(const Eigen::Vector3d &p, bool verbose = false) const;
-  virtual double computeVolume(void) const;
+  virtual double computeVolume() const;
   virtual bool samplePointInside(random_numbers::RandomNumberGenerator &rng, unsigned int max_attempts, Eigen::Vector3d &result);
   virtual void computeBoundingSphere(BoundingSphere &sphere) const;
   virtual void computeBoundingCylinder(BoundingCylinder &cylinder) const;
@@ -302,7 +302,7 @@ public:
 protected:
   
   virtual void useDimensions(const shapes::Shape *shape);
-  virtual void updateInternalData(void);
+  virtual void updateInternalData();
   
   // shape-dependent data
   double          length_;
@@ -330,7 +330,7 @@ public:
 class Box : public Body
 {
 public:
-  Box(void) : Body()
+  Box() : Body()
   {
     type_ = shapes::BOX;
   }
@@ -341,15 +341,15 @@ public:
     setDimensions(shape);
   }
   
-  virtual ~Box(void)
+  virtual ~Box()
   {
   }
   
   /** \brief Get the length & width & height (x, y, z) of the box */
-  virtual std::vector<double> getDimensions(void) const;
+  virtual std::vector<double> getDimensions() const;
   
   virtual bool containsPoint(const Eigen::Vector3d &p, bool verbose = false) const;
-  virtual double computeVolume(void) const;
+  virtual double computeVolume() const;
   virtual bool samplePointInside(random_numbers::RandomNumberGenerator &rng, unsigned int max_attempts, Eigen::Vector3d &result);
   virtual void computeBoundingSphere(BoundingSphere &sphere) const;
   virtual void computeBoundingCylinder(BoundingCylinder &cylinder) const;
@@ -360,7 +360,7 @@ public:
 protected:
   
   virtual void useDimensions(const shapes::Shape *shape); // (x, y, z) = (length, width, height)
-  virtual void updateInternalData(void);
+  virtual void updateInternalData();
   
   // shape-dependent data
   double    length_;
@@ -391,7 +391,7 @@ class ConvexMesh : public Body
 {
 public:
   
-  ConvexMesh(void) : Body()
+  ConvexMesh() : Body()
   {
     type_ = shapes::MESH;
     scaled_vertices_ = NULL;
@@ -404,30 +404,30 @@ public:
     setDimensions(shape);
   }
   
-  virtual ~ConvexMesh(void)
+  virtual ~ConvexMesh()
   {
   }
   
   /** \brief Returns an empty vector */
-  virtual std::vector<double> getDimensions(void) const;
+  virtual std::vector<double> getDimensions() const;
   
   virtual bool containsPoint(const Eigen::Vector3d &p, bool verbose = false) const;
-  virtual double computeVolume(void) const;
+  virtual double computeVolume() const;
   
   virtual void computeBoundingSphere(BoundingSphere &sphere) const;
   virtual void computeBoundingCylinder(BoundingCylinder &cylinder) const;
   virtual bool intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vector3d &dir, EigenSTL::vector_Vector3d *intersections = NULL, unsigned int count = 0) const;
   
-  const std::vector<unsigned int>& getTriangles(void) const;
-  const EigenSTL::vector_Vector3d& getVertices(void) const;
-  const EigenSTL::vector_Vector3d& getScaledVertices(void) const;
+  const std::vector<unsigned int>& getTriangles() const;
+  const EigenSTL::vector_Vector3d& getVertices() const;
+  const EigenSTL::vector_Vector3d& getScaledVertices() const;
   
   virtual BodyPtr cloneAt(const Eigen::Affine3d &pose, double padding, double scale) const;
   
 protected:
   
   virtual void useDimensions(const shapes::Shape *shape);
-  virtual void updateInternalData(void);
+  virtual void updateInternalData();
   
   /** \brief (Used mainly for debugging) Count the number of vertices behind a plane*/
   unsigned int countVerticesBehindPlane(const Eigen::Vector4f& planeNormal) const;
@@ -478,7 +478,7 @@ class BodyVector
 {
 public:
   
-  BodyVector(void);
+  BodyVector();
   
   /** \brief Construct a body vector from a vector of shapes, a vector of poses and a padding */
   BodyVector(const std::vector<shapes::Shape*>& shapes, const EigenSTL::vector_Affine3d& poses, double padding = 0.0);
@@ -492,13 +492,13 @@ public:
   void addBody(const shapes::Shape* shape, const Eigen::Affine3d& pose, double padding = 0.0);
   
   /** \brief Clear all bodies from the vector*/
-  void clear(void);
+  void clear();
   
   /** \brief Set the pose of a particular body in the vector of bodies*/
   void setPose(unsigned int i, const Eigen::Affine3d& pose);
   
   /** \brief Get the number of bodies in this vector*/
-  std::size_t getCount(void) const;
+  std::size_t getCount() const;
   
   /** \brief Check if any of the bodies in the vector contains the input point*/
   bool containsPoint(const Eigen::Vector3d &p, bool verbose = false) const;
