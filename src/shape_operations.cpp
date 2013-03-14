@@ -213,6 +213,50 @@ Mesh* createMeshFromResource(const std::string& resource)
   return createMeshFromResource(resource, one);
 }
 
+Mesh* createMeshFromBinary(const char* buffer, std::size_t size,
+                           const std::string &assimp_hint)
+{
+  static const Eigen::Vector3d one(1.0, 1.0, 1.0);
+  return createMeshFromBinary(buffer, size, one, assimp_hint);
+}
+
+Mesh* createMeshFromBinary(const char *buffer, std::size_t size, const Eigen::Vector3d &scale,
+                           const std::string &assimp_hint)
+{
+  if (!buffer || size < 1)
+  {
+    logWarn("Cannot construct mesh from empty binary buffer");
+    return NULL;
+  }
+  
+  // try to get a file extension
+  std::string hint;
+  std::size_t pos = assimp_hint.find_last_of(".");
+  if (pos != std::string::npos)
+  {
+    hint = assimp_hint.substr(pos + 1);
+    std::transform(hint.begin(), hint.end(), hint.begin(), ::tolower);
+    if (hint.find("stl") != std::string::npos)
+      hint = "stl";
+  }
+  
+  // Create an instance of the Importer class
+  Assimp::Importer importer;
+  
+
+  // And have it read the given file with some postprocessing
+  const aiScene* scene = importer.ReadFileFromMemory(reinterpret_cast<const void*>(buffer), size,
+                                                     aiProcess_Triangulate            |
+                                                     aiProcess_JoinIdenticalVertices  |
+                                                     aiProcess_SortByPType            |
+                                                     aiProcess_OptimizeGraph          |
+                                                     aiProcess_OptimizeMeshes, assimp_hint.c_str());
+  if (scene)
+    return createMeshFromAsset(scene, scale, assimp_hint);
+  else
+    return NULL;
+}
+
 Mesh* createMeshFromResource(const std::string& resource, const Eigen::Vector3d &scale)
 {
   resource_retriever::Retriever retriever;
@@ -233,33 +277,10 @@ Mesh* createMeshFromResource(const std::string& resource, const Eigen::Vector3d 
     return NULL;
   }
   
-  // Create an instance of the Importer class
-  Assimp::Importer importer;
-  
-  // try to get a file extension
-  std::string hint;
-  std::size_t pos = resource.find_last_of(".");
-  if (pos != std::string::npos)
-  {
-    hint = resource.substr(pos + 1);
-    std::transform(hint.begin(), hint.end(), hint.begin(), ::tolower);
-    if (hint.find("stl") != std::string::npos)
-      hint = "stl";
-  }
-  
-  // And have it read the given file with some postprocessing
-  const aiScene* scene = importer.ReadFileFromMemory(reinterpret_cast<void*>(res.data.get()), res.size,
-                                                     aiProcess_Triangulate            |
-                                                     aiProcess_JoinIdenticalVertices  |
-                                                     aiProcess_SortByPType            |
-                                                     aiProcess_OptimizeGraph          |
-                                                     aiProcess_OptimizeMeshes, hint.c_str());
-  if (!scene)
-  {
+  Mesh *m = createMeshFromBinary(reinterpret_cast<const char*>(res.data.get()), res.size, scale, resource);
+  if (!m)
     logWarn("Assimp reports no scene in %s", resource.c_str());
-    return NULL;
-  }
-  return createMeshFromAsset(scene, scale, resource);
+  return m;
 }
 
 namespace

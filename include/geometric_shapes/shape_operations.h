@@ -67,11 +67,21 @@ shapes::Mesh* createMeshFromResource(const std::string& resource);
 /** \brief Load a mesh from a resource that contains a mesh that can be loaded by assimp */
 shapes::Mesh* createMeshFromResource(const std::string& resource, const Eigen::Vector3d &scale);
 
-/** \brief Load a mesh from an assimp datastructure */
-shapes::Mesh* createMeshFromAsset(const aiScene* scene, const Eigen::Vector3d &scale, const std::string &resource_name = std::string());
+/** \brief Load a mesh from a binary stream that contains a mesh that can be loaded by assimp */
+shapes::Mesh* createMeshFromBinary(const char* buffer, std::size_t size,
+                                   const std::string &assimp_hint = std::string());
+
+/** \brief Load a mesh from a resource that contains a mesh that can be loaded by assimp */
+shapes::Mesh* createMeshFromBinary(const char *buffer, std::size_t size, const Eigen::Vector3d &scale,
+                                   const std::string &assimp_hint = std::string());
 
 /** \brief Load a mesh from an assimp datastructure */
-shapes::Mesh* createMeshFromAsset(const aiScene* scene, const std::string &resource_name = std::string());
+shapes::Mesh* createMeshFromAsset(const aiScene* scene, const Eigen::Vector3d &scale,
+                                  const std::string &assimp_hint = std::string());
+
+/** \brief Load a mesh from an assimp datastructure */
+shapes::Mesh* createMeshFromAsset(const aiScene* scene,
+                                  const std::string &assimp_hint = std::string());
 
 /** \brief Construct the shape that corresponds to the message. Return NULL on failure. */
 Shape* constructShapeFromMsg(const shape_msgs::SolidPrimitive &shape_msg);
