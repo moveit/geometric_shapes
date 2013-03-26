@@ -67,22 +67,25 @@ Mesh* createMeshFromResource(const std::string& resource, const Eigen::Vector3d 
 
 /** \brief Load a mesh from a binary stream that contains a mesh that can be loaded by assimp */
 Mesh* createMeshFromBinary(const char* buffer, std::size_t size,
-                                   const std::string &assimp_hint = std::string());
+                           const std::string &assimp_hint = std::string());
 
 /** \brief Load a mesh from a resource that contains a mesh that can be loaded by assimp */
 Mesh* createMeshFromBinary(const char *buffer, std::size_t size, const Eigen::Vector3d &scale,
-                                   const std::string &assimp_hint = std::string());
+                           const std::string &assimp_hint = std::string());
 
 /** \brief Load a mesh from an assimp datastructure */
 Mesh* createMeshFromAsset(const aiScene* scene, const Eigen::Vector3d &scale,
-                                  const std::string &assimp_hint = std::string());
+                          const std::string &assimp_hint = std::string());
 
 /** \brief Load a mesh from an assimp datastructure */
 Mesh* createMeshFromAsset(const aiScene* scene,
-                                  const std::string &assimp_hint = std::string());
+                          const std::string &assimp_hint = std::string());
 
 /** \brief Construct a mesh from a box */
 Mesh* createMeshFromShape(const Box &box);
+
+/** \brief Construct a mesh from a sphere */
+Mesh* createMeshFromShape(const Sphere &sphere);
 
 }
 

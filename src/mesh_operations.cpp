@@ -57,6 +57,8 @@
 
 #include <Eigen/Geometry>
 
+#include <boost/math/constants/constants.hpp>
+
 namespace shapes
 {
 
@@ -397,6 +399,71 @@ Mesh* createMeshFromShape(const Box &box)
   result->computeTriangleNormals();
   result->computeVertexNormals();
   return result;
+}
+
+Mesh* createMeshFromShape(const Sphere &sphere)
+{
+  EigenSTL::vector_Vector3d vertices;
+  std::vector<unsigned int> triangles;
+  
+  const double r = sphere.radius;
+  const double pi = boost::math::constants::pi<double>();
+  const unsigned int seg = std::max<unsigned int>(6, 0.5 + 2.0 * pi * r / 0.01); // split the sphere longitudinally up to a resolution of 1 cm at the ecuator, or a minimum of 6 segments
+  const unsigned int ring = std::max<unsigned int>(6, 2.0 * r / 0.01); // split the sphere into rings along latitude, up to a height of at most 1 cm, or a minimum of 6 rings
+  
+  double phi, phid;
+  phid = pi * 2.0 / seg;
+  phi = 0.0;
+  
+  double theta, thetad;
+  thetad = pi / (ring + 1);
+  theta = 0;
+  
+  for (unsigned int i = 0; i < ring; ++i)
+  {
+    double theta_ = theta + thetad * (i + 1);
+    for (unsigned int j = 0; j < seg; ++j)
+      vertices.push_back(Eigen::Vector3d(r * sin(theta_) * cos(phi + j * phid),
+                                         r * sin(theta_) * sin(phi + j * phid),
+                                         r * cos(theta_)));
+  }
+  vertices.push_back(Eigen::Vector3d(0.0, 0.0, r));
+  vertices.push_back(Eigen::Vector3d(0.0, 0.0, -r));
+  
+  for (unsigned int i = 0 ; i < ring - 1; ++i)
+  {
+    for (unsigned int j = 0 ; j < seg ; ++j)
+    {
+      unsigned int a, b, c, d;
+      a = i * seg + j;
+      b = (j == seg - 1) ? (i * seg) : (i * seg + j + 1);
+      c = (i + 1) * seg + j;
+      d = (j == seg - 1) ? ((i + 1) * seg) : ((i + 1) * seg + j + 1);
+      triangles.push_back(a);
+      triangles.push_back(c);
+      triangles.push_back(b);
+      triangles.push_back(b);
+      triangles.push_back(c);
+      triangles.push_back(d);
+    }
+  }
+  
+  for (unsigned int j = 0 ; j < seg ; ++j)
+  {
+    unsigned int a, b;
+    a = j;
+    b = (j == seg - 1) ? 0 : (j + 1);
+    triangles.push_back(ring * seg);
+    triangles.push_back(a);
+    triangles.push_back(b);
+    
+    a = (ring - 1) * seg + j;
+    b = (j == seg - 1) ? (ring - 1) * seg : ((ring - 1) * seg + j + 1);
+    triangles.push_back(a);
+    triangles.push_back(ring * seg + 1);
+    triangles.push_back(b);
+  }
+  return createMeshFromVertices(vertices, triangles);
 }
 
 }
