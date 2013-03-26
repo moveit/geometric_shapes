@@ -51,36 +51,38 @@ namespace shapes
     constructed using index values from the triangles
     vector. Triangle k has vertices at index values triangles[3k],
     triangles[3k+1], triangles[3k+2]  */
-shapes::Mesh* createMeshFromVertices(const EigenSTL::vector_Vector3d &vertices, const std::vector<unsigned int> &triangles);
+Mesh* createMeshFromVertices(const EigenSTL::vector_Vector3d &vertices, const std::vector<unsigned int> &triangles);
 
 /** \brief Load a mesh from a set of vertices. Every 3 vertices
     are considered a triangle. Repeating vertices are identified
     and the set of triangle indices is constructed. The normal at
     each triangle is also computed */
-shapes::Mesh* createMeshFromVertices(const EigenSTL::vector_Vector3d &source);
+Mesh* createMeshFromVertices(const EigenSTL::vector_Vector3d &source);
 
 /** \brief Load a mesh from a resource that contains a mesh that can be loaded by assimp */
-shapes::Mesh* createMeshFromResource(const std::string& resource);
+Mesh* createMeshFromResource(const std::string& resource);
 
 /** \brief Load a mesh from a resource that contains a mesh that can be loaded by assimp */
-shapes::Mesh* createMeshFromResource(const std::string& resource, const Eigen::Vector3d &scale);
+Mesh* createMeshFromResource(const std::string& resource, const Eigen::Vector3d &scale);
 
 /** \brief Load a mesh from a binary stream that contains a mesh that can be loaded by assimp */
-shapes::Mesh* createMeshFromBinary(const char* buffer, std::size_t size,
+Mesh* createMeshFromBinary(const char* buffer, std::size_t size,
                                    const std::string &assimp_hint = std::string());
 
 /** \brief Load a mesh from a resource that contains a mesh that can be loaded by assimp */
-shapes::Mesh* createMeshFromBinary(const char *buffer, std::size_t size, const Eigen::Vector3d &scale,
+Mesh* createMeshFromBinary(const char *buffer, std::size_t size, const Eigen::Vector3d &scale,
                                    const std::string &assimp_hint = std::string());
 
 /** \brief Load a mesh from an assimp datastructure */
-shapes::Mesh* createMeshFromAsset(const aiScene* scene, const Eigen::Vector3d &scale,
+Mesh* createMeshFromAsset(const aiScene* scene, const Eigen::Vector3d &scale,
                                   const std::string &assimp_hint = std::string());
 
 /** \brief Load a mesh from an assimp datastructure */
-shapes::Mesh* createMeshFromAsset(const aiScene* scene,
+Mesh* createMeshFromAsset(const aiScene* scene,
                                   const std::string &assimp_hint = std::string());
 
+/** \brief Construct a mesh from a box */
+Mesh* createMeshFromShape(const Box &box);
 
 }
 

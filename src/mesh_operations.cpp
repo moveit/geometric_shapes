@@ -341,5 +341,63 @@ Mesh* createMeshFromAsset(const aiScene* scene, const Eigen::Vector3d &scale, co
   return createMeshFromVertices(vertices, triangles);
 }
 
+Mesh* createMeshFromShape(const Box &box)
+{
+  double x = box.size[0] / 2.0;
+  double y = box.size[1] / 2.0;
+  double z = box.size[2] / 2.0;
+  
+  // define vertices of box mesh
+  Mesh *result = new Mesh(8, 12);
+  result->vertices[0] = -x;
+  result->vertices[1] = -y;
+  result->vertices[2] = -z;
+  
+  result->vertices[3] = x;
+  result->vertices[4] = -y;
+  result->vertices[5] = -z;
+  
+  result->vertices[6] = x;
+  result->vertices[7] = -y;
+  result->vertices[8] = z;
+  
+  result->vertices[9] = -x;
+  result->vertices[10] = -y;
+  result->vertices[11] = z;
+  
+  result->vertices[12] = -x;
+  result->vertices[13] = y;
+  result->vertices[14] = z;
+  
+  result->vertices[15] = -x;
+  result->vertices[16] = y;
+  result->vertices[17] = -z;
+  
+  result->vertices[18] = x;
+  result->vertices[19] = y;
+  result->vertices[20] = z;
+  
+  result->vertices[21] = x;
+  result->vertices[22] = y;
+  result->vertices[23] = -z;
+  
+  static const unsigned int tri[] = {0, 1, 2,
+                                     2, 3, 0,
+                                     4, 3, 2,
+                                     2, 6, 4,
+                                     7, 6, 2,
+                                     2, 1, 7,
+                                     3, 4, 5,
+                                     5, 0, 3,
+                                     0, 5, 7,
+                                     7, 1, 0,
+                                     7, 5, 4,
+                                     4, 6, 7};  
+  memcpy(result->triangles, tri, sizeof(unsigned int) * 36);
+  result->computeTriangleNormals();
+  result->computeVertexNormals();
+  return result;
+}
+
 }
 
