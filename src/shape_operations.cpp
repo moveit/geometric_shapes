@@ -248,12 +248,57 @@ Eigen::Vector3d computeShapeExtents(const ShapeMsg &shape_msg)
 }
 
 Eigen::Vector3d computeShapeExtents(const Shape *shape)
-{
-  ShapeMsg shape_msg;
-  if (constructMsgFromShape(shape, shape_msg))
-    return computeShapeExtents(shape_msg);
+{  
+  if (shape->type == SPHERE)
+  {
+    double d = static_cast<const Sphere*>(shape)->radius * 2.0;
+    return Eigen::Vector3d(d, d, d);
+  }
   else
-    return Eigen::Vector3d(0.0, 0.0, 0.0);
+    if (shape->type == BOX)
+    { 
+      const double* sz = static_cast<const Box*>(shape)->size;
+      return Eigen::Vector3d(sz[0], sz[1], sz[2]);
+    }
+    else
+      if (shape->type == CYLINDER)
+      {
+        double d = static_cast<const Cylinder*>(shape)->radius * 2.0;
+        return Eigen::Vector3d(d, d, static_cast<const Cylinder*>(shape)->length);
+      }
+      else
+        if (shape->type == CONE)
+        {
+          double d = static_cast<const Cone*>(shape)->radius * 2.0;
+          return Eigen::Vector3d(d, d, static_cast<const Cone*>(shape)->length);
+        }
+        else
+          if (shape->type == MESH)
+          {
+            const Mesh *mesh = static_cast<const Mesh*>(shape);
+            if (mesh->vertex_count > 1) 
+            {
+              std::vector<double> vmin(3, std::numeric_limits<double>::max());
+              std::vector<double> vmax(3, -std::numeric_limits<double>::max());
+              for (unsigned int i = 0; i < mesh->vertex_count ; ++i)
+              {
+                unsigned int i3 = i * 3;
+                for (unsigned int k = 0 ; k < 3 ; ++k)
+                {
+                  unsigned int i3k = i3 + k;
+                  if (mesh->vertices[i3k] > vmax[k])
+                    vmax[k] = mesh->vertices[i3k];
+                  if (mesh->vertices[i3k] < vmin[k])
+                    vmin[k] = mesh->vertices[i3k];
+                }
+              }
+              return Eigen::Vector3d(vmax[0] - vmin[0], vmax[1] - vmin[1], vmax[2] - vmin[2]);
+            }
+            else
+              return Eigen::Vector3d(0.0, 0.0, 0.0);
+          }
+          else
+            return Eigen::Vector3d(0.0, 0.0, 0.0);
 }
 
 bool constructMsgFromShape(const Shape* shape, ShapeMsg &shape_msg)
