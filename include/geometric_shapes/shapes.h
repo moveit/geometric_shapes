@@ -62,14 +62,8 @@ enum ShapeType { UNKNOWN_SHAPE, SPHERE, CYLINDER, CONE, BOX, PLANE, MESH, OCTREE
 class Shape
 {
 public:
-  Shape()
-  {
-    type = UNKNOWN_SHAPE;
-  }
-  
-  virtual ~Shape()
-  {
-  }
+  Shape();
+  virtual ~Shape();
   
   /** \brief Create a copy of this shape */
   virtual Shape* clone() const = 0;
@@ -97,18 +91,12 @@ public:
 class Sphere : public Shape
 {
 public:
-  Sphere() : Shape()
-  {
-    type   = SPHERE;
-    radius = 0.0;
-  }
+  Sphere();
+
+  /** \brief The radius of the shpere */
+  Sphere(double r);
   
-  Sphere(double r) : Shape()
-  {
-    type   = SPHERE;
-    radius = r;
-  }
-  
+  /** \brief The type of the shape, as a string */
   static const std::string STRING_NAME;
   
   virtual void scaleAndPadd(double scale, double padd);
@@ -123,19 +111,12 @@ public:
 class Cylinder : public Shape
 {
 public:
-  Cylinder() : Shape()
-  {
-    type   = CYLINDER;
-    length = radius = 0.0;
-  }
-  
-  Cylinder(double r, double l) : Shape()
-  {
-    type   = CYLINDER;
-    length = l;
-    radius = r;
-  }
+  Cylinder();   
 
+  /** \brief The radius and the length of the cylinder */
+  Cylinder(double r, double l);
+  
+  /** \brief The type of the shape, as a string */
   static const std::string STRING_NAME;
 
   virtual void scaleAndPadd(double scale, double padd);
@@ -153,19 +134,10 @@ public:
 class Cone : public Shape
 {
 public:
-  Cone() : Shape()
-  {
-    type   = CONE;
-    length = radius = 0.0;
-  }
-  
-  Cone(double r, double l) : Shape()
-  {
-    type   = CONE;
-    length = l;
-    radius = r;
-  }
+  Cone();  
+  Cone(double r, double l);
 
+  /** \brief The type of the shape, as a string */
   static const std::string STRING_NAME;
 
   virtual void scaleAndPadd(double scale, double padd);
@@ -183,20 +155,10 @@ public:
 class Box : public Shape
 {
 public:
-  Box() : Shape()
-  {
-    type = BOX;
-    size[0] = size[1] = size[2] = 0.0;
-  }
-  
-  Box(double x, double y, double z) : Shape()
-  {
-    type = BOX;
-    size[0] = x;
-    size[1] = y;
-    size[2] = z;
-  }
+  Box();  
+  Box(double x, double y, double z);
 
+  /** \brief The type of the shape, as a string */
   static const std::string STRING_NAME;
 
   virtual void scaleAndPadd(double scale, double padd);
@@ -211,44 +173,26 @@ public:
 class Mesh : public Shape
 {
 public:
-  Mesh() : Shape()
-  {
-    type = MESH;
-    vertex_count = 0;
-    vertices = NULL;
-    triangle_count = 0;
-    triangles = NULL;
-    normals = NULL;
-  }
   
-  Mesh(unsigned int v_count, unsigned int t_count) : Shape()
-  {
-    type = MESH;
-    vertex_count = v_count;
-    vertices = new double[v_count * 3];
-    triangle_count = t_count;
-    triangles = new unsigned int[t_count * 3];
-    normals = new double[t_count * 3];
-  }
+  Mesh();  
+  Mesh(unsigned int v_count, unsigned int t_count);  
+  virtual ~Mesh();
   
-  virtual ~Mesh()
-  {
-    if (vertices)
-      delete[] vertices;
-    if (triangles)
-      delete[] triangles;
-    if (normals)
-      delete[] normals;
-  }
-
+  /** \brief The type of the shape, as a string */
   static const std::string STRING_NAME;
-
+  
   virtual void scaleAndPadd(double scale, double padd);
   virtual Shape* clone() const;
   virtual void print(std::ostream &out = std::cout) const;
   
   /** \brief The normals to each triangle can be computed from the vertices using cross products. This function performs this computation and allocates memory for normals if needed */
-  void computeNormals();
+  void computeTriangleNormals();
+
+  /** \brief The normals to each vertex, averaged from the triangle normals. computeTriangleNormals() is automatically called if needed. */
+  void computeVertexNormals();
+  
+  /** \brief Merge vertices that are very close to each other, up to a threshold*/
+  void mergeVertices(double threshold);
   
   /** \brief The number of available vertices */
   unsigned int  vertex_count;
@@ -265,8 +209,12 @@ public:
   unsigned int *triangles;
   
   /** \brief The normal to each triangle; unit vector represented
-      as (x,y,z); If missing from the mesh, these vectors are computed  */
-  double       *normals;
+      as (x,y,z); If missing from the mesh, these vectors can be computed using computeTriangleNormals() */
+  double       *triangle_normals;
+
+  /** \brief The normal to each triangle; unit vector represented
+      as (x,y,z); If missing from the mesh, these vectors can be computed using computeVertexNormals()  */  
+  double       *vertex_normals;
 };
 
 /** \brief Definition of a plane with equation ax + by + cz + d = 0 */
@@ -274,18 +222,10 @@ class Plane : public Shape
 {
 public:
   
-  Plane() : Shape()
-  {
-    type = PLANE;
-    a = b = c = d = 0.0;
-  }
-  
-  Plane(double pa, double pb, double pc, double pd) : Shape()
-  {
-    type = PLANE;
-    a = pa; b = pb; c = pc; d = pd;
-  }
+  Plane();  
+  Plane(double pa, double pb, double pc, double pd);
 
+  /** \brief The type of the shape, as a string */
   static const std::string STRING_NAME;
 
   virtual Shape* clone() const;
@@ -301,16 +241,10 @@ public:
 class OcTree : public Shape
 {
 public:
-  OcTree() : Shape()
-  {
-    type = OCTREE;
-  }
+  OcTree();  
+  OcTree(const boost::shared_ptr<const octomap::OcTree> &t);
   
-  OcTree(const boost::shared_ptr<const octomap::OcTree> &t) : octree(t)
-  {
-    type = OCTREE;
-  }
-
+  /** \brief The type of the shape, as a string */
   static const std::string STRING_NAME;
 
   virtual Shape* clone() const;

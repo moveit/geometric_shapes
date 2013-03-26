@@ -52,6 +52,7 @@ link_directories(${catkin_LIBRARY_DIRS} ${ASSIMP_LIBRARY_DIRS})
 add_library(${PROJECT_NAME}
   src/shapes.cpp
   src/shape_operations.cpp
+  src/mesh_operations.cpp
   src/bodies.cpp
   src/body_operations.cpp)
 target_link_libraries(${PROJECT_NAME} ${ASSIMP_LIBRARIES} ${QHULL_LIB} ${catkin_LIBRARIES} ${Boost_LIBRARIES})

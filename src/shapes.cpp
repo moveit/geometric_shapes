@@ -47,6 +47,123 @@ const std::string shapes::Mesh::STRING_NAME = "mesh";
 const std::string shapes::Plane::STRING_NAME = "plane";
 const std::string shapes::OcTree::STRING_NAME = "octree";
 
+shapes::Shape::Shape()
+{
+  type = UNKNOWN_SHAPE;
+}
+
+shapes::Shape::~Shape()
+{
+}
+
+shapes::Sphere::Sphere() : Shape()
+{
+  type   = SPHERE;
+  radius = 0.0;
+}
+
+shapes::Sphere::Sphere(double r) : Shape()
+{
+  type   = SPHERE;
+  radius = r;
+}
+
+shapes::Cylinder::Cylinder() : Shape()
+{
+  type   = CYLINDER;
+  length = radius = 0.0;
+}
+
+shapes::Cylinder::Cylinder(double r, double l) : Shape()
+{
+  type   = CYLINDER;
+  length = l;
+  radius = r;
+}
+
+shapes::Cone::Cone() : Shape()
+{
+  type   = CONE;
+  length = radius = 0.0;
+}
+
+shapes::Cone::Cone(double r, double l) : Shape()
+{
+  type   = CONE;
+  length = l;
+  radius = r;
+}
+
+shapes::Box::Box() : Shape()
+{
+  type = BOX;
+  size[0] = size[1] = size[2] = 0.0;
+}
+
+shapes::Box::Box(double x, double y, double z) : Shape()
+{
+  type = BOX;
+  size[0] = x;
+  size[1] = y;
+  size[2] = z;
+}
+
+shapes::Mesh::Mesh() : Shape()
+{
+  type = MESH;
+  vertex_count = 0;
+  vertices = NULL;
+  triangle_count = 0;
+  triangles = NULL;
+  triangle_normals = NULL;
+  vertex_normals = NULL;
+}
+
+shapes::Mesh::Mesh(unsigned int v_count, unsigned int t_count) : Shape()
+{
+  type = MESH;
+  vertex_count = v_count;
+  vertices = new double[v_count * 3];
+  triangle_count = t_count;
+  triangles = new unsigned int[t_count * 3];
+  triangle_normals = new double[t_count * 3];
+  vertex_normals = new double[v_count * 3];
+}
+
+shapes::Mesh::~Mesh()
+{
+  if (vertices)
+    delete[] vertices;
+  if (triangles)
+    delete[] triangles;
+  if (triangle_normals)
+    delete[] triangle_normals;
+  if (vertex_normals)
+    delete[] vertex_normals;
+}
+
+shapes::Plane::Plane() : Shape()
+{
+  type = PLANE;
+  a = b = c = d = 0.0;
+}
+
+shapes::Plane::Plane(double pa, double pb, double pc, double pd) : Shape()
+{
+  type = PLANE;
+  a = pa; b = pb; c = pc; d = pd;
+}
+
+shapes::OcTree::OcTree() : Shape()
+{
+  type = OCTREE;
+}
+
+shapes::OcTree::OcTree(const boost::shared_ptr<const octomap::OcTree> &t) : octree(t)
+{
+  type = OCTREE;
+}
+
 shapes::Shape* shapes::Sphere::clone() const
 {
   return new Sphere(radius);
@@ -73,16 +190,24 @@ shapes::Shape* shapes::Mesh::clone() const
   unsigned int n = 3 * vertex_count;
   for (unsigned int i = 0 ; i < n ; ++i)
     dest->vertices[i] = vertices[i];
+  if (vertex_normals)
+    for (unsigned int i = 0 ; i < n ; ++i)
+      dest->vertex_normals[i] = vertex_normals[i];
+  else
+  {
+    delete[] dest->vertex_normals;
+    dest->vertex_normals = NULL;
+  }
   n = 3 * triangle_count;
   for (unsigned int i = 0 ; i < n ; ++i)
     dest->triangles[i] = triangles[i];
-  if (normals)
+  if (triangle_normals)
     for (unsigned int i = 0 ; i < n ; ++i)
-      dest->normals[i] = normals[i];
+      dest->triangle_normals[i] = triangle_normals[i];
   else
   {
-    delete[] dest->normals;
-    dest->normals = NULL;
+    delete[] dest->triangle_normals;
+    dest->triangle_normals = NULL;
   }
   return dest;
 }
@@ -253,10 +378,10 @@ bool shapes::Plane::isFixed() const
   return true;
 }
 
-void shapes::Mesh::computeNormals()
+void shapes::Mesh::computeTriangleNormals()
 { 
-  if (triangle_count && !normals)
-    normals = new double[triangle_count * 3];
+  if (triangle_count && !triangle_normals)
+    triangle_normals = new double[triangle_count * 3];
   
   // compute normals
   for (unsigned int i = 0 ; i < triangle_count ; ++i)
@@ -270,8 +395,111 @@ void shapes::Mesh::computeNormals()
                        vertices[triangles[i3 + 1] * 3 + 2] - vertices[triangles[i3 + 2] * 3 + 2]);
     Eigen::Vector3d normal = s1.cross(s2);
     normal.normalize();
-    normals[i3    ] = normal.x();
-    normals[i3 + 1] = normal.y();
-    normals[i3 + 2] = normal.z();
+    triangle_normals[i3    ] = normal.x();
+    triangle_normals[i3 + 1] = normal.y();
+    triangle_normals[i3 + 2] = normal.z();
   }
+}
+
+void shapes::Mesh::computeVertexNormals()
+{ 
+  if (!triangle_normals)
+    computeTriangleNormals();
+  if (vertex_count && !vertex_normals)
+    vertex_normals = new double[vertex_count * 3];
+  EigenSTL::vector_Vector3d avg_normals(vertex_count, Eigen::Vector3d(0, 0, 0));
+  
+  for (unsigned int tIdx = 0; tIdx < triangle_count; ++tIdx)
+  {
+    unsigned int tIdx3 = 3 * tIdx;
+    unsigned int tIdx3_1 = tIdx3 + 1;
+    unsigned int tIdx3_2 = tIdx3 + 2;
+    
+    unsigned int v1 = triangles [tIdx3];
+    unsigned int v2 = triangles [tIdx3_1];
+    unsigned int v3 = triangles [tIdx3_2];
+
+    avg_normals[v1][0] += triangle_normals [tIdx3];
+    avg_normals[v1][1] += triangle_normals [tIdx3_1];
+    avg_normals[v1][2] += triangle_normals [tIdx3_2];
+
+    avg_normals[v2][0] += triangle_normals [tIdx3];
+    avg_normals[v2][1] += triangle_normals [tIdx3_1];
+    avg_normals[v2][2] += triangle_normals [tIdx3_2];
+    
+    avg_normals[v3][0] += triangle_normals [tIdx3];
+    avg_normals[v3][1] += triangle_normals [tIdx3_1];
+    avg_normals[v3][2] += triangle_normals [tIdx3_2];
+  }
+  for (std::size_t i = 0 ; i < avg_normals.size() ; ++i)
+  {
+    if (avg_normals[i].squaredNorm () > 0.0)
+      avg_normals[i].normalize();
+    unsigned int i3 = i * 3;
+    vertex_normals[i3] = avg_normals[i][0];
+    vertex_normals[i3 + 1] = avg_normals[i][1];
+    vertex_normals[i3 + 2] = avg_normals[i][2];
+  }
+}
+
+void shapes::Mesh::mergeVertices(double threshold)
+{
+  const double thresholdSQR = threshold * threshold;
+  
+  std::vector<unsigned int> vertex_map(vertex_count);
+  EigenSTL::vector_Vector3d orig_vertices(vertex_count);
+  EigenSTL::vector_Vector3d compressed_vertices;
+  
+  for (unsigned int vIdx = 0; vIdx < vertex_count ; ++vIdx)
+  {
+    orig_vertices[vIdx][0] = vertices[3 * vIdx];
+    orig_vertices[vIdx][1] = vertices[3 * vIdx + 1];
+    orig_vertices[vIdx][2] = vertices[3 * vIdx + 2];
+    vertex_map[vIdx] = vIdx;
+  }
+  
+  for (unsigned int vIdx1 = 0; vIdx1 < vertex_count; ++vIdx1)
+  {
+    if (vertex_map[vIdx1] != vIdx1)
+      continue;
+    
+    vertex_map[vIdx1] = compressed_vertices.size();
+    compressed_vertices.push_back(orig_vertices[vIdx1]);
+    
+    for (unsigned int vIdx2 = vIdx1 + 1 ; vIdx2 < vertex_count ; ++vIdx2)
+    {
+      double distanceSQR = (orig_vertices[vIdx1] - orig_vertices[vIdx2]).squaredNorm();
+      if (distanceSQR <= thresholdSQR)
+        vertex_map[vIdx2] = vertex_map[vIdx1];
+    }
+  }
+  
+  if (compressed_vertices.size() == orig_vertices.size())
+    return;
+  
+  // redirect triangles to new vertices!
+  for (unsigned int tIdx = 0; tIdx < triangle_count; ++tIdx)
+  {
+    unsigned int i3 = 3 * tIdx;
+    triangles[i3] =  vertex_map[triangles [i3]];
+    triangles[i3 + 1] = vertex_map[triangles [i3 + 1]];
+    triangles[i3 + 2] = vertex_map[triangles [i3 + 2]];
+  }
+  
+  vertex_count = compressed_vertices.size();
+  delete[] vertices;
+  vertices = new double[vertex_count * 3];
+  
+  for (unsigned int vIdx = 0; vIdx < vertex_count ; ++vIdx)
+  {
+    unsigned int i3 = 3 * vIdx;
+    vertices[i3] = compressed_vertices[vIdx][0];
+    vertices[i3 + 1] = compressed_vertices[vIdx][1];
+    vertices[i3 + 2] = compressed_vertices[vIdx][2];
+  }
+  
+  if (triangle_normals)
+    computeTriangleNormals();
+  if (vertex_normals)
+    computeVertexNormals();
 }
