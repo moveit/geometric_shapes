@@ -35,6 +35,7 @@
 /* Author: Ioan Sucan */
 
 #include "geometric_shapes/mesh_operations.h"
+#include "geometric_shapes/shape_operations.h"
 
 #include <cstdio>
 #include <cmath>
@@ -341,6 +342,18 @@ Mesh* createMeshFromAsset(const aiScene* scene, const Eigen::Vector3d &scale, co
   }
   
   return createMeshFromVertices(vertices, triangles);
+}
+
+Mesh* createMeshFromShape(const Shape *shape)
+{
+  if (shape->type == shapes::SPHERE)
+    return shapes::createMeshFromShape(static_cast<const shapes::Sphere&>(*shape));
+  else
+    if (shape->type == shapes::BOX)
+      return shapes::createMeshFromShape(static_cast<const shapes::Box&>(*shape));
+    else
+      logError("Conversion of shape of type '%s' to a mesh is not known", shapeStringName(shape).c_str());
+  return NULL;
 }
 
 Mesh* createMeshFromShape(const Box &box)

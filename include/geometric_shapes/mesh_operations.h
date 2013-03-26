@@ -81,6 +81,9 @@ Mesh* createMeshFromAsset(const aiScene* scene, const Eigen::Vector3d &scale,
 Mesh* createMeshFromAsset(const aiScene* scene,
                           const std::string &assimp_hint = std::string());
 
+/** \brief Construct a mesh from a primitive shape that is NOT already a mesh. This call allocates a new object. */
+Mesh* createMeshFromShape(const Shape *shape);
+
 /** \brief Construct a mesh from a box */
 Mesh* createMeshFromShape(const Box &box);
 
