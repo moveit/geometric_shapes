@@ -90,6 +90,12 @@ Mesh* createMeshFromShape(const Box &box);
 /** \brief Construct a mesh from a sphere */
 Mesh* createMeshFromShape(const Sphere &sphere);
 
+/** \brief Construct a mesh from a cylinder */
+Mesh* createMeshFromShape(const Cylinder &cylinder);
+
+/** \brief Construct a mesh from a cone */
+Mesh* createMeshFromShape(const Cone &cone);
+
 }
 
 #endif

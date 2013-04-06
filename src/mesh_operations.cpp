@@ -352,7 +352,13 @@ Mesh* createMeshFromShape(const Shape *shape)
     if (shape->type == shapes::BOX)
       return shapes::createMeshFromShape(static_cast<const shapes::Box&>(*shape));
     else
-      logError("Conversion of shape of type '%s' to a mesh is not known", shapeStringName(shape).c_str());
+      if (shape->type == shapes::CYLINDER)
+        return shapes::createMeshFromShape(static_cast<const shapes::Cylinder&>(*shape));
+      else
+        if (shape->type == shapes::CONE)
+          return shapes::createMeshFromShape(static_cast<const shapes::Cone&>(*shape));
+        else
+          logError("Conversion of shape of type '%s' to a mesh is not known", shapeStringName(shape).c_str());
   return NULL;
 }
 
@@ -416,6 +422,7 @@ Mesh* createMeshFromShape(const Box &box)
 
 Mesh* createMeshFromShape(const Sphere &sphere)
 {
+  // this code is adapted from FCL
   EigenSTL::vector_Vector3d vertices;
   std::vector<unsigned int> triangles;
   
@@ -478,6 +485,146 @@ Mesh* createMeshFromShape(const Sphere &sphere)
   }
   return createMeshFromVertices(vertices, triangles);
 }
+
+Mesh* createMeshFromShape(const Cylinder &cylinder)
+{
+  // this code is adapted from FCL
+  EigenSTL::vector_Vector3d vertices;
+  std::vector<unsigned int> triangles;
+
+  // magic number defining how many triangles to construct for the unit cylinder; perhaps this should be a param
+  static unsigned int tot_for_unit_cylinder = 100;
+  
+  double r = cylinder.radius;
+  double h = cylinder.length;
+  
+  const double pi = boost::math::constants::pi<double>();
+  unsigned int tot = tot_for_unit_cylinder * r;
+  double phid = pi * 2 / tot;
+
+  double circle_edge = phid * r;
+  unsigned int h_num = ceil(h / circle_edge);
+
+  double phi = 0;
+  double hd = h / h_num;
+
+  for (unsigned int i = 0 ; i < tot ; ++i)
+    vertices.push_back(Eigen::Vector3d(r * cos(phi + phid * i), r * sin(phi + phid * i), h / 2));
+
+  for (unsigned int i = 0; i < h_num - 1 ; ++i)
+    for(unsigned int j = 0; j < tot; ++j)
+      vertices.push_back(Eigen::Vector3d(r * cos(phi + phid * j), r * sin(phi + phid * j), h / 2 - (i + 1) * hd));
+
+  for (unsigned int i = 0; i < tot; ++i)
+    vertices.push_back(Eigen::Vector3d(r * cos(phi + phid * i), r * sin(phi + phid * i), - h / 2));
+
+  vertices.push_back(Eigen::Vector3d(0, 0, h / 2));
+  vertices.push_back(Eigen::Vector3d(0, 0, -h / 2));
+  
+  for (unsigned int i = 0; i < tot ; ++i)
+  {
+    triangles.push_back((h_num + 1) * tot);
+    triangles.push_back(i);
+    triangles.push_back((i == tot - 1) ? 0 : (i + 1));
+  }
+
+  for (unsigned int i = 0; i < tot; ++i)
+  {
+    triangles.push_back((h_num + 1) * tot + 1);
+    triangles.push_back(h_num * tot + ((i == tot - 1) ? 0 : (i + 1)));
+    triangles.push_back(h_num * tot + i);
+  }
+
+  for (unsigned int i = 0; i < h_num; ++i)
+  {
+    for (unsigned int j = 0; j < tot; ++j)
+    {
+      int a, b, c, d;
+      a = j;
+      b = (j == tot - 1) ? 0 : (j + 1);
+      c = j + tot;
+      d = (j == tot - 1) ? tot : (j + 1 + tot);
+
+      int start = i * tot;
+      triangles.push_back(start + b);
+      triangles.push_back(start + a);
+      triangles.push_back(start + c);
+      triangles.push_back(start + b);
+      triangles.push_back(start + c);
+      triangles.push_back(start + d);
+    }
+  }
+  return createMeshFromVertices(vertices, triangles);
+}
+
+Mesh* createMeshFromShape(const Cone &cone)
+{
+  // this code is adapted from FCL
+  EigenSTL::vector_Vector3d vertices;
+  std::vector<unsigned int> triangles;
+
+  // magic number defining how many triangles to construct for the unit cylinder; perhaps this should be a param
+  static unsigned int tot_for_unit_cone = 100;
+
+  double r = cone.radius;
+  double h = cone.length;
+
+  const double pi = boost::math::constants::pi<double>();
+  unsigned int tot = tot_for_unit_cone * r;
+  double phid = pi * 2 / tot;
+
+  double circle_edge = phid * r;
+  unsigned int h_num = ceil(h / circle_edge);
+
+  double phi = 0;
+  double hd = h / h_num;
+
+  for (unsigned int i = 0; i < h_num - 1; ++i)
+    for(unsigned int j = 0; j < tot; ++j)
+      vertices.push_back(Eigen::Vector3d(r * cos(phi + phid * j), r * sin(phi + phid * j), h / 2 - (i + 1) * hd));
+
+  for (unsigned int i = 0; i < tot; ++i)
+    vertices.push_back(Eigen::Vector3d(r * cos(phi + phid * i), r * sin(phi + phid * i), - h / 2));
+
+  vertices.push_back(Eigen::Vector3d(0, 0, h / 2));
+  vertices.push_back(Eigen::Vector3d(0, 0, -h / 2));
+
+  for (unsigned int i = 0; i < tot; ++i)
+  {
+    triangles.push_back(h_num * tot);
+    triangles.push_back(i);
+    triangles.push_back((i == tot - 1) ? 0 : (i + 1));
+  }
+
+  for (unsigned int i = 0; i < tot; ++i)
+  {
+    triangles.push_back(h_num * tot + 1);
+    triangles.push_back((h_num - 1) * tot + ((i == tot - 1) ? 0 : (i + 1)));
+    triangles.push_back((h_num - 1) * tot + i);
+  }
+
+  for (unsigned int i = 0; i < h_num - 1; ++i)
+    for (unsigned int j = 0; j < tot; ++j)
+    {
+      int a, b, c, d;
+      a = j;
+      b = (j == tot - 1) ? 0 : (j + 1);
+      c = j + tot;
+      d = (j == tot - 1) ? tot : (j + 1 + tot);
+
+      int start = i * tot;
+      triangles.push_back(start + b);
+      triangles.push_back(start + a);
+      triangles.push_back(start + c);
+      triangles.push_back(start + b);
+      triangles.push_back(start + c);
+      triangles.push_back(start + d);
+    }
+  return createMeshFromVertices(vertices, triangles);
+}
+
+
+
 
 }
 
