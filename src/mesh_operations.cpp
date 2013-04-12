@@ -580,9 +580,13 @@ Mesh* createMeshFromShape(const Cone &cone)
   double hd = h / h_num;
 
   for (unsigned int i = 0; i < h_num - 1; ++i)
+  {
+    double h_i = h / 2 - (i + 1) * hd;
+    double rh = r * (0.5 - h_i / h);
     for(unsigned int j = 0; j < tot; ++j)
-      vertices.push_back(Eigen::Vector3d(r * cos(phi + phid * j), r * sin(phi + phid * j), h / 2 - (i + 1) * hd));
-
+      vertices.push_back(Eigen::Vector3d(rh * cos(phi + phid * j), rh * sin(phi + phid * j), h_i));
+  }
+  
   for (unsigned int i = 0; i < tot; ++i)
     vertices.push_back(Eigen::Vector3d(r * cos(phi + phid * i), r * sin(phi + phid * i), - h / 2));
 
