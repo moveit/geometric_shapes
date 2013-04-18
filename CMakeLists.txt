@@ -40,8 +40,8 @@ find_package(catkin COMPONENTS shape_msgs resource_retriever shape_tools random_
 catkin_package(
   INCLUDE_DIRS include ${OCTOMAP_INCLUDE_DIRS}
   LIBRARIES ${PROJECT_NAME} ${OCTOMAP_LIBRARIES}
-  CATKIN_DEPENDS console_bridge shape_tools shape_msgs random_numbers eigen_stl_containers
-  DEPENDS Eigen
+  CATKIN_DEPENDS shape_tools shape_msgs random_numbers eigen_stl_containers
+  DEPENDS Eigen console_bridge
   )
 
 include_directories(SYSTEM ${EIGEN_INCLUDE_DIRS} ${Boost_INCLUDE_DIR} ${ASSIMP_INCLUDE_DIRS})
