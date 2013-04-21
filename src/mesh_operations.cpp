@@ -627,8 +627,57 @@ Mesh* createMeshFromShape(const Cone &cone)
   return createMeshFromVertices(vertices, triangles);
 }
 
-
-
-
+namespace
+{
+  inline void writeFloatToSTL(char *&ptr , float data)
+  {
+    memcpy(ptr, &data, sizeof(float));
+    ptr += sizeof(float);
+  }
+  inline void writeFloatToSTL(char *&ptr , double datad)
+  {
+    float data = datad;
+    memcpy(ptr, &data, sizeof(float));
+    ptr += sizeof(float);
+  }
 }
 
+void writeSTLBinary(const Mesh* mesh, std::vector<char> &buffer)
+{
+  buffer.resize(80 + mesh->triangle_count * 18);
+  memset(&buffer[0], 0, 80);
+  char *ptr = &buffer[80];
+  for (unsigned int i = 0 ; i < mesh->triangle_count ; ++i)
+  { 
+    unsigned int i3 = i * 3;
+      
+    if (mesh->triangle_normals)
+    {
+      writeFloatToSTL(ptr, mesh->triangle_normals[i3]);
+      writeFloatToSTL(ptr, mesh->triangle_normals[i3 + 1]);
+      writeFloatToSTL(ptr, mesh->triangle_normals[i3 + 2]);
+    }
+    else
+    {
+      memset(ptr, 0, sizeof(float) * 3);
+      ptr += sizeof(float) * 3;
+    }
+    
+    unsigned int index = mesh->triangles[i3] * 3;
+    writeFloatToSTL(ptr, mesh->vertices[index]);      
+    writeFloatToSTL(ptr, mesh->vertices[index + 1]);
+    writeFloatToSTL(ptr, mesh->vertices[index + 2]);
+    index = mesh->triangles[i3 + 1] * 3;
+    writeFloatToSTL(ptr, mesh->vertices[index]);      
+    writeFloatToSTL(ptr, mesh->vertices[index + 1]);
+    writeFloatToSTL(ptr, mesh->vertices[index + 2]);
+    index = mesh->triangles[i3 + 2] * 3;
+    writeFloatToSTL(ptr, mesh->vertices[index]);      
+    writeFloatToSTL(ptr, mesh->vertices[index + 1]);
+    writeFloatToSTL(ptr, mesh->vertices[index + 2]);
+    memset(ptr, 0, 2);
+    ptr += 2;
+  } 
+}
+
+}

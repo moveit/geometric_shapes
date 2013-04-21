@@ -96,6 +96,9 @@ Mesh* createMeshFromShape(const Cylinder &cylinder);
 /** \brief Construct a mesh from a cone */
 Mesh* createMeshFromShape(const Cone &cone);
 
+/** \brief Write the mesh to a buffer in STL format */
+void writeSTLBinary(const Mesh* mesh, std::vector<char> &buffer);
+
 }
 
 #endif

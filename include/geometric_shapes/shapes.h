@@ -212,7 +212,7 @@ public:
       as (x,y,z); If missing from the mesh, these vectors can be computed using computeTriangleNormals() */
   double       *triangle_normals;
 
-  /** \brief The normal to each triangle; unit vector represented
+  /** \brief The normal to each vertex; unit vector represented
       as (x,y,z); If missing from the mesh, these vectors can be computed using computeVertexNormals()  */  
   double       *vertex_normals;
 };
