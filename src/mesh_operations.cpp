@@ -647,6 +647,9 @@ void writeSTLBinary(const Mesh* mesh, std::vector<char> &buffer)
   buffer.resize(80 + mesh->triangle_count * 18);
   memset(&buffer[0], 0, 80);
   char *ptr = &buffer[80];
+  uint32_t nt = mesh->triangle_count;
+  memcpy(ptr, &nt, sizeof(uint32_t));
+  ptr += sizeof(uint32_t);
   for (unsigned int i = 0 ; i < mesh->triangle_count ; ++i)
   { 
     unsigned int i3 = i * 3;
