@@ -301,6 +301,70 @@ Eigen::Vector3d computeShapeExtents(const Shape *shape)
             return Eigen::Vector3d(0.0, 0.0, 0.0);
 }
 
+void computeShapeBoundingSphere(const Shape *shape, Eigen::Vector3d& center, double& radius)
+{  
+  center.x() = 0.0;
+  center.y() = 0.0;
+  center.z() = 0.0;
+  radius = 0.0;
+
+  if (shape->type == SPHERE)
+  {
+    radius = static_cast<const Sphere*>(shape)->radius;
+  }
+  else if (shape->type == BOX)
+  { 
+    const double* sz = static_cast<const Box*>(shape)->size;
+    radius = std::sqrt(sz[0] * sz[0] + sz[1] * sz[1] + sz[2] * sz[2]);
+  }
+  else if (shape->type == CYLINDER)
+  {
+    double r = static_cast<const Cylinder*>(shape)->radius;
+    double l = static_cast<const Cylinder*>(shape)->length;
+    radius = std::sqrt(r * r + l * l);
+  }
+  else if (shape->type == CONE)
+  {
+    double r = static_cast<const Cone*>(shape)->radius;
+    double l = static_cast<const Cone*>(shape)->length;
+
+    if (l > r)
+    {
+      // center of sphere is intersection of perpendicular bisectors:
+      double z = (l - (r * r / l)) * 0.5;
+      center.z() = z - (l * 0.5);
+      radius = l - z;
+    }
+    else
+    {
+      // short cone.  Bounding sphere touches base only.
+      center.z() = - (l * 0.5);
+      radius = r;
+    }
+  }
+  else if (shape->type == MESH)
+  {
+    const Mesh *mesh = static_cast<const Mesh*>(shape);
+    if (mesh->vertex_count > 1) 
+    {
+      double mx = std::numeric_limits<double>::max();
+      Eigen::Vector3d min( mx,  mx,  mx);
+      Eigen::Vector3d max(-mx, -mx, -mx);
+      unsigned int cnt = mesh->vertex_count * 3;
+      for (unsigned int i = 0; i < cnt ; i+=3)
+      {
+        Eigen::Vector3d v(mesh->vertices[i+0], mesh->vertices[i+1], mesh->vertices[i+2]);
+        min = min.cwiseMin(v);
+        max = max.cwiseMax(v);
+      }
+
+      center = (min + max) * 0.5;
+      radius = (max - min).norm() * 0.5;
+    }
+  }
+}
+
+
 bool constructMsgFromShape(const Shape* shape, ShapeMsg &shape_msg)
 {
   if (shape->type == SPHERE)
