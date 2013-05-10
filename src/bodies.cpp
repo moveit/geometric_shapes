@@ -39,8 +39,20 @@
 
 #include <console_bridge/console.h>
 
+#include "config.h"
+
 extern "C"
 {
+#ifdef HAVE_QHULL_2011
+#include <libqhull/libqhull.h>
+#include <libqhull/mem.h>
+#include <libqhull/qset.h>
+#include <libqhull/geom.h>
+#include <libqhull/merge.h>
+#include <libqhull/poly.h>
+#include <libqhull/io.h>
+#include <libqhull/stat.h>
+#else
 #include <qhull/qhull.h>
 #include <qhull/mem.h>
 #include <qhull/qset.h>
@@ -49,6 +61,7 @@ extern "C"
 #include <qhull/poly.h>
 #include <qhull/io.h>
 #include <qhull/stat.h>
+#endif
 }
 
 #include <boost/math/constants/constants.hpp>
