@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(geometric_shapes)
 
+set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/" ${CMAKE_MODULE_PATH})
+
 if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
 endif()
@@ -33,7 +35,7 @@ else()
   set(IS_ASSIMP3 0) # most likely not
 endif()
 
-find_library(QHULL_LIB qhull)
+find_package(Qhull REQUIRED)
 find_package(octomap REQUIRED)
 find_package(catkin COMPONENTS shape_msgs resource_retriever shape_tools random_numbers console_bridge eigen_stl_containers)
 
@@ -44,6 +46,12 @@ catkin_package(
   DEPENDS Eigen console_bridge
   )
 
+### ---[ Create the config.h file
+set(config_h_in "${CMAKE_CURRENT_SOURCE_DIR}/config.h.in")
+set(config_h "${CMAKE_CURRENT_BINARY_DIR}/include/config.h")
+configure_file(${config_h_in} ${config_h})
+
+include_directories(${CMAKE_CURRENT_BINARY_DIR}/include)
 include_directories(SYSTEM ${EIGEN_INCLUDE_DIRS} ${Boost_INCLUDE_DIR} ${ASSIMP_INCLUDE_DIRS})
 include_directories(include)
 include_directories(${catkin_INCLUDE_DIRS})
