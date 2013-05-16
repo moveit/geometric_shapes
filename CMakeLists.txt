@@ -35,7 +35,6 @@ else()
   set(IS_ASSIMP3 0) # most likely not
 endif()
 
-find_package(Qhull REQUIRED)
 find_package(octomap REQUIRED)
 find_package(catkin COMPONENTS shape_msgs resource_retriever shape_tools random_numbers console_bridge eigen_stl_containers)
 
@@ -46,12 +45,11 @@ catkin_package(
   DEPENDS Eigen console_bridge
   )
 
-### ---[ Create the config.h file
-set(config_h_in "${CMAKE_CURRENT_SOURCE_DIR}/config.h.in")
-set(config_h "${CMAKE_CURRENT_BINARY_DIR}/include/config.h")
-configure_file(${config_h_in} ${config_h})
+find_package(Qhull REQUIRED)
+if (HAVE_QHULL_2011)
+  add_definitions(-DGEOMETRIC_SHAPES_HAVE_QHULL_2011)
+endif()
 
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/include)
 include_directories(SYSTEM ${EIGEN_INCLUDE_DIRS} ${Boost_INCLUDE_DIR} ${ASSIMP_INCLUDE_DIRS})
 include_directories(include)
 include_directories(${catkin_INCLUDE_DIRS})
@@ -63,7 +61,7 @@ add_library(${PROJECT_NAME}
   src/mesh_operations.cpp
   src/bodies.cpp
   src/body_operations.cpp)
-target_link_libraries(${PROJECT_NAME} ${ASSIMP_LIBRARIES} ${QHULL_LIB} ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${ASSIMP_LIBRARIES} ${QHULL_LIBRARIES} ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 
 
 # Unit tests

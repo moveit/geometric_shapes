@@ -5,7 +5,6 @@
 # QHULL_FOUND - True if QHULL was found.
 # QHULL_INCLUDE_DIRS - Directories containing the QHULL include files.
 # QHULL_LIBRARIES - Libraries needed to use QHULL.
-# QHULL_DEFINITIONS - Compiler flags for QHULL.
 # If QHULL_USE_STATIC is specified then look for static libraries ONLY else 
 # look for shared ones
 

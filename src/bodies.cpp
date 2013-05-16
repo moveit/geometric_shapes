@@ -39,11 +39,9 @@
 
 #include <console_bridge/console.h>
 
-#include "config.h"
-
 extern "C"
 {
-#ifdef HAVE_QHULL_2011
+#ifdef GEOMETRIC_SHAPES_HAVE_QHULL_2011
 #include <libqhull/libqhull.h>
 #include <libqhull/mem.h>
 #include <libqhull/qset.h>
