@@ -323,7 +323,7 @@ void computeShapeBoundingSphere(const Shape *shape, Eigen::Vector3d& center, dou
   else if (shape->type == CYLINDER)
   {
     double r = static_cast<const Cylinder*>(shape)->radius;
-    double l = static_cast<const Cylinder*>(shape)->length;
+    double lo2 = static_cast<const Cylinder*>(shape)->length * 0.5;
     radius = std::sqrt(r * r + l * l);
   }
   else if (shape->type == CONE)
