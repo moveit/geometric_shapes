@@ -315,7 +315,10 @@ void computeShapeBoundingSphere(const Shape *shape, Eigen::Vector3d& center, dou
   else if (shape->type == BOX)
   { 
     const double* sz = static_cast<const Box*>(shape)->size;
-    radius = std::sqrt(sz[0] * sz[0] + sz[1] * sz[1] + sz[2] * sz[2]);
+    double x = sz[0] * 0.5;
+    double y = sz[1] * 0.5;
+    double z = sz[2] * 0.5;
+    radius = std::sqrt(x*x + y*y + z*z);
   }
   else if (shape->type == CYLINDER)
   {
