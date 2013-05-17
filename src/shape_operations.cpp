@@ -315,34 +315,37 @@ void computeShapeBoundingSphere(const Shape *shape, Eigen::Vector3d& center, dou
   else if (shape->type == BOX)
   { 
     const double* sz = static_cast<const Box*>(shape)->size;
-    double x = sz[0] * 0.5;
-    double y = sz[1] * 0.5;
-    double z = sz[2] * 0.5;
-    radius = std::sqrt(x*x + y*y + z*z);
+    double half_width = sz[0] * 0.5;
+    double half_height = sz[1] * 0.5;
+    double half_depth = sz[2] * 0.5;
+    radius = std::sqrt( half_width * half_width +
+						half_height * half_height +
+						half_depth * half_depth);
   }
   else if (shape->type == CYLINDER)
   {
-    double r = static_cast<const Cylinder*>(shape)->radius;
-    double lo2 = static_cast<const Cylinder*>(shape)->length * 0.5;
-    radius = std::sqrt(r * r + l * l);
+    double cyl_radius = static_cast<const Cylinder*>(shape)->radius;
+    double half_len = static_cast<const Cylinder*>(shape)->length * 0.5;
+    radius = std::sqrt( cyl_radius * cyl_radius +
+					    half_len * half_len);
   }
   else if (shape->type == CONE)
   {
-    double r = static_cast<const Cone*>(shape)->radius;
-    double l = static_cast<const Cone*>(shape)->length;
+    double cone_radius = static_cast<const Cone*>(shape)->radius;
+    double cone_height = static_cast<const Cone*>(shape)->length;
 
-    if (l > r)
+    if (cone_height > cone_radius)
     {
       // center of sphere is intersection of perpendicular bisectors:
-      double z = (l - (r * r / l)) * 0.5;
-      center.z() = z - (l * 0.5);
-      radius = l - z;
+      double z = (cone_height - (cone_radius * cone_radius / cone_height)) * 0.5;
+      center.z() = z - (cone_height * 0.5);
+      radius = cone_height - z;
     }
     else
     {
       // short cone.  Bounding sphere touches base only.
-      center.z() = - (l * 0.5);
-      radius = r;
+      center.z() = - (cone_height * 0.5);
+      radius = cone_radius;
     }
   }
   else if (shape->type == MESH)
