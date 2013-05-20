@@ -70,6 +70,9 @@ Eigen::Vector3d computeShapeExtents(const ShapeMsg &shape_msg);
 /** \brief Compute the extents of a shape */
 Eigen::Vector3d computeShapeExtents(const Shape *shape);
 
+/** \brief Compute a sphere bounding a shape */
+void computeShapeBoundingSphere(const Shape *shape, Eigen::Vector3d& center, double& radius);
+
 /** \brief Get the string name of the shape */
 const std::string& shapeStringName(const Shape *shape);
 
