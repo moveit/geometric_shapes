@@ -39,7 +39,7 @@
 #include <geometric_shapes/body_operations.h>
 #include <boost/filesystem.hpp>
 #include <gtest/gtest.h>
-
+#include "resources/config.h"
 
 TEST(SpherePointContainment, SimpleInside)
 {
@@ -259,7 +259,7 @@ TEST(CylinderPointContainment, CylinderPadding)
 
 TEST(MeshPointContainment, Pr2Forearm)
 {
-    shapes::Mesh *ms = shapes::createMeshFromResource("file://" + (boost::filesystem::current_path() / "test/resources/forearm_roll.stl").string());
+    shapes::Mesh *ms = shapes::createMeshFromResource("file://" + (boost::filesystem::path(TEST_RESOURCES_DIR) / "/forearm_roll.stl").string());
     EXPECT_EQ(ms->vertex_count, 2338);
     bodies::Body *m = new bodies::ConvexMesh(ms);
     Eigen::Affine3d t(Eigen::Affine3d::Identity());

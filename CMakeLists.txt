@@ -65,9 +65,7 @@ target_link_libraries(${PROJECT_NAME} ${ASSIMP_LIBRARIES} ${QHULL_LIBRARIES} ${c
 
 
 # Unit tests
-catkin_add_gtest(test_point_inclusion test/test_point_inclusion.cpp)
-target_link_libraries(test_point_inclusion ${PROJECT_NAME} ${catkin_LIBRARIES} ${Boost_LIBRARIES})
-
+add_subdirectory(test)
 
 install(TARGETS ${PROJECT_NAME}
         ARCHIVE DESTINATION lib
