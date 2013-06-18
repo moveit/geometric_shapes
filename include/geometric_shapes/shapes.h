@@ -82,7 +82,7 @@ public:
   
   /** \brief Return a flag indicating whether this shape can be scaled and/or padded */
   virtual bool isFixed() const;
-  
+
   /** \brief The type of the shape */
   ShapeType type;
 };
@@ -107,7 +107,8 @@ public:
   double radius;
 };
 
-/** \brief Definition of a cylinder */
+/** \brief Definition of a cylinder
+ * Length is along z axis.  Origin is at center of mass. */
 class Cylinder : public Shape
 {
 public:
@@ -130,7 +131,9 @@ public:
   double radius;
 };
 
-/** \brief Definition of a cone */
+/** \brief Definition of a cone 
+ * Tip is on positive z axis.  Center of base is on negative z axis.  Origin is
+ * halway between tip and center of base. */
 class Cone : public Shape
 {
 public:
@@ -151,7 +154,8 @@ public:
   double radius;
 };
 
-/** \brief Definition of a box */
+/** \brief Definition of a box
+ * Aligned with the XYZ axes. */
 class Box : public Shape
 {
 public:
@@ -169,7 +173,11 @@ public:
   double size[3];
 };
 
-/** \brief Definition of a triangle mesh */
+/** \brief Definition of a triangle mesh
+ * By convention the "center" of the shape is at the origin.  For a mesh this
+ * implies that the AABB of the mesh is centered at the origin.  Some methods
+ * may not work with arbitrary meshes whose AABB is not centered at the origin.
+ * */
 class Mesh : public Shape
 {
 public:
