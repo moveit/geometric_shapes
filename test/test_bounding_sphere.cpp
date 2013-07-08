@@ -184,31 +184,31 @@ TEST(MeshBoundingSphere, Mesh1)
   m->vertices[3*0 + 0] = 0;
   m->vertices[3*0 + 1] = 0;
   m->vertices[3*0 + 2] = 0;
-  
+
   m->vertices[3*1 + 0] = 1;
   m->vertices[3*1 + 1] = 0;
   m->vertices[3*1 + 2] = 0;
-  
+
   m->vertices[3*2 + 0] = 0;
   m->vertices[3*2 + 1] = 1;
   m->vertices[3*2 + 2] = 0;
-  
+
   m->vertices[3*3 + 0] = 1;
   m->vertices[3*3 + 1] = 1;
   m->vertices[3*3 + 2] = 0;
-  
+
   m->vertices[3*4 + 0] = 0;
   m->vertices[3*4 + 1] = 0;
   m->vertices[3*4 + 2] = 1;
-  
+
   m->vertices[3*5 + 0] = 1;
   m->vertices[3*5 + 1] = 0;
   m->vertices[3*5 + 2] = 1;
-  
+
   m->vertices[3*6 + 0] = 0;
   m->vertices[3*6 + 1] = 1;
   m->vertices[3*6 + 2] = 1;
-  
+
   m->vertices[3*7 + 0] = 1;
   m->vertices[3*7 + 1] = 1;
   m->vertices[3*7 + 2] = 1;
@@ -217,47 +217,47 @@ TEST(MeshBoundingSphere, Mesh1)
   m->triangles[3*0 + 0] = 0;
   m->triangles[3*0 + 1] = 1;
   m->triangles[3*0 + 2] = 2;
-  
+
   m->triangles[3*1 + 0] = 1;
   m->triangles[3*1 + 1] = 3;
   m->triangles[3*1 + 2] = 2;
-  
+
   m->triangles[3*2 + 0] = 5;
   m->triangles[3*2 + 1] = 4;
   m->triangles[3*2 + 2] = 6;
-  
+
   m->triangles[3*3 + 0] = 5;
   m->triangles[3*3 + 1] = 6;
   m->triangles[3*3 + 2] = 7;
-  
+
   m->triangles[3*4 + 0] = 1;
   m->triangles[3*4 + 1] = 5;
   m->triangles[3*4 + 2] = 3;
-  
+
   m->triangles[3*5 + 0] = 5;
   m->triangles[3*5 + 1] = 7;
   m->triangles[3*5 + 2] = 3;
-  
+
   m->triangles[3*6 + 0] = 4;
   m->triangles[3*6 + 1] = 0;
   m->triangles[3*6 + 2] = 2;
-  
+
   m->triangles[3*7 + 0] = 4;
   m->triangles[3*7 + 1] = 2;
   m->triangles[3*7 + 2] = 6;
-  
+
   m->triangles[3*8 + 0] = 2;
   m->triangles[3*8 + 1] = 3;
   m->triangles[3*8 + 2] = 6;
-  
+
   m->triangles[3*9 + 0] = 3;
   m->triangles[3*9 + 1] = 7;
   m->triangles[3*9 + 2] = 6;
-  
+
   m->triangles[3*10 + 0] = 1;
   m->triangles[3*10 + 1] = 0;
   m->triangles[3*10 + 2] = 4;
-  
+
   m->triangles[3*11 + 0] = 1;
   m->triangles[3*11 + 1] = 4;
   m->triangles[3*11 + 2] = 5;

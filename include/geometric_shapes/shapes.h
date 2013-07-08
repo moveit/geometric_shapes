@@ -64,22 +64,22 @@ class Shape
 public:
   Shape();
   virtual ~Shape();
-  
+
   /** \brief Create a copy of this shape */
   virtual Shape* clone() const = 0;
-  
+
   /** \brief Print information about this shape */
   virtual void print(std::ostream &out = std::cout) const;
-    
+
   /** \brief Scale this shape by a factor */
   void scale(double scale);
-  
+
   /** \brief Add padding to this shape */
   void padd(double padding);
-  
+
   /** \brief Scale and padd this shape */
   virtual void scaleAndPadd(double scale, double padd) = 0;
-  
+
   /** \brief Return a flag indicating whether this shape can be scaled and/or padded */
   virtual bool isFixed() const;
 
@@ -95,14 +95,14 @@ public:
 
   /** \brief The radius of the shpere */
   Sphere(double r);
-  
+
   /** \brief The type of the shape, as a string */
   static const std::string STRING_NAME;
-  
+
   virtual void scaleAndPadd(double scale, double padd);
   virtual Shape* clone() const;
   virtual void print(std::ostream &out = std::cout) const;
-  
+
   /** \brief The radius of the sphere */
   double radius;
 };
@@ -112,18 +112,18 @@ public:
 class Cylinder : public Shape
 {
 public:
-  Cylinder();   
+  Cylinder();
 
   /** \brief The radius and the length of the cylinder */
   Cylinder(double r, double l);
-  
+
   /** \brief The type of the shape, as a string */
   static const std::string STRING_NAME;
 
   virtual void scaleAndPadd(double scale, double padd);
   virtual Shape* clone() const;
   virtual void print(std::ostream &out = std::cout) const;
-  
+
   /** \brief The length of the cylinder */
   double length;
 
@@ -131,13 +131,13 @@ public:
   double radius;
 };
 
-/** \brief Definition of a cone 
+/** \brief Definition of a cone
  * Tip is on positive z axis.  Center of base is on negative z axis.  Origin is
  * halway between tip and center of base. */
 class Cone : public Shape
 {
 public:
-  Cone();  
+  Cone();
   Cone(double r, double l);
 
   /** \brief The type of the shape, as a string */
@@ -146,7 +146,7 @@ public:
   virtual void scaleAndPadd(double scale, double padd);
   virtual Shape* clone() const;
   virtual void print(std::ostream &out = std::cout) const;
-  
+
   /** \brief The length (height) of the cone */
   double length;
 
@@ -159,7 +159,7 @@ public:
 class Box : public Shape
 {
 public:
-  Box();  
+  Box();
   Box(double x, double y, double z);
 
   /** \brief The type of the shape, as a string */
@@ -168,7 +168,7 @@ public:
   virtual void scaleAndPadd(double scale, double padd);
   virtual Shape* clone() const;
   virtual void print(std::ostream &out = std::cout) const;
-  
+
   /** \brief x, y, z dimensions of the box (axis-aligned) */
   double size[3];
 };
@@ -181,47 +181,47 @@ public:
 class Mesh : public Shape
 {
 public:
-  
-  Mesh();  
-  Mesh(unsigned int v_count, unsigned int t_count);  
+
+  Mesh();
+  Mesh(unsigned int v_count, unsigned int t_count);
   virtual ~Mesh();
-  
+
   /** \brief The type of the shape, as a string */
   static const std::string STRING_NAME;
-  
+
   virtual void scaleAndPadd(double scale, double padd);
   virtual Shape* clone() const;
   virtual void print(std::ostream &out = std::cout) const;
-  
+
   /** \brief The normals to each triangle can be computed from the vertices using cross products. This function performs this computation and allocates memory for normals if needed */
   void computeTriangleNormals();
 
   /** \brief The normals to each vertex, averaged from the triangle normals. computeTriangleNormals() is automatically called if needed. */
   void computeVertexNormals();
-  
+
   /** \brief Merge vertices that are very close to each other, up to a threshold*/
   void mergeVertices(double threshold);
-  
+
   /** \brief The number of available vertices */
   unsigned int  vertex_count;
-  
+
   /** \brief The position for each vertex vertex k has values at
    * index (3k, 3k+1, 3k+2) = (x,y,z) */
   double       *vertices;
-  
+
   /** \brief The number of triangles formed with the vertices */
   unsigned int  triangle_count;
-  
+
   /** \brief The vertex indices for each triangle
    * triangle k has vertices at index (3k, 3k+1, 3k+2) = (v1, v2, v3) */
   unsigned int *triangles;
-  
+
   /** \brief The normal to each triangle; unit vector represented
       as (x,y,z); If missing from the mesh, these vectors can be computed using computeTriangleNormals() */
   double       *triangle_normals;
 
   /** \brief The normal to each vertex; unit vector represented
-      as (x,y,z); If missing from the mesh, these vectors can be computed using computeVertexNormals()  */  
+      as (x,y,z); If missing from the mesh, these vectors can be computed using computeVertexNormals()  */
   double       *vertex_normals;
 };
 
@@ -229,8 +229,8 @@ public:
 class Plane : public Shape
 {
 public:
-  
-  Plane();  
+
+  Plane();
   Plane(double pa, double pb, double pc, double pd);
 
   /** \brief The type of the shape, as a string */
@@ -249,9 +249,9 @@ public:
 class OcTree : public Shape
 {
 public:
-  OcTree();  
+  OcTree();
   OcTree(const boost::shared_ptr<const octomap::OcTree> &t);
-  
+
   /** \brief The type of the shape, as a string */
   static const std::string STRING_NAME;
 
@@ -259,7 +259,7 @@ public:
   virtual void print(std::ostream &out = std::cout) const;
   virtual void scaleAndPadd(double scale, double padd);
   virtual bool isFixed() const;
-  
+
   boost::shared_ptr<const octomap::OcTree> octree;
 };
 

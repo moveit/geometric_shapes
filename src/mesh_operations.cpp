@@ -75,11 +75,11 @@ struct LocalVertexType
   LocalVertexType() : x(0.0), y(0.0), z(0.0)
   {
   }
-  
+
   LocalVertexType(const Eigen::Vector3d &v) : x(v.x()), y(v.y()), z(v.z())
   {
   }
-  
+
   double x,y,z;
   unsigned int index;
 };
@@ -129,7 +129,7 @@ Mesh* createMeshFromVertices(const EigenSTL::vector_Vector3d &vertices, const st
   std::copy(triangles.begin(), triangles.end(), mesh->triangles);
   mesh->computeTriangleNormals();
   mesh->computeVertexNormals();
-  
+
   return mesh;
 }
 
@@ -137,13 +137,13 @@ Mesh* createMeshFromVertices(const EigenSTL::vector_Vector3d &source)
 {
   if (source.size() < 3)
     return NULL;
-  
+
   if (source.size() % 3 != 0)
     logError("The number of vertices to construct a mesh from is not divisible by 3. Probably constructed triangles will not make sense.");
-  
+
   std::set<detail::LocalVertexType, detail::ltLocalVertexValue> vertices;
   std::vector<unsigned int> triangles;
-  
+
   unsigned int n = source.size() / 3;
   for (unsigned int i = 0 ; i < n ; ++i)
   {
@@ -159,7 +159,7 @@ Mesh* createMeshFromVertices(const EigenSTL::vector_Vector3d &source)
     else
       vt1.index = p1->index;
     triangles.push_back(vt1.index);
-    
+
     detail::LocalVertexType vt2(source[++i3]);
     std::set<detail::LocalVertexType, detail::ltLocalVertexValue>::iterator p2 = vertices.find(vt2);
     if (p2 == vertices.end())
@@ -170,7 +170,7 @@ Mesh* createMeshFromVertices(const EigenSTL::vector_Vector3d &source)
     else
       vt2.index = p2->index;
     triangles.push_back(vt2.index);
-    
+
     detail::LocalVertexType vt3(source[++i3]);
     std::set<detail::LocalVertexType, detail::ltLocalVertexValue>::iterator p3 = vertices.find(vt3);
     if (p3 == vertices.end())
@@ -180,7 +180,7 @@ Mesh* createMeshFromVertices(const EigenSTL::vector_Vector3d &source)
     }
     else
       vt3.index = p3->index;
-    
+
     triangles.push_back(vt3.index);
   }
 
@@ -194,7 +194,7 @@ Mesh* createMeshFromVertices(const EigenSTL::vector_Vector3d &source)
 
   Mesh *mesh = new Mesh(vt.size(), nt);
   for (unsigned int i = 0 ; i < vt.size() ; ++i)
-  {    
+  {
     unsigned int i3 = i * 3;
     mesh->vertices[i3    ] = vt[i].x;
     mesh->vertices[i3 + 1] = vt[i].y;
@@ -204,7 +204,7 @@ Mesh* createMeshFromVertices(const EigenSTL::vector_Vector3d &source)
   std::copy(triangles.begin(), triangles.end(), mesh->triangles);
   mesh->computeTriangleNormals();
   mesh->computeVertexNormals();
-  
+
   return mesh;
 }
 
@@ -229,7 +229,7 @@ Mesh* createMeshFromBinary(const char *buffer, std::size_t size, const Eigen::Ve
     logWarn("Cannot construct mesh from empty binary buffer");
     return NULL;
   }
-  
+
   // try to get a file extension
   std::string hint;
   std::size_t pos = assimp_hint.find_last_of(".");
@@ -240,10 +240,10 @@ Mesh* createMeshFromBinary(const char *buffer, std::size_t size, const Eigen::Ve
     if (hint.find("stl") != std::string::npos)
       hint = "stl";
   }
-  
+
   // Create an instance of the Importer class
   Assimp::Importer importer;
-  
+
 
   // And have it read the given file with some postprocessing
   const aiScene* scene = importer.ReadFileFromMemory(reinterpret_cast<const void*>(buffer), size,
@@ -265,7 +265,7 @@ Mesh* createMeshFromResource(const std::string& resource, const Eigen::Vector3d 
   try
   {
     res = retriever.get(resource);
-  } 
+  }
   catch (resource_retriever::Exception& e)
   {
     logError("%s", e.what());
@@ -277,7 +277,7 @@ Mesh* createMeshFromResource(const std::string& resource, const Eigen::Vector3d 
     logWarn("Retrieved empty mesh for resource '%s'", resource.c_str());
     return NULL;
   }
-  
+
   Mesh *m = createMeshFromBinary(reinterpret_cast<const char*>(res.data.get()), res.size, scale, resource);
   if (!m)
     logWarn("Assimp reports no scene in %s", resource.c_str());
@@ -293,8 +293,8 @@ void extractMeshData(const aiScene *scene, const aiNode *node, const aiMatrix4x4
   transform *= node->mTransformation;
   for (unsigned int j = 0 ; j < node->mNumMeshes; ++j)
   {
-    const aiMesh* a = scene->mMeshes[node->mMeshes[j]];   
-    unsigned int offset = vertices.size();    
+    const aiMesh* a = scene->mMeshes[node->mMeshes[j]];
+    unsigned int offset = vertices.size();
     for (unsigned int i = 0 ; i < a->mNumVertices ; ++i)
     {
       aiVector3D v = transform * a->mVertices[i];
@@ -308,7 +308,7 @@ void extractMeshData(const aiScene *scene, const aiNode *node, const aiMatrix4x4
         triangles.push_back(offset + a->mFaces[i].mIndices[2]);
       }
   }
-  
+
   for (unsigned int n = 0; n < node->mNumChildren; ++n)
     extractMeshData(scene, node->mChildren[n], transform, scale, vertices, triangles);
 }
@@ -340,7 +340,7 @@ Mesh* createMeshFromAsset(const aiScene* scene, const Eigen::Vector3d &scale, co
     logWarn("There are no triangles in the scene %s", resource_name.c_str());
     return NULL;
   }
-  
+
   return createMeshFromVertices(vertices, triangles);
 }
 
@@ -367,41 +367,41 @@ Mesh* createMeshFromShape(const Box &box)
   double x = box.size[0] / 2.0;
   double y = box.size[1] / 2.0;
   double z = box.size[2] / 2.0;
-  
+
   // define vertices of box mesh
   Mesh *result = new Mesh(8, 12);
   result->vertices[0] = -x;
   result->vertices[1] = -y;
   result->vertices[2] = -z;
-  
+
   result->vertices[3] = x;
   result->vertices[4] = -y;
   result->vertices[5] = -z;
-  
+
   result->vertices[6] = x;
   result->vertices[7] = -y;
   result->vertices[8] = z;
-  
+
   result->vertices[9] = -x;
   result->vertices[10] = -y;
   result->vertices[11] = z;
-  
+
   result->vertices[12] = -x;
   result->vertices[13] = y;
   result->vertices[14] = z;
-  
+
   result->vertices[15] = -x;
   result->vertices[16] = y;
   result->vertices[17] = -z;
-  
+
   result->vertices[18] = x;
   result->vertices[19] = y;
   result->vertices[20] = z;
-  
+
   result->vertices[21] = x;
   result->vertices[22] = y;
   result->vertices[23] = -z;
-  
+
   static const unsigned int tri[] = {0, 1, 2,
                                      2, 3, 0,
                                      4, 3, 2,
@@ -413,7 +413,7 @@ Mesh* createMeshFromShape(const Box &box)
                                      0, 5, 7,
                                      7, 1, 0,
                                      7, 5, 4,
-                                     4, 6, 7};  
+                                     4, 6, 7};
   memcpy(result->triangles, tri, sizeof(unsigned int) * 36);
   result->computeTriangleNormals();
   result->computeVertexNormals();
@@ -425,20 +425,20 @@ Mesh* createMeshFromShape(const Sphere &sphere)
   // this code is adapted from FCL
   EigenSTL::vector_Vector3d vertices;
   std::vector<unsigned int> triangles;
-  
+
   const double r = sphere.radius;
   const double pi = boost::math::constants::pi<double>();
   const unsigned int seg = std::max<unsigned int>(6, 0.5 + 2.0 * pi * r / 0.01); // split the sphere longitudinally up to a resolution of 1 cm at the ecuator, or a minimum of 6 segments
   const unsigned int ring = std::max<unsigned int>(6, 2.0 * r / 0.01); // split the sphere into rings along latitude, up to a height of at most 1 cm, or a minimum of 6 rings
-  
+
   double phi, phid;
   phid = pi * 2.0 / seg;
   phi = 0.0;
-  
+
   double theta, thetad;
   thetad = pi / (ring + 1);
   theta = 0;
-  
+
   for (unsigned int i = 0; i < ring; ++i)
   {
     double theta_ = theta + thetad * (i + 1);
@@ -449,7 +449,7 @@ Mesh* createMeshFromShape(const Sphere &sphere)
   }
   vertices.push_back(Eigen::Vector3d(0.0, 0.0, r));
   vertices.push_back(Eigen::Vector3d(0.0, 0.0, -r));
-  
+
   for (unsigned int i = 0 ; i < ring - 1; ++i)
   {
     for (unsigned int j = 0 ; j < seg ; ++j)
@@ -467,7 +467,7 @@ Mesh* createMeshFromShape(const Sphere &sphere)
       triangles.push_back(d);
     }
   }
-  
+
   for (unsigned int j = 0 ; j < seg ; ++j)
   {
     unsigned int a, b;
@@ -476,7 +476,7 @@ Mesh* createMeshFromShape(const Sphere &sphere)
     triangles.push_back(ring * seg);
     triangles.push_back(a);
     triangles.push_back(b);
-    
+
     a = (ring - 1) * seg + j;
     b = (j == seg - 1) ? (ring - 1) * seg : ((ring - 1) * seg + j + 1);
     triangles.push_back(a);
@@ -494,10 +494,10 @@ Mesh* createMeshFromShape(const Cylinder &cylinder)
 
   // magic number defining how many triangles to construct for the unit cylinder; perhaps this should be a param
   static unsigned int tot_for_unit_cylinder = 100;
-  
+
   double r = cylinder.radius;
   double h = cylinder.length;
-  
+
   const double pi = boost::math::constants::pi<double>();
   unsigned int tot = tot_for_unit_cylinder * r;
   double phid = pi * 2 / tot;
@@ -520,7 +520,7 @@ Mesh* createMeshFromShape(const Cylinder &cylinder)
 
   vertices.push_back(Eigen::Vector3d(0, 0, h / 2));
   vertices.push_back(Eigen::Vector3d(0, 0, -h / 2));
-  
+
   for (unsigned int i = 0; i < tot ; ++i)
   {
     triangles.push_back((h_num + 1) * tot);
@@ -586,7 +586,7 @@ Mesh* createMeshFromShape(const Cone &cone)
     for(unsigned int j = 0; j < tot; ++j)
       vertices.push_back(Eigen::Vector3d(rh * cos(phi + phid * j), rh * sin(phi + phid * j), h_i));
   }
-  
+
   for (unsigned int i = 0; i < tot; ++i)
     vertices.push_back(Eigen::Vector3d(r * cos(phi + phid * i), r * sin(phi + phid * i), - h / 2));
 
@@ -651,9 +651,9 @@ void writeSTLBinary(const Mesh* mesh, std::vector<char> &buffer)
   memcpy(ptr, &nt, sizeof(uint32_t));
   ptr += sizeof(uint32_t);
   for (unsigned int i = 0 ; i < mesh->triangle_count ; ++i)
-  { 
+  {
     unsigned int i3 = i * 3;
-      
+
     if (mesh->triangle_normals)
     {
       writeFloatToSTL(ptr, mesh->triangle_normals[i3]);
@@ -665,22 +665,22 @@ void writeSTLBinary(const Mesh* mesh, std::vector<char> &buffer)
       memset(ptr, 0, sizeof(float) * 3);
       ptr += sizeof(float) * 3;
     }
-    
+
     unsigned int index = mesh->triangles[i3] * 3;
-    writeFloatToSTL(ptr, mesh->vertices[index]);      
+    writeFloatToSTL(ptr, mesh->vertices[index]);
     writeFloatToSTL(ptr, mesh->vertices[index + 1]);
     writeFloatToSTL(ptr, mesh->vertices[index + 2]);
     index = mesh->triangles[i3 + 1] * 3;
-    writeFloatToSTL(ptr, mesh->vertices[index]);      
+    writeFloatToSTL(ptr, mesh->vertices[index]);
     writeFloatToSTL(ptr, mesh->vertices[index + 1]);
     writeFloatToSTL(ptr, mesh->vertices[index + 2]);
     index = mesh->triangles[i3 + 2] * 3;
-    writeFloatToSTL(ptr, mesh->vertices[index]);      
+    writeFloatToSTL(ptr, mesh->vertices[index]);
     writeFloatToSTL(ptr, mesh->vertices[index + 1]);
     writeFloatToSTL(ptr, mesh->vertices[index + 2]);
     memset(ptr, 0, 2);
     ptr += 2;
-  } 
+  }
 }
 
 }

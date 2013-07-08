@@ -80,7 +80,7 @@ void bodies::mergeBoundingSpheres(const std::vector<BoundingSphere> &spheres, Bo
     {
       if (spheres[i].radius <= 0.0)
         continue;
-      Eigen::Vector3d diff = spheres[i].center-mergedSphere.center; 
+      Eigen::Vector3d diff = spheres[i].center-mergedSphere.center;
       double d = diff.norm();
       if (d + mergedSphere.radius <= spheres[i].radius)
       {
@@ -92,7 +92,7 @@ void bodies::mergeBoundingSpheres(const std::vector<BoundingSphere> &spheres, Bo
         Eigen::Vector3d delta = mergedSphere.center - spheres[i].center;
         mergedSphere.radius = (delta.norm() + spheres[i].radius + mergedSphere.radius)/2.0;
         mergedSphere.center = delta.normalized() * (mergedSphere.radius - spheres[i].radius) + spheres[i].center;
-      } 
+      }
     }
   }
 }
@@ -103,7 +103,7 @@ template<typename T>
 Body* constructBodyFromMsgHelper(const T &shape_msg, const geometry_msgs::Pose &pose)
 {
   shapes::Shape *shape = shapes::constructShapeFromMsg(shape_msg);
-  
+
   if (shape)
   {
     Body *body = createBodyFromShape(shape);
@@ -141,7 +141,7 @@ bodies::Body* bodies::constructBodyFromMsg(const shape_msgs::SolidPrimitive &sha
 
 void bodies::computeBoundingSphere(const std::vector<const bodies::Body*>& bodies, bodies::BoundingSphere& sphere) {
   Eigen::Vector3d sum(0.0,0.0,0.0);
-  
+
   //TODO - expand to all body types
   unsigned int vertex_count = 0;
   for(unsigned int i = 0; i < bodies.size(); i++) {
@@ -151,7 +151,7 @@ void bodies::computeBoundingSphere(const std::vector<const bodies::Body*>& bodie
       sum += conv->getPose()*conv->getScaledVertices()[j];
     }
   }
-  
+
   sphere.center=sum/(double)vertex_count;
 
   double max_dist_squared = 0.0;

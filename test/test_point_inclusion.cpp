@@ -161,7 +161,7 @@ TEST(BoxPointContainment, ComplexInside)
     bodies::Body* box = new bodies::Box(&shape);
     box->setScale(1.01);
     Eigen::Affine3d pose(Eigen::AngleAxisd(M_PI/3.0, Eigen::Vector3d::UnitX()));
-    pose.translation() = Eigen::Vector3d(1.0,1.0,1.0); 
+    pose.translation() = Eigen::Vector3d(1.0,1.0,1.0);
     box->setPose(pose);
 
     bool contains = box->containsPoint(1.5,1.0,1.5);
@@ -172,7 +172,7 @@ TEST(BoxPointContainment, ComplexInside)
     for (int i = 0 ; i < 100 ; ++i)
     {
         EXPECT_TRUE(box->samplePointInside(r, 100, p));
-	EXPECT_TRUE(box->containsPoint(p));
+    EXPECT_TRUE(box->containsPoint(p));
     }
 
     delete box;
@@ -184,7 +184,7 @@ TEST(BoxPointContainment, ComplexOutside)
     bodies::Body* box = new bodies::Box(&shape);
     box->setScale(1.01);
     Eigen::Affine3d pose(Eigen::AngleAxisd(M_PI/3.0, Eigen::Vector3d::UnitX()));
-    pose.translation() = Eigen::Vector3d(1.0,1.0,1.0); 
+    pose.translation() = Eigen::Vector3d(1.0,1.0,1.0);
     box->setPose(pose);
 
     bool contains = box->containsPoint(1.5,1.5,1.5);

@@ -281,17 +281,17 @@ void shapes::Mesh::scaleAndPadd(double scale, double padding)
   sx /= (double)vertex_count;
   sy /= (double)vertex_count;
   sz /= (double)vertex_count;
-  
+
   // scale the mesh
   for (unsigned int i = 0 ; i < vertex_count ; ++i)
   {
     unsigned int i3 = i * 3;
-    
+
     // vector from center to the vertex
     double dx = vertices[i3] - sx;
     double dy = vertices[i3 + 1] - sy;
     double dz = vertices[i3 + 2] - sz;
-    
+
     // length of vector
     double norm = sqrt(dx * dx + dy * dy + dz * dz);
     if (norm > 1e-6)
@@ -355,8 +355,8 @@ void shapes::OcTree::print(std::ostream &out) const
     double minx, miny, minz, maxx, maxy, maxz;
     octree->getMetricMin(minx, miny, minz);
     octree->getMetricMax(maxx, maxy, maxz);
-    out << "OcTree[depth = " << octree->getTreeDepth() << ", resolution = " << octree->getResolution() 
-        << " inside box (minx=" << minx << ", miny=" << miny << ", minz=" << minz << ", maxx=" << maxx 
+    out << "OcTree[depth = " << octree->getTreeDepth() << ", resolution = " << octree->getResolution()
+        << " inside box (minx=" << minx << ", miny=" << miny << ", minz=" << minz << ", maxx=" << maxx
         << ", maxy=" << maxy << ", maxz=" << maxz << ")]" << std::endl;
   }
   else
@@ -379,13 +379,13 @@ bool shapes::Plane::isFixed() const
 }
 
 void shapes::Mesh::computeTriangleNormals()
-{ 
+{
   if (triangle_count && !triangle_normals)
     triangle_normals = new double[triangle_count * 3];
-  
+
   // compute normals
   for (unsigned int i = 0 ; i < triangle_count ; ++i)
-  { 
+  {
     unsigned int i3 = i * 3;
     Eigen::Vector3d s1(vertices[triangles[i3] * 3] - vertices[triangles[i3 + 1] * 3],
                        vertices[triangles[i3] * 3 + 1] - vertices[triangles[i3 + 1] * 3 + 1],
@@ -402,19 +402,19 @@ void shapes::Mesh::computeTriangleNormals()
 }
 
 void shapes::Mesh::computeVertexNormals()
-{ 
+{
   if (!triangle_normals)
     computeTriangleNormals();
   if (vertex_count && !vertex_normals)
     vertex_normals = new double[vertex_count * 3];
   EigenSTL::vector_Vector3d avg_normals(vertex_count, Eigen::Vector3d(0, 0, 0));
-  
+
   for (unsigned int tIdx = 0; tIdx < triangle_count; ++tIdx)
   {
     unsigned int tIdx3 = 3 * tIdx;
     unsigned int tIdx3_1 = tIdx3 + 1;
     unsigned int tIdx3_2 = tIdx3 + 2;
-    
+
     unsigned int v1 = triangles [tIdx3];
     unsigned int v2 = triangles [tIdx3_1];
     unsigned int v3 = triangles [tIdx3_2];
@@ -426,7 +426,7 @@ void shapes::Mesh::computeVertexNormals()
     avg_normals[v2][0] += triangle_normals [tIdx3];
     avg_normals[v2][1] += triangle_normals [tIdx3_1];
     avg_normals[v2][2] += triangle_normals [tIdx3_2];
-    
+
     avg_normals[v3][0] += triangle_normals [tIdx3];
     avg_normals[v3][1] += triangle_normals [tIdx3_1];
     avg_normals[v3][2] += triangle_normals [tIdx3_2];
@@ -445,11 +445,11 @@ void shapes::Mesh::computeVertexNormals()
 void shapes::Mesh::mergeVertices(double threshold)
 {
   const double thresholdSQR = threshold * threshold;
-  
+
   std::vector<unsigned int> vertex_map(vertex_count);
   EigenSTL::vector_Vector3d orig_vertices(vertex_count);
   EigenSTL::vector_Vector3d compressed_vertices;
-  
+
   for (unsigned int vIdx = 0; vIdx < vertex_count ; ++vIdx)
   {
     orig_vertices[vIdx][0] = vertices[3 * vIdx];
@@ -457,15 +457,15 @@ void shapes::Mesh::mergeVertices(double threshold)
     orig_vertices[vIdx][2] = vertices[3 * vIdx + 2];
     vertex_map[vIdx] = vIdx;
   }
-  
+
   for (unsigned int vIdx1 = 0; vIdx1 < vertex_count; ++vIdx1)
   {
     if (vertex_map[vIdx1] != vIdx1)
       continue;
-    
+
     vertex_map[vIdx1] = compressed_vertices.size();
     compressed_vertices.push_back(orig_vertices[vIdx1]);
-    
+
     for (unsigned int vIdx2 = vIdx1 + 1 ; vIdx2 < vertex_count ; ++vIdx2)
     {
       double distanceSQR = (orig_vertices[vIdx1] - orig_vertices[vIdx2]).squaredNorm();
@@ -473,10 +473,10 @@ void shapes::Mesh::mergeVertices(double threshold)
         vertex_map[vIdx2] = vertex_map[vIdx1];
     }
   }
-  
+
   if (compressed_vertices.size() == orig_vertices.size())
     return;
-  
+
   // redirect triangles to new vertices!
   for (unsigned int tIdx = 0; tIdx < triangle_count; ++tIdx)
   {
@@ -485,11 +485,11 @@ void shapes::Mesh::mergeVertices(double threshold)
     triangles[i3 + 1] = vertex_map[triangles [i3 + 1]];
     triangles[i3 + 2] = vertex_map[triangles [i3 + 2]];
   }
-  
+
   vertex_count = compressed_vertices.size();
   delete[] vertices;
   vertices = new double[vertex_count * 3];
-  
+
   for (unsigned int vIdx = 0; vIdx < vertex_count ; ++vIdx)
   {
     unsigned int i3 = 3 * vIdx;
@@ -497,7 +497,7 @@ void shapes::Mesh::mergeVertices(double threshold)
     vertices[i3 + 1] = compressed_vertices[vIdx][1];
     vertices[i3 + 2] = compressed_vertices[vIdx][2];
   }
-  
+
   if (triangle_normals)
     computeTriangleNormals();
   if (vertex_normals)
