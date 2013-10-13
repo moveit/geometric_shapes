@@ -64,8 +64,10 @@ add_library(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME} ${ASSIMP_LIBRARIES} ${QHULL_LIBRARIES} ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 
 
-# Unit tests
-add_subdirectory(test)
+if(CATKIN_ENABLE_TESTING)
+  # Unit tests
+  add_subdirectory(test)
+endif()
 
 install(TARGETS ${PROJECT_NAME}
         ARCHIVE DESTINATION lib
