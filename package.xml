@@ -8,7 +8,7 @@
   <license>BSD</license>  
   <url>http://ros.org/wiki/geometric_shapes</url>
 
-  <buildtool_depend>catkin</buildtool_depend>
+  <buildtool_depend version_gte="0.5.68">catkin</buildtool_depend>
 
   <build_depend>boost</build_depend>
   <build_depend>shape_msgs</build_depend>
