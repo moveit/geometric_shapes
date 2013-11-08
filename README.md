@@ -15,4 +15,4 @@ Note: Bodies for meshes compute the convex hull of those meshes in order to prov
 
 ## Build Status
 
-[![Build Status](https://travis-ci.org/ros-planning/geometric_shapes.png?branch=hydro-devel)](https://travis-ci.org/ros-planning/geometric_shapes)
+hydro-devel branch: [![Build Status](https://travis-ci.org/ros-planning/geometric_shapes.png?branch=hydro-devel)](https://travis-ci.org/ros-planning/geometric_shapes)
