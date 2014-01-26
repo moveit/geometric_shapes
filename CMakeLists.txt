@@ -31,7 +31,6 @@ else()
   set(ASSIMP_CFLAGS_OTHER)
   set(ASSIMP_LINK_FLAGS)
   set(ASSIMP_INCLUDE_DIRS)
-  set(IS_ASSIMP3 0) # most likely not
 endif()
 
 find_package(octomap REQUIRED)
