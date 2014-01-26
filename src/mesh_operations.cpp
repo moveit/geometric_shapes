@@ -46,7 +46,7 @@
 #include <console_bridge/console.h>
 #include <resource_retriever/retriever.h>
 
-#if defined(IS_ASSIMP3)
+#if defined(ASSIMP_UNIFIED_HEADER_NAMES)
 #include <assimp/scene.h>
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
