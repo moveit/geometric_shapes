@@ -14,7 +14,7 @@
   <build_depend>shape_msgs</build_depend>
   <build_depend>shape_tools</build_depend>
   <build_depend>octomap</build_depend>
-  <build_depend>assimp</build_depend>
+  <build_depend>assimp-dev</build_depend>
   <build_depend>eigen</build_depend>
   <build_depend>libqhull</build_depend>
   <build_depend>console_bridge</build_depend>
