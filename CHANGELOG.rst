@@ -2,8 +2,8 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.3.6 (2014-01-31)
+------------------
 * Use assimp-dev dep for building
 * Remove stray IS_ASSIMP3 define
 * Invert Assimp version detect logic for greater accuracy
