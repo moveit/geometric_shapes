@@ -2,6 +2,11 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* add build dep so we can find eigen, build fixes
+* Contributors: Ioan A Sucan, Scott K Logan
+
 0.3.6 (2014-01-31)
 ------------------
 * Use assimp-dev dep for building
