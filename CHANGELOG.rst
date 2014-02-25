@@ -2,8 +2,8 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.3.8 (2014-02-25)
+------------------
 * fix how we find eigen
 * Contributors: Ioan Sucan
 
