@@ -7,7 +7,6 @@ if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
 endif()
 
-find_package(Eigen REQUIRED)
 find_package(Boost REQUIRED system filesystem)
 
 find_package(ASSIMP QUIET)
@@ -34,7 +33,9 @@ else()
 endif()
 
 find_package(octomap REQUIRED)
-find_package(catkin COMPONENTS shape_msgs resource_retriever shape_tools random_numbers console_bridge eigen_stl_containers)
+find_package(catkin COMPONENTS cmake_modules shape_msgs resource_retriever shape_tools random_numbers console_bridge eigen_stl_containers)
+
+find_package(Eigen REQUIRED)
 
 catkin_package(
   INCLUDE_DIRS include ${OCTOMAP_INCLUDE_DIRS}
