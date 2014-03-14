@@ -3,7 +3,7 @@ if(WIN32)
     # Correct directory separator for Windows
     string(REPLACE "\\" "\\\\" TEST_RESOURCES_DIR "${TEST_RESOURCES_DIR}")
 endif(WIN32)
-configure_file("${TEST_RESOURCES_DIR}/config.h.in" "${CMAKE_CURRENT_BINARY_DIR}/resources/config.h")
+configure_file(resources/config.h.in "${CMAKE_CURRENT_BINARY_DIR}/resources/config.h")
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 catkin_add_gtest(test_point_inclusion test_point_inclusion.cpp)
