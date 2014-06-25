@@ -2,8 +2,8 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.4.0 (2014-06-24)
+------------------
 * update usage of console_bridge to deal with version in Trusty
 * Merge pull request `#13 <https://github.com/ros-planning/geometric_shapes/issues/13>`_ from ros-planning/testing-in-travis
   Run local and moveit_core tests in Travis builds.
