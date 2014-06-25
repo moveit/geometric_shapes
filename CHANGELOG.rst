@@ -2,6 +2,16 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* update usage of console_bridge to deal with version in Trusty
+* Merge pull request `#13 <https://github.com/ros-planning/geometric_shapes/issues/13>`_ from ros-planning/testing-in-travis
+  Run local and moveit_core tests in Travis builds.
+* Merge pull request `#18 <https://github.com/ros-planning/geometric_shapes/issues/18>`_ from dirk-thomas/hydro-devel
+  fix configure config.h.in when paths contain spaces fix `#9 <https://github.com/ros-planning/geometric_shapes/issues/9>`_
+* Run local and moveit_core tests in Travis builds.
+* Contributors: Acorn, Dave Hershberger, Dirk Thomas, Ioan A Sucan, William Woodall
+
 0.3.8 (2014-02-25)
 ------------------
 * fix how we find eigen
