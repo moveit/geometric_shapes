@@ -80,3 +80,9 @@ script: # All commands must exit with code 0 on success. Anything else is consid
   # and returns a result code indicating whether there were any
   # failures or not.
   - catkin_test_results .
+
+# Disable the build on indigo as it requires trusty but travis does not support trusty. 
+# https://github.com/travis-ci/travis-ci/issues/2046
+branches:
+  except:
+    - indigo-devel
