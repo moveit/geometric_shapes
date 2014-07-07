@@ -2,6 +2,12 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* update distro for travis testing. precise:=trusty
+* update to use debian console_bridge dependency. https://github.com/ros/rosdistro/issues/4633
+* Contributors: Ioan A Sucan, Tully Foote
+
 0.4.0 (2014-06-24)
 ------------------
 * update usage of console_bridge to deal with version in Trusty
