@@ -667,6 +667,28 @@ bool bodies::ConvexMesh::containsPoint(const Eigen::Vector3d &p, bool verbose) c
     return false;
 }
 
+void bodies::ConvexMesh::correctVertexOrderFromPlanes()
+{
+    for(unsigned int i = 0; i < mesh_data_->triangles_.size(); i += 3) {
+        Eigen::Vector3d d1 = mesh_data_->vertices_[mesh_data_->triangles_[i]]
+            - mesh_data_->vertices_[mesh_data_->triangles_[i + 1]];
+        Eigen::Vector3d d2 = mesh_data_->vertices_[mesh_data_->triangles_[i]]
+            - mesh_data_->vertices_[mesh_data_->triangles_[i + 2]];
+        // expected computed normal from triangle vertex order
+        Eigen::Vector3d tri_normal = d1.cross(d2);
+        tri_normal.normalize();
+        // actual plane normal
+        Eigen::Vector3d normal(
+                mesh_data_->planes_[mesh_data_->plane_for_triangle_[i/3]].x(),
+                mesh_data_->planes_[mesh_data_->plane_for_triangle_[i/3]].y(),
+                mesh_data_->planes_[mesh_data_->plane_for_triangle_[i/3]].z());
+        bool same_dir = tri_normal.dot(normal) > 0;
+        if(!same_dir) {
+            std::swap(mesh_data_->triangles_[i], mesh_data_->triangles_[i + 1]);
+        }
+    }
+}
+
 void bodies::ConvexMesh::useDimensions(const shapes::Shape *shape)
 {
   mesh_data_.reset(new MeshData());
@@ -833,6 +855,64 @@ void bodies::ConvexMesh::useDimensions(const shapes::Shape *shape)
 std::vector<double> bodies::ConvexMesh::getDimensions() const
 {
   return std::vector<double>();
+}
+
+void bodies::ConvexMesh::computeScaledVerticesFromPlaneProjections()
+{
+    // compute the scaled vertices, if needed
+    if (padding_ == 0.0 && scale_ == 1.0) {
+        scaled_vertices_ = &mesh_data_->vertices_;
+        return;
+    }
+
+    if (!scaled_vertices_storage_)
+        scaled_vertices_storage_.reset(new EigenSTL::vector_Vector3d());
+    scaled_vertices_ = scaled_vertices_storage_.get();
+    scaled_vertices_storage_->resize(mesh_data_->vertices_.size());
+    // project vertices along the vertex - center line to the scaled and padded plane
+    // take the average of all tri's planes around that vertex as the result
+    // is not unique
+
+    // First figure out, which tris are connected to each vertex
+    std::map<unsigned int, std::vector<unsigned int> > vertex_to_tris;
+    for(unsigned int i = 0; i < mesh_data_->triangles_.size()/3; ++i) {
+        vertex_to_tris[mesh_data_->triangles_[3*i + 0]].push_back(i);
+        vertex_to_tris[mesh_data_->triangles_[3*i + 1]].push_back(i);
+        vertex_to_tris[mesh_data_->triangles_[3*i + 2]].push_back(i);
+    }
+
+    for (unsigned int i = 0 ; i < mesh_data_->vertices_.size() ; ++i)
+    {
+        Eigen::Vector3d v(mesh_data_->vertices_[i] - mesh_data_->mesh_center_);
+        EigenSTL::vector_Vector3d   projected_vertices;
+        for(unsigned int t = 0; t < vertex_to_tris[i].size(); ++ t) {
+            const Eigen::Vector4f & plane =
+                mesh_data_->planes_[mesh_data_->plane_for_triangle_[vertex_to_tris[i][t]]];
+            Eigen::Vector3d plane_normal(plane.x(), plane.y(), plane.z());
+            double d_scaled_padded = scale_ * plane.w()
+                - (1 - scale_) * mesh_data_->mesh_center_.dot(plane_normal) - padding_;
+
+            // intersect vert - center with scaled/padded plane equation
+            double denom = v.dot(plane_normal);
+            if(fabs(denom) < 1e-3)
+                continue;
+            double lambda = (-mesh_data_->mesh_center_.dot(plane_normal) - d_scaled_padded)/denom;
+            Eigen::Vector3d vert_on_plane = v * lambda + mesh_data_->mesh_center_;
+            projected_vertices.push_back(vert_on_plane);
+        }
+        if(projected_vertices.empty()) {
+            double l = v.norm();
+            scaled_vertices_storage_->at(i) = mesh_data_->mesh_center_ +
+                v * (scale_ + (l > detail::ZERO ? padding_ / l : 0.0));
+        } else {
+            Eigen::Vector3d sum(0,0,0);
+            for(unsigned int v = 0; v < projected_vertices.size(); ++ v) {
+                sum += projected_vertices[v];
+            }
+            sum /= projected_vertices.size();
+            scaled_vertices_storage_->at(i) = sum;
+        }
+    }
 }
 
 void bodies::ConvexMesh::updateInternalData()
