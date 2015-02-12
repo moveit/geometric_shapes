@@ -424,6 +424,11 @@ public:
 
   virtual BodyPtr cloneAt(const Eigen::Affine3d &pose, double padding, double scale) const;
 
+  /// Project the original vertex to the scaled and padded planes and average.
+  void computeScaledVerticesFromPlaneProjections();
+
+  void correctVertexOrderFromPlanes();
+
 protected:
 
   virtual void useDimensions(const shapes::Shape *shape);
