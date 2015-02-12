@@ -660,7 +660,7 @@ bool bodies::ConvexMesh::containsPoint(const Eigen::Vector3d &p, bool verbose) c
   if (bounding_box_.containsPoint(p))
   {
     Eigen::Vector3d ip(i_pose_ * p);
-    ip = mesh_data_->mesh_center_ + (ip - mesh_data_->mesh_center_) * scale_;
+    ip = mesh_data_->mesh_center_ + (ip - mesh_data_->mesh_center_) / scale_;
     return isPointInsidePlanes(ip);
   }
   else
