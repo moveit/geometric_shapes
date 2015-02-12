@@ -761,7 +761,7 @@ void bodies::ConvexMesh::useDimensions(const shapes::Shape *shape)
 
   FILE* null = fopen ("/dev/null","w");
 
-  char flags[] = "qhull Tv";
+  char flags[] = "qhull Tv Qt";
   int exitcode = qh_new_qhull(3, mesh->vertex_count, points, true, flags, null, null);
 
   if (exitcode != 0)
@@ -808,7 +808,13 @@ void bodies::ConvexMesh::useDimensions(const shapes::Shape *shape)
   FORALLfacets
   {
     Eigen::Vector4f planeEquation(facet->normal[0], facet->normal[1], facet->normal[2], facet->offset);
-    mesh_data_->planes_.push_back(planeEquation);
+    if(!mesh_data_->planes_.empty()) {
+        // filter equal planes - assuming same ones follow each other
+        if((planeEquation - mesh_data_->planes_.back()).cwiseAbs().maxCoeff() > 1e-6)    // max diff to last
+            mesh_data_->planes_.push_back(planeEquation);
+    } else {
+        mesh_data_->planes_.push_back(planeEquation);
+    }
 
     // Needed by FOREACHvertex_i_
     int vertex_n, vertex_i;
@@ -817,6 +823,7 @@ void bodies::ConvexMesh::useDimensions(const shapes::Shape *shape)
       mesh_data_->triangles_.push_back(qhull_vertex_table[vertex->id]);
     }
 
+    mesh_data_->plane_for_triangle_[(mesh_data_->triangles_.size() - 1)/3] = mesh_data_->planes_.size() - 1;
   }
   qh_freeqhull(!qh_ALL);
   int curlong, totlong;
@@ -967,15 +974,15 @@ bool bodies::ConvexMesh::intersectsRay(const Eigen::Vector3d& origin, const Eige
   const unsigned int nt = mesh_data_->triangles_.size() / 3;
   for (unsigned int i = 0 ; i < nt ; ++i)
   {
-    Eigen::Vector3d vec(mesh_data_->planes_[i].x(),
-                        mesh_data_->planes_[i].y(),
-                        mesh_data_->planes_[i].z());
+    Eigen::Vector3d vec(mesh_data_->planes_[mesh_data_->plane_for_triangle_[i]].x(),
+                        mesh_data_->planes_[mesh_data_->plane_for_triangle_[i]].y(),
+                        mesh_data_->planes_[mesh_data_->plane_for_triangle_[i]].z());
 
     double tmp = vec.dot(dr);
     if (fabs(tmp) > detail::ZERO)
     {
 
-      double t = -(vec.dot(orig) + mesh_data_->planes_[i].w()) / tmp;
+      double t = -(vec.dot(orig) + mesh_data_->planes_[mesh_data_->plane_for_triangle_[i]].w()) / tmp;
       if (t > 0.0)
       {
         const int i3 = 3 * i;

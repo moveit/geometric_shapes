@@ -440,6 +440,7 @@ protected:
     EigenSTL::vector_Vector4f   planes_;
     EigenSTL::vector_Vector3d   vertices_;
     std::vector<unsigned int>   triangles_;
+    std::map<unsigned int, unsigned int> plane_for_triangle_;
     Eigen::Vector3d             mesh_center_;
     double                      mesh_radiusB_;
     Eigen::Vector3d             box_offset_;
