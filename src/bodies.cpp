@@ -759,7 +759,7 @@ void bodies::ConvexMesh::useDimensions(const shapes::Shape *shape)
   mesh_data_->bounding_cylinder_.radius = maxdist;
   mesh_data_->bounding_cylinder_.length = cyl_length;
 
-  FILE* null = fopen ("/dev/null","w");
+  static FILE* null = fopen ("/dev/null","w");
 
   char flags[] = "qhull Tv";
   int exitcode = qh_new_qhull(3, mesh->vertex_count, points, true, flags, null, null);
