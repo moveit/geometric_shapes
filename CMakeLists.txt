@@ -42,7 +42,7 @@ find_package(Eigen REQUIRED)
 catkin_package(
   INCLUDE_DIRS include ${OCTOMAP_INCLUDE_DIRS}
   LIBRARIES ${PROJECT_NAME} ${OCTOMAP_LIBRARIES}
-  CATKIN_DEPENDS shape_tools shape_msgs random_numbers eigen_stl_containers
+  CATKIN_DEPENDS shape_tools shape_msgs random_numbers eigen_stl_containers visualization_msgs
   DEPENDS Eigen console_bridge
   )
 
