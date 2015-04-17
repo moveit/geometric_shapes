@@ -46,9 +46,9 @@
 
 #include <Eigen/Geometry>
 
-#include <shape_tools/shape_to_marker.h>
-#include <shape_tools/shape_extents.h>
-#include <shape_tools/solid_primitive_dims.h>
+#include <geometric_shapes/shape_to_marker.h>
+#include <geometric_shapes/shape_extents.h>
+#include <geometric_shapes/solid_primitive_dims.h>
 
 namespace shapes
 {
@@ -173,12 +173,12 @@ public:
 
   void operator()(const shape_msgs::Mesh &shape_msg) const
   {
-    shape_tools::constructMarkerFromShape(shape_msg, *marker_, use_mesh_triangle_list_);
+    geometric_shapes::constructMarkerFromShape(shape_msg, *marker_, use_mesh_triangle_list_);
   }
 
   void operator()(const shape_msgs::SolidPrimitive &shape_msg) const
   {
-    shape_tools::constructMarkerFromShape(shape_msg, *marker_);
+    geometric_shapes::constructMarkerFromShape(shape_msg, *marker_);
   }
 
 private:
@@ -226,7 +226,7 @@ public:
   Eigen::Vector3d operator()(const shape_msgs::Mesh &shape_msg) const
   {
     double x_extent, y_extent, z_extent;
-    shape_tools::getShapeExtents(shape_msg, x_extent, y_extent, z_extent);
+    geometric_shapes::getShapeExtents(shape_msg, x_extent, y_extent, z_extent);
     Eigen::Vector3d e(x_extent, y_extent, z_extent);
     return e;
   }
@@ -234,7 +234,7 @@ public:
   Eigen::Vector3d operator()(const shape_msgs::SolidPrimitive &shape_msg) const
   {
     double x_extent, y_extent, z_extent;
-    shape_tools::getShapeExtents(shape_msg, x_extent, y_extent, z_extent);
+    geometric_shapes::getShapeExtents(shape_msg, x_extent, y_extent, z_extent);
     Eigen::Vector3d e(x_extent, y_extent, z_extent);
     return e;
   }
@@ -377,7 +377,7 @@ bool constructMsgFromShape(const Shape* shape, ShapeMsg &shape_msg)
   {
     shape_msgs::SolidPrimitive s;
     s.type = shape_msgs::SolidPrimitive::SPHERE;
-    s.dimensions.resize(shape_tools::SolidPrimitiveDimCount<shape_msgs::SolidPrimitive::SPHERE>::value);
+    s.dimensions.resize(geometric_shapes::SolidPrimitiveDimCount<shape_msgs::SolidPrimitive::SPHERE>::value);
     s.dimensions[shape_msgs::SolidPrimitive::SPHERE_RADIUS] = static_cast<const Sphere*>(shape)->radius;
     shape_msg = s;
   }
@@ -387,7 +387,7 @@ bool constructMsgFromShape(const Shape* shape, ShapeMsg &shape_msg)
       shape_msgs::SolidPrimitive s;
       s.type = shape_msgs::SolidPrimitive::BOX;
       const double* sz = static_cast<const Box*>(shape)->size;
-      s.dimensions.resize(shape_tools::SolidPrimitiveDimCount<shape_msgs::SolidPrimitive::BOX>::value);
+      s.dimensions.resize(geometric_shapes::SolidPrimitiveDimCount<shape_msgs::SolidPrimitive::BOX>::value);
       s.dimensions[shape_msgs::SolidPrimitive::BOX_X] = sz[0];
       s.dimensions[shape_msgs::SolidPrimitive::BOX_Y] = sz[1];
       s.dimensions[shape_msgs::SolidPrimitive::BOX_Z] = sz[2];
@@ -398,7 +398,7 @@ bool constructMsgFromShape(const Shape* shape, ShapeMsg &shape_msg)
       {
         shape_msgs::SolidPrimitive s;
         s.type = shape_msgs::SolidPrimitive::CYLINDER;
-        s.dimensions.resize(shape_tools::SolidPrimitiveDimCount<shape_msgs::SolidPrimitive::CYLINDER>::value);
+        s.dimensions.resize(geometric_shapes::SolidPrimitiveDimCount<shape_msgs::SolidPrimitive::CYLINDER>::value);
         s.dimensions[shape_msgs::SolidPrimitive::CYLINDER_RADIUS] = static_cast<const Cylinder*>(shape)->radius;
         s.dimensions[shape_msgs::SolidPrimitive::CYLINDER_HEIGHT] = static_cast<const Cylinder*>(shape)->length;
         shape_msg = s;
@@ -408,7 +408,7 @@ bool constructMsgFromShape(const Shape* shape, ShapeMsg &shape_msg)
         {
           shape_msgs::SolidPrimitive s;
           s.type = shape_msgs::SolidPrimitive::CONE;
-          s.dimensions.resize(shape_tools::SolidPrimitiveDimCount<shape_msgs::SolidPrimitive::CONE>::value);
+          s.dimensions.resize(geometric_shapes::SolidPrimitiveDimCount<shape_msgs::SolidPrimitive::CONE>::value);
           s.dimensions[shape_msgs::SolidPrimitive::CONE_RADIUS] = static_cast<const Cone*>(shape)->radius;
           s.dimensions[shape_msgs::SolidPrimitive::CONE_HEIGHT] = static_cast<const Cone*>(shape)->length;
           shape_msg = s;
