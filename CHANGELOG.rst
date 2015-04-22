@@ -2,6 +2,16 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* PR `#32 <https://github.com/ros-planning/geometric_shapes/issues/32>`_
+  Merge shape_tools package into geometric shapes
+* PR `#33 <https://github.com/ros-planning/geometric_shapes/issues/33>`_
+  Add run_depend on visualization_msgs
+* PR `#26 <https://github.com/ros-planning/geometric_shapes/issues/26>`_
+  Prevent every mesh generation opening a new file handle.
+* Contributors: Christian Dornhege, Dave Coleman, Jochen Sprickerhof, Michael Ferguson, Steven Peters
+
 0.4.1 (2014-07-07)
 ------------------
 * update distro for travis testing. precise:=trusty
