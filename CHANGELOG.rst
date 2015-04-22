@@ -2,8 +2,8 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.4.2 (2015-04-22)
+------------------
 * PR `#32 <https://github.com/ros-planning/geometric_shapes/issues/32>`_
   Merge shape_tools package into geometric shapes
 * PR `#33 <https://github.com/ros-planning/geometric_shapes/issues/33>`_
