@@ -2,8 +2,8 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.4.3 (2015-04-30)
+------------------
 * add functions for better display of convex meshes
 * produce actual triangles for qhull mesh
 * Fixed inverted scale for convex meshes inside check
