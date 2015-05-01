@@ -2,6 +2,15 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Prevent every mesh generation opening a new file handle.
+* add functions for better display of convex meshes
+* produce actual triangles for qhull mesh
+* Fixed inverted scale for convex meshes inside check
+* fix configure config.h.in when paths contain spaces (fix `#9 <https://github.com/ros-planning/geometric_shapes/issues/9>`_)
+* Contributors: Acorn, Christian Dornhege, Dave Hershberger, Dirk Thomas, Ioan A Sucan, Michael Ferguson
+
 0.3.8 (2014-02-25)
 ------------------
 * fix how we find eigen
