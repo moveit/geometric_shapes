@@ -2,8 +2,8 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.3.9 (2015-04-30)
+------------------
 * Prevent every mesh generation opening a new file handle.
 * add functions for better display of convex meshes
 * produce actual triangles for qhull mesh
