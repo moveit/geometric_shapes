@@ -2,6 +2,13 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* add functions for better display of convex meshes
+* produce actual triangles for qhull mesh
+* Fixed inverted scale for convex meshes inside check
+* Contributors: Christian Dornhege, Michael Ferguson
+
 0.4.2 (2015-04-22)
 ------------------
 * PR `#32 <https://github.com/ros-planning/geometric_shapes/issues/32>`_
