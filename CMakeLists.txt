@@ -34,7 +34,7 @@ else()
 endif()
 
 find_package(octomap REQUIRED)
-find_package(catkin COMPONENTS cmake_modules shape_msgs resource_retriever shape_tools random_numbers eigen_stl_containers)
+find_package(catkin COMPONENTS cmake_modules visualization_msgs shape_msgs resource_retriever random_numbers eigen_stl_containers)
 find_package(console_bridge REQUIRED)
 
 find_package(Eigen REQUIRED)
@@ -42,7 +42,7 @@ find_package(Eigen REQUIRED)
 catkin_package(
   INCLUDE_DIRS include ${OCTOMAP_INCLUDE_DIRS}
   LIBRARIES ${PROJECT_NAME} ${OCTOMAP_LIBRARIES}
-  CATKIN_DEPENDS shape_tools shape_msgs random_numbers eigen_stl_containers
+  CATKIN_DEPENDS shape_msgs random_numbers eigen_stl_containers visualization_msgs
   DEPENDS Eigen console_bridge
   )
 
@@ -61,7 +61,9 @@ add_library(${PROJECT_NAME}
   src/shape_operations.cpp
   src/mesh_operations.cpp
   src/bodies.cpp
-  src/body_operations.cpp)
+  src/body_operations.cpp
+  src/shape_to_marker.cpp
+  src/shape_extents.cpp)
 target_link_libraries(${PROJECT_NAME} ${ASSIMP_LIBRARIES} ${QHULL_LIBRARIES} ${catkin_LIBRARIES} ${console_bridge_LIBRARIES} ${Boost_LIBRARIES})
 
 
@@ -77,4 +79,3 @@ install(TARGETS ${PROJECT_NAME}
 install(DIRECTORY include/
         DESTINATION include
         FILES_MATCHING PATTERN "*.h")
-

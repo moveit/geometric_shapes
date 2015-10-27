@@ -2,6 +2,23 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.4.3 (2015-04-30)
+------------------
+* add functions for better display of convex meshes
+* produce actual triangles for qhull mesh
+* Fixed inverted scale for convex meshes inside check
+* Contributors: Christian Dornhege, Michael Ferguson
+
+0.4.2 (2015-04-22)
+------------------
+* PR `#32 <https://github.com/ros-planning/geometric_shapes/issues/32>`_
+  Merge shape_tools package into geometric shapes
+* PR `#33 <https://github.com/ros-planning/geometric_shapes/issues/33>`_
+  Add run_depend on visualization_msgs
+* PR `#26 <https://github.com/ros-planning/geometric_shapes/issues/26>`_
+  Prevent every mesh generation opening a new file handle.
+* Contributors: Christian Dornhege, Dave Coleman, Jochen Sprickerhof, Michael Ferguson, Steven Peters
+
 0.4.1 (2014-07-07)
 ------------------
 * update distro for travis testing. precise:=trusty
