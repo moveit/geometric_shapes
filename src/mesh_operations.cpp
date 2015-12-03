@@ -251,7 +251,7 @@ Mesh* createMeshFromBinary(const char *buffer, std::size_t size, const Eigen::Ve
                                                      aiProcess_JoinIdenticalVertices  |
                                                      aiProcess_SortByPType            |
                                                      aiProcess_OptimizeGraph          |
-                                                     aiProcess_OptimizeMeshes, assimp_hint.c_str());
+                                                     aiProcess_OptimizeMeshes, hint.c_str());
   if (scene)
     return createMeshFromAsset(scene, scale, assimp_hint);
   else
