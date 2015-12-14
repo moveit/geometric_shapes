@@ -499,7 +499,7 @@ Mesh* createMeshFromShape(const Cylinder &cylinder)
   double h = cylinder.length;
 
   const double pi = boost::math::constants::pi<double>();
-  unsigned int tot = tot_for_unit_cylinder * r;
+  unsigned int tot = ceil(tot_for_unit_cylinder * r);
   double phid = pi * 2 / tot;
 
   double circle_edge = phid * r;
