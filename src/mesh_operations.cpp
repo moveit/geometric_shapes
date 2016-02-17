@@ -244,12 +244,26 @@ Mesh* createMeshFromBinary(const char *buffer, std::size_t size, const Eigen::Ve
   // Create an instance of the Importer class
   Assimp::Importer importer;
 
+  // Issue #38 fix: as part of the post-processing, we remove all other components in file but
+  // the meshes, as anyway the resulting shapes:Mesh object just receives vertices and triangles.
+  importer.SetPropertyInteger(AI_CONFIG_PP_RVC_FLAGS,
+          aiComponent_NORMALS                  |
+          aiComponent_TANGENTS_AND_BITANGENTS  |
+          aiComponent_COLORS                   |
+          aiComponent_TEXCOORDS                |
+          aiComponent_BONEWEIGHTS              |
+          aiComponent_ANIMATIONS               |
+          aiComponent_TEXTURES                 |
+          aiComponent_LIGHTS                   |
+          aiComponent_CAMERAS                  |
+          aiComponent_MATERIALS);
 
-  // And have it read the given file with some postprocessing
+  // And have it read the given file with some post-processing
   const aiScene* scene = importer.ReadFileFromMemory(reinterpret_cast<const void*>(buffer), size,
                                                      aiProcess_Triangulate            |
                                                      aiProcess_JoinIdenticalVertices  |
                                                      aiProcess_SortByPType            |
+                                                     aiProcess_RemoveComponent        |
                                                      aiProcess_OptimizeGraph          |
                                                      aiProcess_OptimizeMeshes, assimp_hint.c_str());
   if (scene)
