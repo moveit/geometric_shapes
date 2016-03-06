@@ -2,8 +2,8 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.4.4 (2016-03-06)
+------------------
 * Merge pull request `#37 <https://github.com/ros-planning/geometric_shapes/issues/37>`_ from corot/indigo-devel
   Fix issue `#28 <https://github.com/ros-planning/geometric_shapes/issues/28>`_ on small radius cylinders
 * Contributors: Dave Coleman, Jorge Santos Simon
