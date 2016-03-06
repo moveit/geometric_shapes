@@ -17,4 +17,6 @@ Note: [shape_tools](https://github.com/ros-planning/shape_tools) package was rec
  
 ## Build Status
 
-hydro-devel branch: [![Build Status](https://travis-ci.org/ros-planning/geometric_shapes.png?branch=hydro-devel)](https://travis-ci.org/ros-planning/geometric_shapes)
+Devel Job: [![Build Status](http://build.ros.org/buildStatus/icon?job=Jbin_uT64__geometric_shapes__ubuntu_trusty_amd64__binary)](http://build.ros.org/view/Ibin_uT64/job/Jbin_uT64__geometric_shapes__ubuntu_trusty_amd64__binary/)
+
+Debian Job: [![Build Status](http://build.ros.org/buildStatus/icon?job=Jdev__geometric_shapes__ubuntu_trusty_amd64)](http://build.ros.org/view/Idev/job/Jdev__geometric_shapes__ubuntu_trusty_amd64/)
