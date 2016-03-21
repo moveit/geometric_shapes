@@ -43,10 +43,10 @@
 
 
 /**
- * Test fixture that generates a mesh from a primitive shape randomly chosen between SPHERE,
- * CYLINDER, CONE and BOX, and load its twin from an STL file. All the following tests are
- * intended to verify that both procedures produce equivalent meshes, and particularly that
- * changes related to issue #38 don't break mesh loading.
+ * Test fixture that generates meshes from the primitive shapes SPHERE, CYLINDER, CONE and BOX,
+ * and load their twins from STL files. All the following tests are intended to verify that both
+ * procedures produce equivalent meshes, and particularly that changes related to issue #38 don't
+ * break mesh loading.
  */
 class CompareMeshVsPrimitive : public ::testing::Test
 {
@@ -64,52 +64,54 @@ public:
     // https://github.com/corot/geometric_shapes/blob/patch-1/src/mesh_operations.cpp#L510)
     // The STL meshes have been built with a more or less equivalent smoothness, but
     // if this matching breaks, randomized tests can fail in some unlikely situations
-    switch (rng.uniformInteger(shapes::CYLINDER, shapes::BOX))
-    {
-      case shapes::SPHERE:
-      {
-        shapes::Sphere shape(0.5);
-        shape_ms = shapes::createMeshFromShape(&shape);
-        loaded_ms = shapes::createMeshFromResource(
-            "file://" + (boost::filesystem::path(TEST_RESOURCES_DIR) / "/sphere.stl").string());
-        break;
-      }
-      case shapes::CYLINDER:
-      {
-        shapes::Cylinder shape(0.5, 1.0);
-        shape_ms = shapes::createMeshFromShape(&shape);
-        loaded_ms = shapes::createMeshFromResource(
-            "file://" + (boost::filesystem::path(TEST_RESOURCES_DIR) / "/cylinder.stl").string());
-        break;
-      }
-      case shapes::CONE:
-      {
-        shapes::Cone shape(0.5, 1.0);
-        shape_ms = shapes::createMeshFromShape(&shape);
-        loaded_ms = shapes::createMeshFromResource(
-            "file://" + (boost::filesystem::path(TEST_RESOURCES_DIR) / "/cone.stl").string());
-        break;
-      }
-      case shapes::BOX:
-      {
-        shapes::Box shape(1.0, 1.0, 1.0);
-        shape_ms = shapes::createMeshFromShape(&shape);
-        loaded_ms = shapes::createMeshFromResource(
-            "file://" + (boost::filesystem::path(TEST_RESOURCES_DIR) / "/cube.stl").string());
-        break;
-      }
-    }
 
-    shape_cms = new bodies::ConvexMesh(shape_ms);
-    loaded_cms = new bodies::ConvexMesh(loaded_ms);
+    // SPHERE
+//    shapes::Sphere sphere(0.5);
+//    shape_meshes.push_back(shapes::createMeshFromShape(&sphere));
+//    loaded_meshes.push_back(shapes::createMeshFromResource(
+//        "file://" + (boost::filesystem::path(TEST_RESOURCES_DIR) / "/sphere.stl").string()));
+//
+//    shape_convex_meshes.push_back(new bodies::ConvexMesh(shape_meshes.back()));
+//    loaded_convex_meshes.push_back(new bodies::ConvexMesh(loaded_meshes.back()));
+
+    // CYLINDER
+    shapes::Cylinder cylinder(0.5, 1.0);
+    shape_meshes.push_back(shapes::createMeshFromShape(&cylinder));
+    loaded_meshes.push_back(shapes::createMeshFromResource(
+        "file://" + (boost::filesystem::path(TEST_RESOURCES_DIR) / "/cylinder.stl").string()));
+
+    shape_convex_meshes.push_back(new bodies::ConvexMesh(shape_meshes.back()));
+    loaded_convex_meshes.push_back(new bodies::ConvexMesh(loaded_meshes.back()));
+
+    // CONE
+    shapes::Cone cone(0.5, 1.0);
+    shape_meshes.push_back(shapes::createMeshFromShape(&cone));
+    loaded_meshes.push_back(shapes::createMeshFromResource(
+        "file://" + (boost::filesystem::path(TEST_RESOURCES_DIR) / "/cone.stl").string()));
+
+    shape_convex_meshes.push_back(new bodies::ConvexMesh(shape_meshes.back()));
+    loaded_convex_meshes.push_back(new bodies::ConvexMesh(loaded_meshes.back()));
+
+    // BOX
+    shapes::Box box(1.0, 1.0, 1.0);
+    shape_meshes.push_back(shapes::createMeshFromShape(&box));
+    loaded_meshes.push_back(shapes::createMeshFromResource(
+        "file://" + (boost::filesystem::path(TEST_RESOURCES_DIR) / "/cube.stl").string()));
+
+    shape_convex_meshes.push_back(new bodies::ConvexMesh(shape_meshes.back()));
+    loaded_convex_meshes.push_back(new bodies::ConvexMesh(loaded_meshes.back()));
   }
 
   void TearDown()
   {
-    delete shape_ms;
-    delete loaded_ms;
-    delete shape_cms;
-    delete loaded_cms;
+    for (int i = 0; i < shape_meshes.size(); ++i)
+    {
+      delete shape_meshes[i];
+      delete loaded_meshes[i];
+
+      delete shape_convex_meshes[i];
+      delete loaded_convex_meshes[i];
+    }
   }
 
   ~CompareMeshVsPrimitive()
@@ -119,29 +121,37 @@ public:
 protected:
   random_numbers::RandomNumberGenerator rng;
 
-  shapes::Mesh *shape_ms;
-  shapes::Mesh *loaded_ms;
+  std::vector<shapes::Mesh*> shape_meshes;
+  std::vector<shapes::Mesh*> loaded_meshes;
 
-  bodies::Body *shape_cms;
-  bodies::Body *loaded_cms;
+  std::vector<bodies::Body*> shape_convex_meshes;
+  std::vector<bodies::Body*> loaded_convex_meshes;
 };
 
 TEST_F(CompareMeshVsPrimitive, ContainsPoint)
 {
   // Any point inside a mesh must be inside the other too
-
-  Eigen::Vector3d p;
-  bool found = false;
-  for (int i = 0; i < 100; ++i)
+  for (int i = 0; i < shape_meshes.size(); ++i)
   {
-    if ((shape_cms->samplePointInside(rng, 10000, p)) ||
-        (loaded_cms->samplePointInside(rng, 10000, p)))
+    shapes::Mesh *shape_ms = shape_meshes[i];
+    shapes::Mesh *loaded_ms = loaded_meshes[i];
+
+    bodies::Body *shape_cms = shape_convex_meshes[i];
+    bodies::Body *loaded_cms = loaded_convex_meshes[i];
+
+    Eigen::Vector3d p;
+    bool found = false;
+    for (int i = 0; i < 100; ++i)
     {
-      found = true;
-      EXPECT_EQ(shape_cms->containsPoint(p), loaded_cms->containsPoint(p));
+      if ((shape_cms->samplePointInside(rng, 10000, p)) ||
+          (loaded_cms->samplePointInside(rng, 10000, p)))
+      {
+        found = true;
+        EXPECT_EQ(shape_cms->containsPoint(p), loaded_cms->containsPoint(p));
+      }
     }
+    EXPECT_TRUE(found) << "No point inside the meshes was found (very unlikely)";
   }
-  EXPECT_TRUE(found) << "No point inside the meshes was found (very unlikely)";
 }
 
 TEST_F(CompareMeshVsPrimitive, IntersectsRay)
@@ -154,55 +164,86 @@ TEST_F(CompareMeshVsPrimitive, IntersectsRay)
 //  Eigen::Vector3d ray_o(0.497215,  -0.0503702, 0.15293);
 //  Eigen::Vector3d ray_d(0.00640291, 0.776497, -0.0711191);
 
-  bool intersects = false;
-  for (int i = 0; i < 100; ++i)
+  for (int i = 0; i < shape_meshes.size(); ++i)
   {
-    Eigen::Vector3d ray_o(rng.uniformReal(-1.0, +1.0),
-                          rng.uniformReal(-1.0, +1.0),
-                          rng.uniformReal(-1.0, +1.0));
-    Eigen::Vector3d ray_d(rng.uniformReal(-1.0, +1.0),
-                          rng.uniformReal(-1.0, +1.0),
-                          rng.uniformReal(-1.0, +1.0));
-    EigenSTL::vector_Vector3d vi1, vi2;
-    shape_cms->intersectsRay(ray_o, ray_d, &vi1);
-    loaded_cms->intersectsRay(ray_o, ray_d, &vi2);
+    shapes::Mesh *shape_ms = shape_meshes[i];
+    shapes::Mesh *loaded_ms = loaded_meshes[i];
 
-// DEBUG printing
-//    if (vi1.size() != vi2.size() && vi1.size() > 0 && vi2.size() > 0)
-//    {
-//        std::cout << vi1.size() << "   " << vi2.size() << "\n";
-//        std::cout << ray_o.x() << "  "<< ray_o.y() << "  "<< ray_o.z()
-//          << "\n" << ray_d.x() << "  "<< ray_d.y() << "  "<< ray_d.z() << "\n";
-//    }
-    
-    EXPECT_EQ(vi1.size(), vi2.size());
-    if (vi1.size() > 0 && vi2.size() > 0)
+    bodies::Body *shape_cms = shape_convex_meshes[i];
+    bodies::Body *loaded_cms = loaded_convex_meshes[i];
+
+    bool intersects = false;
+    for (int i = 0; i < 100; ++i)
     {
-      EXPECT_NEAR(vi1[0].x(), vi2[0].x(), 0.01);
-      EXPECT_NEAR(vi1[0].y(), vi2[0].y(), 0.01);
-      EXPECT_NEAR(vi1[0].z(), vi2[0].z(), 0.01);
+      Eigen::Vector3d ray_o(rng.uniformReal(-1.0, +1.0),
+                            rng.uniformReal(-1.0, +1.0),
+                            rng.uniformReal(-1.0, +1.0));
+      Eigen::Vector3d ray_d(rng.uniformReal(-1.0, +1.0),
+                            rng.uniformReal(-1.0, +1.0),
+                            rng.uniformReal(-1.0, +1.0));
+      EigenSTL::vector_Vector3d vi1, vi2;
+      shape_cms->intersectsRay(ray_o, ray_d, &vi1);
+      loaded_cms->intersectsRay(ray_o, ray_d, &vi2);
 
-      intersects = true;
+  // DEBUG printing
+  //    if (vi1.size() != vi2.size() && vi1.size() > 0 && vi2.size() > 0)
+  //    {
+  //        std::cout << vi1.size() << "   " << vi2.size() << "\n";
+  //        std::cout << ray_o.x() << "  "<< ray_o.y() << "  "<< ray_o.z()
+  //          << "\n" << ray_d.x() << "  "<< ray_d.y() << "  "<< ray_d.z() << "\n";
+  //    }
+
+      EXPECT_EQ(vi1.size(), vi2.size());
+      if (vi1.size() > 0 && vi2.size() > 0)
+      {
+        EXPECT_NEAR(vi1[0].x(), vi2[0].x(), 0.01);
+        EXPECT_NEAR(vi1[0].y(), vi2[0].y(), 0.01);
+        EXPECT_NEAR(vi1[0].z(), vi2[0].z(), 0.01);
+
+        intersects = true;
+      }
     }
-  }
 
-  EXPECT_TRUE(intersects) << "No ray intersects the meshes (very unlikely)";
+    EXPECT_TRUE(intersects) << "No ray intersects the meshes (very unlikely)";
+  }
 }
 
 TEST_F(CompareMeshVsPrimitive, BoundingSphere)
 {
   // Bounding spheres must be nearly identical
+  for (int i = 0; i < shape_meshes.size(); ++i)
+  {
+    shapes::Mesh *shape_ms = shape_meshes[i];
+    shapes::Mesh *loaded_ms = loaded_meshes[i];
 
-  shapes::Sphere shape(1.0);
-  Eigen::Vector3d center1, center2;
-  double radius1, radius2;
-  computeShapeBoundingSphere(shape_ms, center1, radius1);
-  computeShapeBoundingSphere(loaded_ms, center2, radius2);
+    bodies::Body *shape_cms = shape_convex_meshes[i];
+    bodies::Body *loaded_cms = loaded_convex_meshes[i];
 
-  EXPECT_NEAR(radius1,     radius2,     0.001);
-  EXPECT_NEAR(center1.x(), center2.x(), 0.001);
-  EXPECT_NEAR(center1.y(), center2.y(), 0.001);
-  EXPECT_NEAR(center1.z(), center2.z(), 0.001);
+    shapes::Sphere shape(1.0);
+    Eigen::Vector3d center1, center2;
+    double radius1, radius2;
+    computeShapeBoundingSphere(shape_ms, center1, radius1);
+    computeShapeBoundingSphere(loaded_ms, center2, radius2);
+
+    EXPECT_NEAR(radius1,     radius2,     0.001);
+    EXPECT_NEAR(center1.x(), center2.x(), 0.001);
+    EXPECT_NEAR(center1.y(), center2.y(), 0.001);
+    EXPECT_NEAR(center1.z(), center2.z(), 0.001);
+  }
+}
+
+TEST_F(CompareMeshVsPrimitive, BoxVertexCount)
+{
+  // For a simple shape as a cube, we expect that both meshes have the same number of vertex and triangles
+  // But that was not the case before fixing issue #38!
+  // These tests don't apply to curve shapes because the number of elements depends on how smooth they where
+  // created. So ensure that "back()" gives a pointer to box meshes!
+  EXPECT_EQ(shape_meshes.back()->vertex_count, loaded_meshes.back()->vertex_count);
+}
+
+TEST_F(CompareMeshVsPrimitive, BoxTriangleCount)
+{
+  EXPECT_EQ(shape_meshes.back()->triangle_count, loaded_meshes.back()->triangle_count);
 }
 
 
