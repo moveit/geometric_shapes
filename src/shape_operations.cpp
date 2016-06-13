@@ -117,7 +117,7 @@ Shape* constructShapeFromMsg(const shape_msgs::SolidPrimitive &shape_msg)
                              shape_msg.dimensions[shape_msgs::SolidPrimitive::CONE_HEIGHT]);
         }
   if (shape == NULL)
-    logError("Unable to construct shape corresponding to shape_msgect of type %d", (int)shape_msg.type);
+    logError("Unable to construct shape corresponding to shape_msg of type %d", (int)shape_msg.type);
 
   return shape;
 }
