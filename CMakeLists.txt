@@ -7,8 +7,6 @@ if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
 endif()
 
-find_package(Boost REQUIRED system filesystem)
-
 find_package(ASSIMP QUIET)
 if (NOT ASSIMP_FOUND)
   find_package(PkgConfig REQUIRED)
@@ -16,17 +14,36 @@ if (NOT ASSIMP_FOUND)
   pkg_check_modules(ASSIMP REQUIRED assimp)
 endif()
 
-find_package(octomap REQUIRED)
-find_package(catkin REQUIRED COMPONENTS cmake_modules visualization_msgs shape_msgs resource_retriever random_numbers eigen_stl_containers)
+find_package(Boost REQUIRED system filesystem)
+
 find_package(console_bridge REQUIRED)
 
+# required to find 'Eigen' in indigo
+find_package(cmake_modules REQUIRED)
 find_package(Eigen REQUIRED)
+
+find_package(octomap REQUIRED)
+
+find_package(catkin REQUIRED COMPONENTS
+  eigen_stl_containers
+  random_numbers
+  resource_retriever
+  shape_msgs
+  visualization_msgs
+)
 
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES ${PROJECT_NAME} ${OCTOMAP_LIBRARIES}
-  CATKIN_DEPENDS shape_msgs random_numbers eigen_stl_containers visualization_msgs
-  DEPENDS Eigen console_bridge OCTOMAP
+  CATKIN_DEPENDS
+    eigen_stl_containers
+    random_numbers
+    shape_msgs
+    visualization_msgs
+  DEPENDS
+    Eigen
+    OCTOMAP
+    console_bridge
   )
 
 find_package(Qhull REQUIRED)
@@ -39,13 +56,15 @@ include_directories(SYSTEM ${EIGEN_INCLUDE_DIRS} ${Boost_INCLUDE_DIR} ${ASSIMP_I
 include_directories(${catkin_INCLUDE_DIRS} ${console_bridge_INCLUDE_DIRS})
 
 add_library(${PROJECT_NAME}
-  src/shapes.cpp
-  src/shape_operations.cpp
-  src/mesh_operations.cpp
   src/bodies.cpp
   src/body_operations.cpp
+  src/mesh_operations.cpp
+  src/shape_extents.cpp
+  src/shape_operations.cpp
   src/shape_to_marker.cpp
-  src/shape_extents.cpp)
+  src/shapes.cpp
+)
+
 target_link_libraries(${PROJECT_NAME} ${ASSIMP_LIBRARIES} ${QHULL_LIBRARIES} ${catkin_LIBRARIES} ${console_bridge_LIBRARIES} ${Boost_LIBRARIES})
 
 
