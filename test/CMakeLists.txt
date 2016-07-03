@@ -2,7 +2,7 @@ file(TO_NATIVE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/resources" TEST_RESOURCES_DIR)
 if(WIN32)
     # Correct directory separator for Windows
     string(REPLACE "\\" "\\\\" TEST_RESOURCES_DIR "${TEST_RESOURCES_DIR}")
-endif(WIN32)
+endif()
 configure_file(resources/config.h.in "${CMAKE_CURRENT_BINARY_DIR}/resources/config.h")
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
