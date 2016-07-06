@@ -34,7 +34,7 @@ else()
 endif()
 
 find_package(octomap REQUIRED)
-find_package(catkin COMPONENTS cmake_modules visualization_msgs shape_msgs resource_retriever random_numbers eigen_stl_containers)
+find_package(catkin REQUIRED COMPONENTS cmake_modules visualization_msgs shape_msgs resource_retriever random_numbers eigen_stl_containers)
 find_package(console_bridge REQUIRED)
 
 find_package(Eigen REQUIRED)
