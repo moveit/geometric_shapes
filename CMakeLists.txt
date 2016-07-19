@@ -21,9 +21,7 @@ find_package(Boost REQUIRED system filesystem)
 
 find_package(console_bridge REQUIRED)
 
-# required to find 'Eigen' in indigo
-find_package(cmake_modules REQUIRED)
-find_package(Eigen REQUIRED)
+find_package(Eigen3 REQUIRED)
 
 find_package(octomap REQUIRED)
 
@@ -36,7 +34,8 @@ find_package(catkin REQUIRED COMPONENTS
 )
 
 catkin_package(
-  INCLUDE_DIRS include
+  INCLUDE_DIRS
+    include
   LIBRARIES ${PROJECT_NAME} ${OCTOMAP_LIBRARIES}
   CATKIN_DEPENDS
     eigen_stl_containers
@@ -44,7 +43,7 @@ catkin_package(
     shape_msgs
     visualization_msgs
   DEPENDS
-    Eigen
+    EIGEN3
     OCTOMAP
     console_bridge
   )
@@ -55,7 +54,7 @@ if (HAVE_QHULL_2011)
 endif()
 
 include_directories(include)
-include_directories(SYSTEM ${EIGEN_INCLUDE_DIRS} ${Boost_INCLUDE_DIR} ${ASSIMP_INCLUDE_DIRS} ${OCTOMAP_INCLUDE_DIRS})
+include_directories(SYSTEM ${EIGEN3_INCLUDE_DIR} ${Boost_INCLUDE_DIR} ${ASSIMP_INCLUDE_DIRS} ${OCTOMAP_INCLUDE_DIRS})
 include_directories(${catkin_INCLUDE_DIRS} ${console_bridge_INCLUDE_DIRS})
 
 add_library(${PROJECT_NAME}

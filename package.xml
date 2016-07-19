@@ -7,14 +7,13 @@
   <maintainer email="isucan@google.com">Ioan Sucan</maintainer>
   <maintainer email="dave@dav.ee">Dave Coleman</maintainer>
 
-  <license>BSD</license>  
+  <license>BSD</license>
   <url>http://ros.org/wiki/geometric_shapes</url>
 
   <buildtool_depend version_gte="0.5.68">catkin</buildtool_depend>
 
   <build_depend>assimp-dev</build_depend>
   <build_depend>boost</build_depend>
-  <build_depend>cmake_modules</build_depend>
   <build_depend>eigen</build_depend>
   <build_depend>eigen_stl_containers</build_depend>
   <build_depend>libconsole-bridge-dev</build_depend>
