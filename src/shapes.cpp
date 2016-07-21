@@ -159,7 +159,7 @@ shapes::OcTree::OcTree() : Shape()
   type = OCTREE;
 }
 
-shapes::OcTree::OcTree(const boost::shared_ptr<const octomap::OcTree> &t) : octree(t)
+shapes::OcTree::OcTree(const std::shared_ptr<const octomap::OcTree> &t) : octree(t)
 {
   type = OCTREE;
 }
