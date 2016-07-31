@@ -2,6 +2,17 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* [fix] append cmake module path instead of prepending (`#22 <https://github.com/ros-planning/geometric_shapes/issues/22>`_)
+* [fix] FindQhull with non-debian systems (`#30 <https://github.com/ros-planning/geometric_shapes/issues/30>`_). See https://github.com/PointCloudLibrary/pcl/pull/852
+* [sys] Use std::shared_ptr for compatibility with FCL 0.5. `#47 <https://github.com/ros-planning/geometric_shapes/issues/47>`_
+* [sys] Switch to eigen 3 (`#46 <https://github.com/ros-planning/geometric_shapes/issues/46>`_)
+* [sys] Switched to C++11 `#44 <https://github.com/ros-planning/geometric_shapes/issues/44>`_
+* [sys] add notice that project will be built in Release mode
+* [sys] Remove link_directories, deprecated assimp code
+* Contributors: Dave Coleman, Ioan A Sucan, Jochen Sprickerhof, Maarten de Vries, Michael Goerner
+
 0.4.4 (2016-03-06)
 ------------------
 * Merge pull request `#37 <https://github.com/ros-planning/geometric_shapes/issues/37>`_ from corot/indigo-devel
