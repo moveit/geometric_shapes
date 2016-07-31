@@ -2,8 +2,8 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.0 (2016-07-31)
+------------------
 * [fix] append cmake module path instead of prepending (`#22 <https://github.com/ros-planning/geometric_shapes/issues/22>`_)
 * [fix] FindQhull with non-debian systems (`#30 <https://github.com/ros-planning/geometric_shapes/issues/30>`_). See https://github.com/PointCloudLibrary/pcl/pull/852
 * [sys] Use std::shared_ptr for compatibility with FCL 0.5. `#47 <https://github.com/ros-planning/geometric_shapes/issues/47>`_
