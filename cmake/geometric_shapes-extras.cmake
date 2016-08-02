@@ -1,2 +1,2 @@
-set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
+add_compile_options("-std=c++11")
 
