@@ -231,9 +231,9 @@ Mesh* createMeshFromBinary(const char *buffer, std::size_t size, const Eigen::Ve
   {
     hint = assimp_hint.substr(pos + 1);
     std::transform(hint.begin(), hint.end(), hint.begin(), ::tolower);
-    if (hint.find("stl") != std::string::npos)
-      hint = "stl";
   }
+  if (hint.empty())
+    hint = assimp_hint; // send entire file name as hint if no extension was found
 
   // Create an instance of the Importer class
   Assimp::Importer importer;
@@ -245,9 +245,10 @@ Mesh* createMeshFromBinary(const char *buffer, std::size_t size, const Eigen::Ve
                                                      aiProcess_JoinIdenticalVertices  |
                                                      aiProcess_SortByPType            |
                                                      aiProcess_OptimizeGraph          |
-                                                     aiProcess_OptimizeMeshes, assimp_hint.c_str());
+                                                     aiProcess_OptimizeMeshes,
+                                                     hint.c_str());
   if (scene)
-    return createMeshFromAsset(scene, scale, assimp_hint);
+    return createMeshFromAsset(scene, scale, hint);
   else
     return NULL;
 }
