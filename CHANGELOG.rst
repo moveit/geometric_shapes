@@ -2,6 +2,13 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* add c++11 safe-guards to the respective headers (`#51 <https://github.com/ros-planning/geometric_shapes/issues/51>`_)
+  This is, to be polite and point problems that might arise it out to users.
+* Fix incorrect hint always sent to Assimp, improved STL reading (`#24 <https://github.com/ros-planning/geometric_shapes/issues/24>`_)
+* Contributors: Dave Coleman, Michael Görner
+
 0.5.0 (2016-07-31)
 ------------------
 * [fix] append cmake module path instead of prepending (`#22 <https://github.com/ros-planning/geometric_shapes/issues/22>`_)
