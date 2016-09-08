@@ -95,6 +95,21 @@ TEST(CreateMesh, daeXUp)
   assertMesh(loadMesh("triangle_x_up.dae"));
 }
 
+TEST(CreateMesh, daeNoUnit)
+{
+  assertMesh(loadMesh("triangle_no_unit.dae"));
+}
+
+TEST(CreateMesh, dae1M)
+{
+  assertMesh(loadMesh("triangle_1m.dae"));
+}
+
+TEST(CreateMesh, dae10M)
+{
+  assertMesh(loadMesh("triangle_10m.dae"));
+}
+
 int main(int argc, char **argv)
 {
   testing::InitGoogleTest(&argc, argv);
