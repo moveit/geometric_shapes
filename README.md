@@ -1,5 +1,4 @@
-geometric_shapes
-================
+# Geometric Shapes
 
 This package contains generic definitions of geometric shapes and bodies, as well as tools for operating on shape messages.
 Shapes represent only the form of an object.
@@ -13,6 +12,7 @@ Supported shapes:
 - mesh
 
 Note: Bodies for meshes compute the convex hull of those meshes in order to provide the point containment / ray intersection routines.
+
 Note: [shape_tools](https://github.com/ros-planning/shape_tools) package was recently merged into this package
 
 ## Build Status
