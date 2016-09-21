@@ -53,7 +53,7 @@ if (HAVE_QHULL_2011)
 endif()
 
 include_directories(include)
-include_directories(SYSTEM ${EIGEN_INCLUDE_DIRS} ${Boost_INCLUDE_DIR} ${ASSIMP_INCLUDE_DIRS} ${OCTOMAP_INCLUDE_DIRS})
+include_directories(${EIGEN_INCLUDE_DIRS} ${Boost_INCLUDE_DIR} ${ASSIMP_INCLUDE_DIRS} ${OCTOMAP_INCLUDE_DIRS})
 include_directories(${catkin_INCLUDE_DIRS} ${console_bridge_INCLUDE_DIRS})
 
 add_library(${PROJECT_NAME}
