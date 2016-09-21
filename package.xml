@@ -38,4 +38,5 @@
   <run_depend>shape_msgs</run_depend>
   <run_depend>visualization_msgs</run_depend>
 
+  <test_depend>rosunit</test_depend>
 </package>

@@ -46,15 +46,9 @@
 #include <console_bridge/console.h>
 #include <resource_retriever/retriever.h>
 
-#if defined(ASSIMP_UNIFIED_HEADER_NAMES)
 #include <assimp/scene.h>
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
-#else
-#include <assimp/aiScene.h>
-#include <assimp/assimp.hpp>
-#include <assimp/aiPostProcess.h>
-#endif
 
 #include <Eigen/Geometry>
 
@@ -237,9 +231,9 @@ Mesh* createMeshFromBinary(const char *buffer, std::size_t size, const Eigen::Ve
   {
     hint = assimp_hint.substr(pos + 1);
     std::transform(hint.begin(), hint.end(), hint.begin(), ::tolower);
-    if (hint.find("stl") != std::string::npos)
-      hint = "stl";
   }
+  if (hint.empty())
+    hint = assimp_hint; // send entire file name as hint if no extension was found
 
   // Create an instance of the Importer class
   Assimp::Importer importer;
@@ -270,6 +264,19 @@ Mesh* createMeshFromBinary(const char *buffer, std::size_t size, const Eigen::Ve
     return createMeshFromAsset(scene, scale, assimp_hint);
   else
     return NULL;
+
+  // Assimp enforces Y_UP convention by rotating models with different conventions.
+  // However, that behaviour is confusing and doesn't match the ROS convention
+  // where the Z axis is pointing up.
+  // Hopefully this doesn't undo legit use of the root node transformation...
+  // Note that this is also what RViz does internally.
+  scene->mRootNode->mTransformation = aiMatrix4x4();
+
+  // These post processing steps flatten the root node transformation into child nodes,
+  // so they must be delayed until after clearing the root node transform above.
+  importer.ApplyPostProcessing(aiProcess_OptimizeMeshes | aiProcess_OptimizeGraph);
+
+  return createMeshFromAsset(scene, scale, hint);
 }
 
 Mesh* createMeshFromResource(const std::string& resource, const Eigen::Vector3d &scale)

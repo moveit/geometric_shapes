@@ -1,7 +1,7 @@
 /*********************************************************************
 * Software License Agreement (BSD License)
 *
-*  Copyright (c) 2008, Willow Garage, Inc.
+*  Copyright (c) 2016, Jorge Santos
 *  All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without
@@ -57,41 +57,6 @@ public:
 
   void SetUp()
   {
-    // WARN1: we skip the sphere because it takes ages for each test, around 20 seconds each
-    // (possible bug?)
-    // WARN2: meshes created by createMeshFromShape for cylinders and cones use a
-    // magic number to set the smoothness (now is 100):
-    // https://github.com/corot/geometric_shapes/blob/patch-1/src/mesh_operations.cpp#L510)
-    // The STL meshes have been built with a more or less equivalent smoothness, but
-    // if this matching breaks, randomized tests can fail in some unlikely situations
-
-    // SPHERE
-//    shapes::Sphere sphere(0.5);
-//    shape_meshes.push_back(shapes::createMeshFromShape(&sphere));
-//    loaded_meshes.push_back(shapes::createMeshFromResource(
-//        "file://" + (boost::filesystem::path(TEST_RESOURCES_DIR) / "/sphere.stl").string()));
-//
-//    shape_convex_meshes.push_back(new bodies::ConvexMesh(shape_meshes.back()));
-//    loaded_convex_meshes.push_back(new bodies::ConvexMesh(loaded_meshes.back()));
-
-    // CYLINDER
-    shapes::Cylinder cylinder(0.5, 1.0);
-    shape_meshes.push_back(shapes::createMeshFromShape(&cylinder));
-    loaded_meshes.push_back(shapes::createMeshFromResource(
-        "file://" + (boost::filesystem::path(TEST_RESOURCES_DIR) / "/cylinder.stl").string()));
-
-    shape_convex_meshes.push_back(new bodies::ConvexMesh(shape_meshes.back()));
-    loaded_convex_meshes.push_back(new bodies::ConvexMesh(loaded_meshes.back()));
-
-    // CONE
-    shapes::Cone cone(0.5, 1.0);
-    shape_meshes.push_back(shapes::createMeshFromShape(&cone));
-    loaded_meshes.push_back(shapes::createMeshFromResource(
-        "file://" + (boost::filesystem::path(TEST_RESOURCES_DIR) / "/cone.stl").string()));
-
-    shape_convex_meshes.push_back(new bodies::ConvexMesh(shape_meshes.back()));
-    loaded_convex_meshes.push_back(new bodies::ConvexMesh(loaded_meshes.back()));
-
     // BOX
     shapes::Box box(1.0, 1.0, 1.0);
     shape_meshes.push_back(shapes::createMeshFromShape(&box));
@@ -157,13 +122,6 @@ TEST_F(CompareMeshVsPrimitive, ContainsPoint)
 TEST_F(CompareMeshVsPrimitive, IntersectsRay)
 {
   // Random rays must intersect both meshes nearly at the same points
-
-  SUCCEED() << "Test disabled by now, as it fails in around 1% cases";
-  return;
-//  For example, the following ray will hit twice the generated mesh but once the loaded
-//  Eigen::Vector3d ray_o(0.497215,  -0.0503702, 0.15293);
-//  Eigen::Vector3d ray_d(0.00640291, 0.776497, -0.0711191);
-
   for (int i = 0; i < shape_meshes.size(); ++i)
   {
     shapes::Mesh *shape_ms = shape_meshes[i];
