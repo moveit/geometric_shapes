@@ -44,7 +44,6 @@
 #include <cstdlib>
 #include <vector>
 #include <iostream>
-#include <boost/shared_ptr.hpp>
 #include <memory>
 #include <string>
 
@@ -270,10 +269,10 @@ public:
 
 
 /** \brief Shared pointer to a Shape */
-typedef boost::shared_ptr<Shape> ShapePtr;
+typedef std::shared_ptr<Shape> ShapePtr;
 
 /** \brief Shared pointer to a const Shape */
-typedef boost::shared_ptr<const Shape> ShapeConstPtr;
+typedef std::shared_ptr<const Shape> ShapeConstPtr;
 
 }
 
