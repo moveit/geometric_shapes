@@ -149,7 +149,7 @@ void bodies::Sphere::updateInternalData()
   center_ = pose_.translation();
 }
 
-boost::shared_ptr<bodies::Body> bodies::Sphere::cloneAt(const Eigen::Affine3d &pose, double padding, double scale) const
+std::shared_ptr<bodies::Body> bodies::Sphere::cloneAt(const Eigen::Affine3d &pose, double padding, double scale) const
 {
   Sphere *s = new Sphere();
   s->radius_ = radius_;
@@ -157,7 +157,7 @@ boost::shared_ptr<bodies::Body> bodies::Sphere::cloneAt(const Eigen::Affine3d &p
   s->scale_ = scale;
   s->pose_ = pose;
   s->updateInternalData();
-  return boost::shared_ptr<Body>(s);
+  return std::shared_ptr<Body>(s);
 }
 
 double bodies::Sphere::computeVolume() const
@@ -323,7 +323,7 @@ bool bodies::Cylinder::samplePointInside(random_numbers::RandomNumberGenerator &
   return true;
 }
 
-boost::shared_ptr<bodies::Body> bodies::Cylinder::cloneAt(const Eigen::Affine3d &pose, double padding, double scale) const
+std::shared_ptr<bodies::Body> bodies::Cylinder::cloneAt(const Eigen::Affine3d &pose, double padding, double scale) const
 {
   Cylinder *c = new Cylinder();
   c->length_ = length_;
@@ -332,7 +332,7 @@ boost::shared_ptr<bodies::Body> bodies::Cylinder::cloneAt(const Eigen::Affine3d 
   c->scale_ = scale;
   c->pose_ = pose;
   c->updateInternalData();
-  return boost::shared_ptr<Body>(c);
+  return std::shared_ptr<Body>(c);
 }
 
 double bodies::Cylinder::computeVolume() const
@@ -521,7 +521,7 @@ void bodies::Box::updateInternalData()
   corner2_ = center_ + tmp;
 }
 
-boost::shared_ptr<bodies::Body> bodies::Box::cloneAt(const Eigen::Affine3d &pose, double padding, double scale) const
+std::shared_ptr<bodies::Body> bodies::Box::cloneAt(const Eigen::Affine3d &pose, double padding, double scale) const
 {
   Box *b = new Box();
   b->length_ = length_;
@@ -531,7 +531,7 @@ boost::shared_ptr<bodies::Body> bodies::Box::cloneAt(const Eigen::Affine3d &pose
   b->scale_ = scale;
   b->pose_ = pose;
   b->updateInternalData();
-  return boost::shared_ptr<Body>(b);
+  return std::shared_ptr<Body>(b);
 }
 
 double bodies::Box::computeVolume() const
@@ -922,7 +922,7 @@ void bodies::ConvexMesh::updateInternalData()
   Eigen::Affine3d pose = pose_;
   pose.translation() = Eigen::Vector3d(pose_ * mesh_data_->box_offset_);
 
-  boost::scoped_ptr<shapes::Box> box_shape(new shapes::Box(mesh_data_->box_size_.x(), mesh_data_->box_size_.y(), mesh_data_->box_size_.z()));
+  std::unique_ptr<shapes::Box> box_shape(new shapes::Box(mesh_data_->box_size_.x(), mesh_data_->box_size_.y(), mesh_data_->box_size_.z()));
   bounding_box_.setDimensions(box_shape.get());
   bounding_box_.setPose(pose);
   bounding_box_.setPadding(padding_);
@@ -967,7 +967,7 @@ const EigenSTL::vector_Vector3d& bodies::ConvexMesh::getScaledVertices() const
   return scaled_vertices_ ? *scaled_vertices_ : getVertices();
 }
 
-boost::shared_ptr<bodies::Body> bodies::ConvexMesh::cloneAt(const Eigen::Affine3d &pose, double padding, double scale) const
+std::shared_ptr<bodies::Body> bodies::ConvexMesh::cloneAt(const Eigen::Affine3d &pose, double padding, double scale) const
 {
   ConvexMesh *m = new ConvexMesh();
   m->mesh_data_ = mesh_data_;
@@ -975,7 +975,7 @@ boost::shared_ptr<bodies::Body> bodies::ConvexMesh::cloneAt(const Eigen::Affine3
   m->scale_ = scale;
   m->pose_ = pose;
   m->updateInternalData();
-  return boost::shared_ptr<Body>(m);
+  return std::shared_ptr<Body>(m);
 }
 
 void bodies::ConvexMesh::computeBoundingSphere(BoundingSphere &sphere) const
