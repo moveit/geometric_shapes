@@ -257,12 +257,8 @@ Mesh* createMeshFromBinary(const char *buffer, std::size_t size, const Eigen::Ve
                                                      aiProcess_Triangulate            |
                                                      aiProcess_JoinIdenticalVertices  |
                                                      aiProcess_SortByPType            |
-                                                     aiProcess_RemoveComponent        |
-                                                     aiProcess_OptimizeGraph          |
-                                                     aiProcess_OptimizeMeshes, assimp_hint.c_str());
-  if (scene)
-    return createMeshFromAsset(scene, scale, assimp_hint);
-  else
+                                                     aiProcess_RemoveComponent, hint.c_str());
+  if (!scene)
     return NULL;
 
   // Assimp enforces Y_UP convention by rotating models with different conventions.
