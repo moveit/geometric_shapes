@@ -260,8 +260,9 @@ TEST(CylinderPointContainment, CylinderPadding)
 TEST(MeshPointContainment, Pr2Forearm)
 {
     shapes::Mesh *ms = shapes::createMeshFromResource("file://" + (boost::filesystem::path(TEST_RESOURCES_DIR) / "/forearm_roll.stl").string());
-    EXPECT_EQ(ms->vertex_count, 2338);
+    ASSERT_TRUE(ms != NULL);
     bodies::Body *m = new bodies::ConvexMesh(ms);
+    ASSERT_TRUE(m != NULL);
     Eigen::Affine3d t(Eigen::Affine3d::Identity());
     t.translation().x() = 1.0;
     EXPECT_FALSE(m->cloneAt(t)->containsPoint(-1.0, 0.0, 0.0));
