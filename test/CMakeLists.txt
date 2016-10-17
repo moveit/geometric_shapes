@@ -14,3 +14,6 @@ target_link_libraries(test_bounding_sphere ${PROJECT_NAME} ${catkin_LIBRARIES} $
 
 catkin_add_gtest(test_create_mesh test_create_mesh.cpp)
 target_link_libraries(test_create_mesh ${PROJECT_NAME} ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+
+catkin_add_gtest(test_loaded_meshes test_loaded_meshes.cpp)
+target_link_libraries(test_loaded_meshes ${PROJECT_NAME} ${catkin_LIBRARIES} ${Boost_LIBRARIES})
