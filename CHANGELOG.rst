@@ -2,6 +2,22 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* [fix] mesh with too many vertices (`#39 <https://github.com/ros-planning/geometric_shapes/issues/39>`_) (`#60 <https://github.com/ros-planning/geometric_shapes/issues/60>`_)
+* [fix] gcc6 build error (`#56 <https://github.com/ros-planning/geometric_shapes/issues/55>`_)
+* [fix] Clear root transformation on imported Collada meshes. `#52 <https://github.com/ros-planning/geometric_shapes/issues/52>`_
+* [fix] incorrect hint always sent to Assimp, improved STL reading (`#24 <https://github.com/ros-planning/geometric_shapes/issues/24>`_)
+* [fix] append cmake module path instead of prepending. Fixes `#22 <https://github.com/ros-planning/geometric_shapes/issues/22>`_
+* [fix] FindQhull with non-debian systems (`#30 <https://github.com/ros-planning/geometric_shapes/issues/30>`_)
+* [improve] relax mesh containment test (`#58 <https://github.com/ros-planning/geometric_shapes/issues/58>`_)
+* [maintenance] Switch boost::shared_ptr to std::shared_ptr. `#57 <https://github.com/ros-planning/geometric_shapes/pull/57>`_
+* [maintenance] Fix travis for Indigo (`#53 <https://github.com/ros-planning/geometric_shapes/issues/53>`_)
+* [maintenance] catkin_lint and cleanup `#43 <https://github.com/ros-planning/geometric_shapes/issues/43>`_
+* [maintenance] add notice that project will be built in Release mode
+* [maintenance] cmake cleanup and improvement (`#35 <https://github.com/ros-planning/geometric_shapes/issues/35>`_ and others)
+* Contributors: Dave Coleman, Ioan A Sucan, Isaac I.Y. Saito, Jochen Sprickerhof, Jorge Santos Simon, Lukas Bulwahn, Maarten de Vries, Michael Goerner,
+
 0.4.4 (2016-03-06)
 ------------------
 * Merge pull request `#37 <https://github.com/ros-planning/geometric_shapes/issues/37>`_ from corot/indigo-devel
