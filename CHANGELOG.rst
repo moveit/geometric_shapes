@@ -2,8 +2,8 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.2 (2016-10-20)
+------------------
 * [fix] mesh with too many vertices (`#39 <https://github.com/ros-planning/geometric_shapes/issues/39>`_) (`#60 <https://github.com/ros-planning/geometric_shapes/issues/60>`_)
 * [fix] gcc6 build error (`#56 <https://github.com/ros-planning/geometric_shapes/issues/56>`_)
 * [fix] Clear root transformation on imported Collada meshes. `#52 <https://github.com/ros-planning/geometric_shapes/issues/52>`_
