@@ -2,6 +2,15 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* [fix] mesh with too many vertices (`#39 <https://github.com/ros-planning/geometric_shapes/issues/39>`_) (`#60 <https://github.com/ros-planning/geometric_shapes/issues/60>`_)
+* [fix] gcc6 build error (`#56 <https://github.com/ros-planning/geometric_shapes/issues/56>`_)
+* [fix] Clear root transformation on imported Collada meshes. `#52 <https://github.com/ros-planning/geometric_shapes/issues/52>`_
+* [improve] relax mesh containment test (`#58 <https://github.com/ros-planning/geometric_shapes/issues/58>`_)
+* [maintenance] Switch boost::shared_ptr to std::shared_ptr. `#57 <https://github.com/ros-planning/geometric_shapes/pull/57>`_
+* Contributors: Dave Coleman, Isaac I.Y. Saito, Lukas Bulwahn, Maarten de Vries, Michael Goerner
+
 0.5.1 (2016-08-23)
 ------------------
 * add c++11 safe-guards to the respective headers (`#51 <https://github.com/ros-planning/geometric_shapes/issues/51>`_)
