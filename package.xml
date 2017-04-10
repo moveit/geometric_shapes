@@ -2,10 +2,12 @@
   <name>geometric_shapes</name>
   <version>0.5.2</version>
   <description>This package contains generic definitions of geometric shapes and bodies.</description>
+
   <author email="isucan@google.com">Ioan Sucan</author>
   <author email="gjones@willowgarage.edu">Gil Jones</author>
-  <maintainer email="isucan@google.com">Ioan Sucan</maintainer>
+
   <maintainer email="dave@dav.ee">Dave Coleman</maintainer>
+  <maintainer email="130s@2000.jukuin.keio.ac.jp">Isaac I. Y. Saito</maintainer>
 
   <license>BSD</license>
   <url>http://ros.org/wiki/geometric_shapes</url>
