@@ -46,6 +46,8 @@ catkin_package(
     EIGEN3
     OCTOMAP
     console_bridge
+  CFG_EXTRAS
+    geometric_shapes-extras.cmake
   )
 
 find_package(Qhull REQUIRED)
