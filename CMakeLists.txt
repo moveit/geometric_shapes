@@ -21,7 +21,9 @@ find_package(Boost REQUIRED system filesystem)
 
 find_package(console_bridge REQUIRED)
 
-find_package(Eigen3 REQUIRED)
+find_package( PkgConfig )
+pkg_check_modules( EIGEN3 REQUIRED eigen3 )
+include_directories( ${EIGEN3_INCLUDE_DIRS} ) 
 
 find_package(octomap REQUIRED)
 
