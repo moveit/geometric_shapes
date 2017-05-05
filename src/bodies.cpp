@@ -79,7 +79,7 @@ static const double ZERO = 1e-9;
 static inline double distanceSQR(const Eigen::Vector3d& p, const Eigen::Vector3d& origin, const Eigen::Vector3d& dir)
 {
   Eigen::Vector3d a = p - origin;
-  double d = dir.dot(a);
+  double d = dir.normalized().dot(a);
   return a.squaredNorm() - d * d;
 }
 
@@ -579,76 +579,72 @@ void bodies::Box::computeBoundingCylinder(BoundingCylinder &cylinder) const
 
 bool bodies::Box::intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vector3d& dir, EigenSTL::vector_Vector3d *intersections, unsigned int count) const
 {
-  if (detail::distanceSQR(center_, origin, dir) > radius2_) return false;
 
-  double t_near = -std::numeric_limits<double>::infinity();
-  double t_far  = std::numeric_limits<double>::infinity();
-
-  for (int i = 0; i < 3; i++)
+  //Brian Smits. Efficient bounding box intersection. Ray tracing news 15(1), 2002
+  float tmin, tmax, tymin, tymax, tzmin, tzmax;
+  float divx, divy, divz;
+  divx = 1 / dir.x();
+  if(divx >= 0)
   {
-    const Eigen::Vector3d &vN = i == 0 ? normalL_ : (i == 1 ? normalW_ : normalH_);
-    double dp = vN.dot(dir);
-
-    if (fabs(dp) > detail::ZERO)
-    {
-      double t1 = vN.dot(corner1_ - origin) / dp;
-      double t2 = vN.dot(corner2_ - origin) / dp;
-
-      if (t1 > t2)
-        std::swap(t1, t2);
-
-      if (t1 > t_near)
-        t_near = t1;
-
-      if (t2 < t_far)
-        t_far = t2;
-
-      if (t_near > t_far)
-        return false;
-
-      if (t_far < 0.0)
-        return false;
-    }
-    else
-    {
-      if (i == 0)
-      {
-        if ((std::min(corner1_.y(), corner2_.y()) > origin.y() ||
-             std::max(corner1_.y(), corner2_.y()) < origin.y()) &&
-            (std::min(corner1_.z(), corner2_.z()) > origin.z() ||
-             std::max(corner1_.z(), corner2_.z()) < origin.z()))
-          return false;
-      }
-      else
-      {
-        if (i == 1)
-        {
-          if ((std::min(corner1_.x(), corner2_.x()) > origin.x() ||
-               std::max(corner1_.x(), corner2_.x()) < origin.x()) &&
-              (std::min(corner1_.z(), corner2_.z()) > origin.z() ||
-               std::max(corner1_.z(), corner2_.z()) < origin.z()))
-            return false;
-        }
-        else
-          if ((std::min(corner1_.x(), corner2_.x()) > origin.x() ||
-               std::max(corner1_.x(), corner2_.x()) < origin.x()) &&
-              (std::min(corner1_.y(), corner2_.y()) > origin.y() ||
-               std::max(corner1_.y(), corner2_.y()) < origin.y()))
-            return false;
-      }
-    }
+    tmin = (corner1_.x() - origin.x()) * divx;
+    tmax = (corner2_.x() - origin.x()) * divx;
+  } else
+  {
+    tmax = (corner1_.x() - origin.x()) * divx;
+    tmin = (corner2_.x() - origin.x()) * divx;
   }
+
+  divy = 1 / dir.y();
+  if(dir.y() >= 0)
+  {
+    tymin = (corner1_.y() - origin.y()) * divy;
+    tymax = (corner2_.y() - origin.y()) * divy;
+  } else
+  {
+    tymax = (corner1_.y() - origin.y()) * divy;
+    tymin = (corner2_.y() - origin.y()) * divy;
+  }
+
+  if((tmin > tymax || tymin > tmax))
+    return false;
+  
+  if(tymin > tmin)
+    tmin = tymin;
+  if(tymax < tmax)
+    tmax = tymax;
+
+  divz = 1 / dir.z();
+  if(dir.z() >= 0)
+  {
+    tzmin = (corner1_.z() - origin.z()) * divz;
+    tzmax = (corner2_.z() - origin.z()) * divz;
+  } else
+  {
+    tzmax = (corner1_.z() - origin.z()) * divz;
+    tzmin = (corner2_.z() - origin.z()) * divz;
+  }
+
+  if((tmin > tzmax || tzmin > tmax))
+    return false;
+
+  if(tzmin > tmin)
+    tmin = tzmin;
+  if(tzmax < tmax)
+    tmax = tzmax;
+
+  if(tmax < 0)
+    return false;
 
   if (intersections)
   {
-    if (t_far - t_near > detail::ZERO)
+    if (tmax - tmin > detail::ZERO)
     {
-      intersections->push_back(t_near * dir + origin);
+      intersections->push_back(tmin * dir + origin);
       if (count > 1)
-        intersections->push_back(t_far  * dir + origin);
+        intersections->push_back(tmax  * dir + origin);
     }
     else
-      intersections->push_back(t_far * dir + origin);
+      intersections->push_back(tmax * dir + origin);
   }
 
   return true;
