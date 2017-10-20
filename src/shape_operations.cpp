@@ -62,7 +62,7 @@ Shape* constructShapeFromMsg(const shape_msgs::Mesh &shape_msg)
 {
   if (shape_msg.triangles.empty() || shape_msg.vertices.empty())
   {
-    logWarn("Mesh definition is empty");
+    CONSOLE_BRIDGE_logWarn("Mesh definition is empty");
     return NULL;
   }
   else
@@ -117,7 +117,7 @@ Shape* constructShapeFromMsg(const shape_msgs::SolidPrimitive &shape_msg)
                              shape_msg.dimensions[shape_msgs::SolidPrimitive::CONE_HEIGHT]);
         }
   if (shape == NULL)
-    logError("Unable to construct shape corresponding to shape_msg of type %d", (int)shape_msg.type);
+    CONSOLE_BRIDGE_logError("Unable to construct shape corresponding to shape_msg of type %d", (int)shape_msg.type);
 
   return shape;
 }
@@ -202,7 +202,7 @@ bool constructMarkerFromShape(const Shape* shape, visualization_msgs::Marker &ma
     }
     catch (std::runtime_error &ex)
     {
-      logError("%s", ex.what());
+      CONSOLE_BRIDGE_logError("%s", ex.what());
     }
     if (ok)
       return true;
@@ -451,7 +451,7 @@ bool constructMsgFromShape(const Shape* shape, ShapeMsg &shape_msg)
             }
             else
             {
-              logError("Unable to construct shape message for shape of type %d", (int)shape->type);
+              CONSOLE_BRIDGE_logError("Unable to construct shape message for shape of type %d", (int)shape->type);
               return false;
             }
 
@@ -512,7 +512,7 @@ void saveAsText(const Shape *shape, std::ostream &out)
             }
             else
             {
-              logError("Unable to save shape of type %d", (int)shape->type);
+              CONSOLE_BRIDGE_logError("Unable to save shape of type %d", (int)shape->type);
             }
 }
 
@@ -580,7 +580,7 @@ Shape* constructShapeFromText(std::istream &in)
                   m->computeVertexNormals();
                 }
                 else
-                  logError("Unknown shape type: '%s'", type.c_str());
+                  CONSOLE_BRIDGE_logError("Unknown shape type: '%s'", type.c_str());
     }
   }
   return result;
