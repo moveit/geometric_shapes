@@ -2,6 +2,12 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* [enhance] Add warning about common Assimp bug (`#63 <https://github.com/ros-planning/geometric_shapes/issues/63>`_)
+* [maintenance] Update maintainers (`#66 <https://github.com/ros-planning/geometric_shapes/issues/66>`_)
+* Contributors: Dave Coleman
+
 0.4.5 (2016-10-20)
 ------------------
 * [fix] mesh with too many vertices (`#39 <https://github.com/ros-planning/geometric_shapes/issues/39>`_) (`#60 <https://github.com/ros-planning/geometric_shapes/issues/60>`_)
