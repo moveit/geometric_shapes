@@ -2,8 +2,8 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.4.6 (2017-11-30)
+------------------
 * [enhance] Add warning about common Assimp bug (`#63 <https://github.com/ros-planning/geometric_shapes/issues/63>`_)
 * [maintenance] Update maintainers (`#66 <https://github.com/ros-planning/geometric_shapes/issues/66>`_)
 * Contributors: Dave Coleman
