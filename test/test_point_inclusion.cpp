@@ -211,6 +211,50 @@ TEST(BoxRayIntersection, SimpleRay1)
     EXPECT_TRUE(intersect);
 }
 
+TEST(BoxRayIntersection, BrokenRay)
+{
+    shapes::Box shape(0.9, 0.01, 1.2);
+    bodies::Body* box = new bodies::Box(&shape);
+
+    Eigen::Affine3d pose(Eigen::AngleAxisd(0, Eigen::Vector3d::UnitX()));
+    pose.translation() = Eigen::Vector3d(0, 0.005, 0.6);
+    box->setPose(pose);
+
+    Eigen::Vector3d ray_o(0, 5, 1.6);
+    Eigen::Vector3d ray_d(0, -5.195, -0.77);
+    EigenSTL::vector_Vector3d p;
+
+    bool intersect = box->intersectsRay(ray_o, ray_d, &p);
+    EXPECT_TRUE(intersect);
+
+    intersect = box->intersectsRay(ray_o, ray_d.normalized(), &p);
+    EXPECT_TRUE(intersect);
+
+    delete box;
+}
+
+TEST(BoxRayIntersection, BrokenRay2)
+{
+    shapes::Box shape(0.02, 0.40000000000000002, 1.2);
+    bodies::Body* box = new bodies::Box(&shape);
+
+    Eigen::Affine3d pose(Eigen::AngleAxisd(0, Eigen::Vector3d::UnitX()));
+    pose.translation() = Eigen::Vector3d(0.45, -0.19500000000000001, 0.59999999999999998);
+    box->setPose(pose);
+
+    Eigen::Vector3d ray_o(0, -2, 1.1100000143051147);
+    Eigen::Vector3d ray_d(0, 1.8049999999999999, -0.66900001448113477);
+    EigenSTL::vector_Vector3d p;
+
+    bool intersect = box->intersectsRay(ray_o, ray_d, &p);
+    EXPECT_FALSE(intersect);
+
+    intersect = box->intersectsRay(ray_o, ray_d.normalized(), &p);
+    EXPECT_FALSE(intersect);
+
+    delete box;
+}
+
 
 TEST(CylinderPointContainment, SimpleInside)
 {
