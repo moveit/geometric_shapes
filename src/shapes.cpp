@@ -224,12 +224,12 @@ shapes::Shape* shapes::OcTree::clone() const
 
 void shapes::OcTree::scaleAndPadd(double scale, double padd)
 {
-  logWarn("OcTrees cannot be scaled or padded");
+  CONSOLE_BRIDGE_logWarn("OcTrees cannot be scaled or padded");
 }
 
 void shapes::Plane::scaleAndPadd(double scale, double padding)
 {
-  logWarn("Planes cannot be scaled or padded");
+  CONSOLE_BRIDGE_logWarn("Planes cannot be scaled or padded");
 }
 
 void shapes::Shape::scale(double scale)

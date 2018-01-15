@@ -133,7 +133,7 @@ Mesh* createMeshFromVertices(const EigenSTL::vector_Vector3d &source)
     return NULL;
 
   if (source.size() % 3 != 0)
-    logError("The number of vertices to construct a mesh from is not divisible by 3. Probably constructed triangles will not make sense.");
+    CONSOLE_BRIDGE_logError("The number of vertices to construct a mesh from is not divisible by 3. Probably constructed triangles will not make sense.");
 
   std::set<detail::LocalVertexType, detail::ltLocalVertexValue> vertices;
   std::vector<unsigned int> triangles;
@@ -220,7 +220,7 @@ Mesh* createMeshFromBinary(const char *buffer, std::size_t size, const Eigen::Ve
 {
   if (!buffer || size < 1)
   {
-    logWarn("Cannot construct mesh from empty binary buffer");
+    CONSOLE_BRIDGE_logWarn("Cannot construct mesh from empty binary buffer");
     return NULL;
   }
 
@@ -285,21 +285,21 @@ Mesh* createMeshFromResource(const std::string& resource, const Eigen::Vector3d 
   }
   catch (resource_retriever::Exception& e)
   {
-    logError("%s", e.what());
+    CONSOLE_BRIDGE_logError("%s", e.what());
     return NULL;
   }
 
   if (res.size == 0)
   {
-    logWarn("Retrieved empty mesh for resource '%s'", resource.c_str());
+    CONSOLE_BRIDGE_logWarn("Retrieved empty mesh for resource '%s'", resource.c_str());
     return NULL;
   }
 
   Mesh *m = createMeshFromBinary(reinterpret_cast<const char*>(res.data.get()), res.size, scale, resource);
   if (!m)
   {
-    logWarn("Assimp reports no scene in %s.", resource.c_str());
-    logWarn("This could be because of a resource filename that is too long for the Assimp library, a known bug. As a workaround shorten the filename/path.");
+    CONSOLE_BRIDGE_logWarn("Assimp reports no scene in %s.", resource.c_str());
+    CONSOLE_BRIDGE_logWarn("This could be because of a resource filename that is too long for the Assimp library, a known bug. As a workaround shorten the filename/path.");
   }
   return m;
 }
@@ -344,7 +344,7 @@ Mesh* createMeshFromAsset(const aiScene* scene, const Eigen::Vector3d &scale, co
 {
   if (!scene->HasMeshes())
   {
-    logWarn("Assimp reports scene in %s has no meshes", resource_name.c_str());
+    CONSOLE_BRIDGE_logWarn("Assimp reports scene in %s has no meshes", resource_name.c_str());
     return NULL;
   }
   EigenSTL::vector_Vector3d vertices;
@@ -352,12 +352,12 @@ Mesh* createMeshFromAsset(const aiScene* scene, const Eigen::Vector3d &scale, co
   extractMeshData(scene, scene->mRootNode, aiMatrix4x4(), scale, vertices, triangles);
   if (vertices.empty())
   {
-    logWarn("There are no vertices in the scene %s", resource_name.c_str());
+    CONSOLE_BRIDGE_logWarn("There are no vertices in the scene %s", resource_name.c_str());
     return NULL;
   }
   if (triangles.empty())
   {
-    logWarn("There are no triangles in the scene %s", resource_name.c_str());
+    CONSOLE_BRIDGE_logWarn("There are no triangles in the scene %s", resource_name.c_str());
     return NULL;
   }
 
@@ -378,7 +378,7 @@ Mesh* createMeshFromShape(const Shape *shape)
         if (shape->type == shapes::CONE)
           return shapes::createMeshFromShape(static_cast<const shapes::Cone&>(*shape));
         else
-          logError("Conversion of shape of type '%s' to a mesh is not known", shapeStringName(shape).c_str());
+          CONSOLE_BRIDGE_logError("Conversion of shape of type '%s' to a mesh is not known", shapeStringName(shape).c_str());
   return NULL;
 }
 

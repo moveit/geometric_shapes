@@ -784,7 +784,7 @@ void bodies::ConvexMesh::useDimensions(const shapes::Shape *shape)
 
   if (exitcode != 0)
   {
-    logWarn("Convex hull creation failed");
+    CONSOLE_BRIDGE_logWarn("Convex hull creation failed");
     qh_freeqhull (!qh_ALL);
     int curlong, totlong;
     qh_memfreeshort (&curlong, &totlong);
@@ -1170,7 +1170,7 @@ void bodies::BodyVector::setPose(unsigned int i, const Eigen::Affine3d& pose)
 {
   if (i >= bodies_.size())
   {
-    logError("There is no body at index %u", i);
+    CONSOLE_BRIDGE_logError("There is no body at index %u", i);
     return;
   }
 
@@ -1181,7 +1181,7 @@ const bodies::Body* bodies::BodyVector::getBody(unsigned int i) const
 {
   if (i >= bodies_.size())
   {
-    logError("There is no body at index %u", i);
+    CONSOLE_BRIDGE_logError("There is no body at index %u", i);
     return NULL;
   }
   else
