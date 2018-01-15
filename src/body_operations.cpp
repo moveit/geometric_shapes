@@ -59,7 +59,7 @@ bodies::Body* bodies::createBodyFromShape(const shapes::Shape *shape)
       body = new bodies::ConvexMesh(shape);
       break;
     default:
-      logError("Creating body from shape: Unknown shape type %d", (int)shape->type);
+      CONSOLE_BRIDGE_logError("Creating body from shape: Unknown shape type %d", (int)shape->type);
       break;
     }
 
@@ -112,7 +112,7 @@ Body* constructBodyFromMsgHelper(const T &shape_msg, const geometry_msgs::Pose &
       Eigen::Quaterniond q(pose.orientation.w, pose.orientation.x, pose.orientation.y, pose.orientation.z);
       if (fabs(q.squaredNorm() - 1.0) > 1e-3)
       {
-        logError("Quaternion is not normalized. Assuming identity.");
+        CONSOLE_BRIDGE_logError("Quaternion is not normalized. Assuming identity.");
         q = Eigen::Quaterniond(1.0, 0.0, 0.0, 0.0);
       }
       Eigen::Affine3d af(Eigen::Translation3d(pose.position.x, pose.position.y, pose.position.z) * q.toRotationMatrix());
