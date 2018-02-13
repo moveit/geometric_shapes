@@ -425,6 +425,8 @@ public:
   const std::vector<unsigned int>& getTriangles() const;
   const EigenSTL::vector_Vector3d& getVertices() const;
   const EigenSTL::vector_Vector3d& getScaledVertices() const;
+  const EigenSTL::vector_Vector4d& getPlanes() const;
+
 
   virtual BodyPtr cloneAt(const Eigen::Affine3d &pose, double padding, double scale) const;
 
@@ -446,7 +448,7 @@ protected:
 
   struct MeshData
   {
-    EigenSTL::vector_Vector4f   planes_;
+    EigenSTL::vector_Vector4d   planes_;
     EigenSTL::vector_Vector3d   vertices_;
     std::vector<unsigned int>   triangles_;
     std::map<unsigned int, unsigned int> plane_for_triangle_;
