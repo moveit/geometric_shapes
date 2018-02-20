@@ -425,6 +425,11 @@ public:
   const std::vector<unsigned int>& getTriangles() const;
   const EigenSTL::vector_Vector3d& getVertices() const;
   const EigenSTL::vector_Vector3d& getScaledVertices() const;
+
+  /**
+   * @brief getPlanes Get the planes that define the convex shape.
+   * @return A a list of vector4d(nx, ny, nz, d).
+   */
   const EigenSTL::vector_Vector4d& getPlanes() const;
 
 
