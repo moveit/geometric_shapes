@@ -504,7 +504,7 @@ Mesh* createMeshFromShape(const Cylinder& cylinder)
   double phid = pi * 2 / tot;
 
   double circle_edge = phid * r;
-  unsigned int h_num = ceil(h / circle_edge);
+  unsigned int h_num = ceil(std::abs(h) / circle_edge);
 
   double phi = 0;
   double hd = h / h_num;
