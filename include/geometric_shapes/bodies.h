@@ -426,6 +426,13 @@ public:
   const EigenSTL::vector_Vector3d& getVertices() const;
   const EigenSTL::vector_Vector3d& getScaledVertices() const;
 
+  /**
+   * @brief getPlanes Get the planes that define the convex shape.
+   * @return A a list of vector4d(nx, ny, nz, d).
+   */
+  const EigenSTL::vector_Vector4d& getPlanes() const;
+
+
   virtual BodyPtr cloneAt(const Eigen::Affine3d &pose, double padding, double scale) const;
 
   /// Project the original vertex to the scaled and padded planes and average.
@@ -446,7 +453,7 @@ protected:
 
   struct MeshData
   {
-    EigenSTL::vector_Vector4f   planes_;
+    EigenSTL::vector_Vector4d   planes_;
     EigenSTL::vector_Vector3d   vertices_;
     std::vector<unsigned int>   triangles_;
     std::map<unsigned int, unsigned int> plane_for_triangle_;
