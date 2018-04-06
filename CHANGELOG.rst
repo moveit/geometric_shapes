@@ -2,8 +2,8 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.4 (2018-04-06)
+------------------
 * gracefully handle negative cylinder height: `#64 <https://github.com/ros-planning/geometric_shapes/issues/64>`_, `#80 <https://github.com/ros-planning/geometric_shapes/issues/80>`_
 * clang-formatting of whole repo: `#79 <https://github.com/ros-planning/geometric_shapes/issues/79>`_
 * operator<< for ShapeType: `#80 <https://github.com/ros-planning/geometric_shapes/issues/80>`_
