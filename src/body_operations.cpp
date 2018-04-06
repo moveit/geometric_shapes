@@ -39,34 +39,34 @@
 #include <console_bridge/console.h>
 #include <Eigen/Geometry>
 
-bodies::Body* bodies::createBodyFromShape(const shapes::Shape *shape)
+bodies::Body* bodies::createBodyFromShape(const shapes::Shape* shape)
 {
-  Body *body = NULL;
+  Body* body = NULL;
 
   if (shape)
     switch (shape->type)
     {
-    case shapes::BOX:
-      body = new bodies::Box(shape);
-      break;
-    case shapes::SPHERE:
-      body = new bodies::Sphere(shape);
-      break;
-    case shapes::CYLINDER:
-      body = new bodies::Cylinder(shape);
-      break;
-    case shapes::MESH:
-      body = new bodies::ConvexMesh(shape);
-      break;
-    default:
-      CONSOLE_BRIDGE_logError("Creating body from shape: Unknown shape type %d", (int)shape->type);
-      break;
+      case shapes::BOX:
+        body = new bodies::Box(shape);
+        break;
+      case shapes::SPHERE:
+        body = new bodies::Sphere(shape);
+        break;
+      case shapes::CYLINDER:
+        body = new bodies::Cylinder(shape);
+        break;
+      case shapes::MESH:
+        body = new bodies::ConvexMesh(shape);
+        break;
+      default:
+        CONSOLE_BRIDGE_logError("Creating body from shape: Unknown shape type %d", (int)shape->type);
+        break;
     }
 
   return body;
 }
 
-void bodies::mergeBoundingSpheres(const std::vector<BoundingSphere> &spheres, BoundingSphere &mergedSphere)
+void bodies::mergeBoundingSpheres(const std::vector<BoundingSphere>& spheres, BoundingSphere& mergedSphere)
 {
   if (spheres.empty())
   {
@@ -76,11 +76,11 @@ void bodies::mergeBoundingSpheres(const std::vector<BoundingSphere> &spheres, Bo
   else
   {
     mergedSphere = spheres[0];
-    for (unsigned int i = 1 ; i < spheres.size() ; ++i)
+    for (unsigned int i = 1; i < spheres.size(); ++i)
     {
       if (spheres[i].radius <= 0.0)
         continue;
-      Eigen::Vector3d diff = spheres[i].center-mergedSphere.center;
+      Eigen::Vector3d diff = spheres[i].center - mergedSphere.center;
       double d = diff.norm();
       if (d + mergedSphere.radius <= spheres[i].radius)
       {
@@ -90,7 +90,7 @@ void bodies::mergeBoundingSpheres(const std::vector<BoundingSphere> &spheres, Bo
       else if (d + spheres[i].radius > mergedSphere.radius)
       {
         Eigen::Vector3d delta = mergedSphere.center - spheres[i].center;
-        mergedSphere.radius = (delta.norm() + spheres[i].radius + mergedSphere.radius)/2.0;
+        mergedSphere.radius = (delta.norm() + spheres[i].radius + mergedSphere.radius) / 2.0;
         mergedSphere.center = delta.normalized() * (mergedSphere.radius - spheres[i].radius) + spheres[i].center;
       }
     }
@@ -99,14 +99,14 @@ void bodies::mergeBoundingSpheres(const std::vector<BoundingSphere> &spheres, Bo
 
 namespace bodies
 {
-template<typename T>
-Body* constructBodyFromMsgHelper(const T &shape_msg, const geometry_msgs::Pose &pose)
+template <typename T>
+Body* constructBodyFromMsgHelper(const T& shape_msg, const geometry_msgs::Pose& pose)
 {
-  shapes::Shape *shape = shapes::constructShapeFromMsg(shape_msg);
+  shapes::Shape* shape = shapes::constructShapeFromMsg(shape_msg);
 
   if (shape)
   {
-    Body *body = createBodyFromShape(shape);
+    Body* body = createBodyFromShape(shape);
     if (body)
     {
       Eigen::Quaterniond q(pose.orientation.w, pose.orientation.x, pose.orientation.y, pose.orientation.z);
@@ -115,7 +115,8 @@ Body* constructBodyFromMsgHelper(const T &shape_msg, const geometry_msgs::Pose &
         CONSOLE_BRIDGE_logError("Quaternion is not normalized. Assuming identity.");
         q = Eigen::Quaterniond(1.0, 0.0, 0.0, 0.0);
       }
-      Eigen::Affine3d af(Eigen::Translation3d(pose.position.x, pose.position.y, pose.position.z) * q.toRotationMatrix());
+      Eigen::Affine3d af(Eigen::Translation3d(pose.position.x, pose.position.y, pose.position.z) *
+                         q.toRotationMatrix());
       body->setPose(af);
       return body;
     }
@@ -124,43 +125,51 @@ Body* constructBodyFromMsgHelper(const T &shape_msg, const geometry_msgs::Pose &
 }
 }
 
-bodies::Body* bodies::constructBodyFromMsg(const shapes::ShapeMsg &shape_msg, const geometry_msgs::Pose &pose)
+bodies::Body* bodies::constructBodyFromMsg(const shapes::ShapeMsg& shape_msg, const geometry_msgs::Pose& pose)
 {
   return constructBodyFromMsgHelper(shape_msg, pose);
 }
 
-bodies::Body* bodies::constructBodyFromMsg(const shape_msgs::Mesh &shape_msg, const geometry_msgs::Pose &pose)
+bodies::Body* bodies::constructBodyFromMsg(const shape_msgs::Mesh& shape_msg, const geometry_msgs::Pose& pose)
 {
   return constructBodyFromMsgHelper(shape_msg, pose);
 }
 
-bodies::Body* bodies::constructBodyFromMsg(const shape_msgs::SolidPrimitive &shape_msg, const geometry_msgs::Pose &pose)
+bodies::Body* bodies::constructBodyFromMsg(const shape_msgs::SolidPrimitive& shape_msg, const geometry_msgs::Pose& pose)
 {
   return constructBodyFromMsgHelper(shape_msg, pose);
 }
 
-void bodies::computeBoundingSphere(const std::vector<const bodies::Body*>& bodies, bodies::BoundingSphere& sphere) {
-  Eigen::Vector3d sum(0.0,0.0,0.0);
+void bodies::computeBoundingSphere(const std::vector<const bodies::Body*>& bodies, bodies::BoundingSphere& sphere)
+{
+  Eigen::Vector3d sum(0.0, 0.0, 0.0);
 
-  //TODO - expand to all body types
+  // TODO - expand to all body types
   unsigned int vertex_count = 0;
-  for(unsigned int i = 0; i < bodies.size(); i++) {
+  for (unsigned int i = 0; i < bodies.size(); i++)
+  {
     const bodies::ConvexMesh* conv = dynamic_cast<const bodies::ConvexMesh*>(bodies[i]);
-    if(!conv) continue;
-    for(unsigned int j = 0; j < conv->getScaledVertices().size(); j++, vertex_count++) {
-      sum += conv->getPose()*conv->getScaledVertices()[j];
+    if (!conv)
+      continue;
+    for (unsigned int j = 0; j < conv->getScaledVertices().size(); j++, vertex_count++)
+    {
+      sum += conv->getPose() * conv->getScaledVertices()[j];
     }
   }
 
-  sphere.center=sum/(double)vertex_count;
+  sphere.center = sum / (double)vertex_count;
 
   double max_dist_squared = 0.0;
-  for(unsigned int i = 0; i < bodies.size(); i++) {
+  for (unsigned int i = 0; i < bodies.size(); i++)
+  {
     const bodies::ConvexMesh* conv = dynamic_cast<const bodies::ConvexMesh*>(bodies[i]);
-    if(!conv) continue;
-    for(unsigned int j = 0; j < conv->getScaledVertices().size(); j++) {
-      double dist = (conv->getPose()*conv->getScaledVertices()[j]-sphere.center).squaredNorm();
-      if(dist > max_dist_squared) {
+    if (!conv)
+      continue;
+    for (unsigned int j = 0; j < conv->getScaledVertices().size(); j++)
+    {
+      double dist = (conv->getPose() * conv->getScaledVertices()[j] - sphere.center).squaredNorm();
+      if (dist > max_dist_squared)
+      {
         max_dist_squared = dist;
       }
     }

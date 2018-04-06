@@ -39,35 +39,34 @@
 #include <gtest/gtest.h>
 #include <string>
 
-namespace {
+namespace
+{
+void assertMesh(shapes::Mesh* mesh)
+{
+  ASSERT_TRUE(mesh != NULL);
+  ASSERT_EQ(3, mesh->vertex_count);
+  ASSERT_EQ(1, mesh->triangle_count);
 
-  void assertMesh(shapes::Mesh * mesh)
-  {
-    ASSERT_TRUE(mesh != NULL);
-    ASSERT_EQ(3, mesh->vertex_count);
-    ASSERT_EQ(1, mesh->triangle_count);
+  ASSERT_EQ(0, mesh->triangles[0]);
+  ASSERT_EQ(1, mesh->triangles[1]);
+  ASSERT_EQ(2, mesh->triangles[2]);
 
-    ASSERT_EQ(0, mesh->triangles[0]);
-    ASSERT_EQ(1, mesh->triangles[1]);
-    ASSERT_EQ(2, mesh->triangles[2]);
+  ASSERT_FLOAT_EQ(0, mesh->vertices[0 + 0]);
+  ASSERT_FLOAT_EQ(0, mesh->vertices[0 + 1]);
+  ASSERT_FLOAT_EQ(1, mesh->vertices[0 + 2]);
+  ASSERT_FLOAT_EQ(0, mesh->vertices[3 + 0]);
+  ASSERT_FLOAT_EQ(1, mesh->vertices[3 + 1]);
+  ASSERT_FLOAT_EQ(0, mesh->vertices[3 + 2]);
+  ASSERT_FLOAT_EQ(1, mesh->vertices[6 + 0]);
+  ASSERT_FLOAT_EQ(0, mesh->vertices[6 + 1]);
+  ASSERT_FLOAT_EQ(0, mesh->vertices[6 + 2]);
+}
 
-    ASSERT_FLOAT_EQ(0, mesh->vertices[0 + 0]);
-    ASSERT_FLOAT_EQ(0, mesh->vertices[0 + 1]);
-    ASSERT_FLOAT_EQ(1, mesh->vertices[0 + 2]);
-    ASSERT_FLOAT_EQ(0, mesh->vertices[3 + 0]);
-    ASSERT_FLOAT_EQ(1, mesh->vertices[3 + 1]);
-    ASSERT_FLOAT_EQ(0, mesh->vertices[3 + 2]);
-    ASSERT_FLOAT_EQ(1, mesh->vertices[6 + 0]);
-    ASSERT_FLOAT_EQ(0, mesh->vertices[6 + 1]);
-    ASSERT_FLOAT_EQ(0, mesh->vertices[6 + 2]);
-  }
-
-  shapes::Mesh * loadMesh(const std::string & mesh)
-  {
-    std::string path = "file://" + std::string(TEST_RESOURCES_DIR) + "/" + mesh;
-    return shapes::createMeshFromResource(path);
-  }
-
+shapes::Mesh* loadMesh(const std::string& mesh)
+{
+  std::string path = "file://" + std::string(TEST_RESOURCES_DIR) + "/" + mesh;
+  return shapes::createMeshFromResource(path);
+}
 }
 
 TEST(CreateMesh, stl)
@@ -110,7 +109,7 @@ TEST(CreateMesh, dae10M)
   assertMesh(loadMesh("triangle_10m.dae"));
 }
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
   testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();

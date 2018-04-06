@@ -40,7 +40,6 @@
 #include <boost/filesystem.hpp>
 #include <gtest/gtest.h>
 
-
 TEST(SphereBoundingSphere, Sphere1)
 {
   shapes::Sphere shape(1.0);
@@ -56,7 +55,7 @@ TEST(SphereBoundingSphere, Sphere1)
 
 TEST(SphereBoundingSphere, Sphere2)
 {
-  shapes::Shape *shape = new shapes::Sphere(2.0);
+  shapes::Shape* shape = new shapes::Sphere(2.0);
   Eigen::Vector3d center;
   double radius;
   computeShapeBoundingSphere(shape, center, radius);
@@ -70,7 +69,7 @@ TEST(SphereBoundingSphere, Sphere2)
 
 TEST(BoxBoundingSphere, Box1)
 {
-  shapes::Shape *shape = new shapes::Box(2.0, 4.0, 6.0);
+  shapes::Shape* shape = new shapes::Box(2.0, 4.0, 6.0);
   Eigen::Vector3d center;
   double radius;
   computeShapeBoundingSphere(shape, center, radius);
@@ -83,7 +82,7 @@ TEST(BoxBoundingSphere, Box1)
 
 TEST(BoxBoundingSphere, Box2)
 {
-  shapes::Shape *shape = new shapes::Box(2.0, 2.0, 2.0);
+  shapes::Shape* shape = new shapes::Box(2.0, 2.0, 2.0);
   Eigen::Vector3d center;
   double radius;
   computeShapeBoundingSphere(shape, center, radius);
@@ -96,12 +95,12 @@ TEST(BoxBoundingSphere, Box2)
 
 TEST(CylBoundingSphere, Cyl1)
 {
-  shapes::Shape *shape = new shapes::Cylinder(1.0, 4.0);
+  shapes::Shape* shape = new shapes::Cylinder(1.0, 4.0);
   Eigen::Vector3d center;
   double radius;
   computeShapeBoundingSphere(shape, center, radius);
 
-  EXPECT_EQ(sqrt(1+4), radius);
+  EXPECT_EQ(sqrt(1 + 4), radius);
   EXPECT_EQ(0.0, center.x());
   EXPECT_EQ(0.0, center.y());
   EXPECT_EQ(0.0, center.z());
@@ -109,12 +108,12 @@ TEST(CylBoundingSphere, Cyl1)
 
 TEST(CylBoundingSphere, Cyl2)
 {
-  shapes::Shape *shape = new shapes::Cylinder(2.0, 20.0);
+  shapes::Shape* shape = new shapes::Cylinder(2.0, 20.0);
   Eigen::Vector3d center;
   double radius;
   computeShapeBoundingSphere(shape, center, radius);
 
-  EXPECT_EQ(sqrt(4+100), radius);
+  EXPECT_EQ(sqrt(4 + 100), radius);
   EXPECT_EQ(0.0, center.x());
   EXPECT_EQ(0.0, center.y());
   EXPECT_EQ(0.0, center.z());
@@ -122,7 +121,7 @@ TEST(CylBoundingSphere, Cyl2)
 
 TEST(ConeBoundingSphere, Cone1)
 {
-  shapes::Shape *shape = new shapes::Cone(20.0, 2.0);
+  shapes::Shape* shape = new shapes::Cone(20.0, 2.0);
   Eigen::Vector3d center;
   double radius;
   computeShapeBoundingSphere(shape, center, radius);
@@ -135,7 +134,7 @@ TEST(ConeBoundingSphere, Cone1)
 
 TEST(ConeBoundingSphere, Cone2)
 {
-  shapes::Shape *shape = new shapes::Cone(5.0, 5.0);
+  shapes::Shape* shape = new shapes::Cone(5.0, 5.0);
   Eigen::Vector3d center;
   double radius;
   computeShapeBoundingSphere(shape, center, radius);
@@ -148,8 +147,8 @@ TEST(ConeBoundingSphere, Cone2)
 
 TEST(ConeBoundingSphere, Cone3)
 {
-  double height = 1.0 + 1.0/sqrt(2);
-  shapes::Shape *shape = new shapes::Cone(1/sqrt(2), height);
+  double height = 1.0 + 1.0 / sqrt(2);
+  shapes::Shape* shape = new shapes::Cone(1 / sqrt(2), height);
   Eigen::Vector3d center;
   double radius;
   computeShapeBoundingSphere(shape, center, radius);
@@ -157,111 +156,109 @@ TEST(ConeBoundingSphere, Cone3)
   EXPECT_EQ(1.0, radius);
   EXPECT_EQ(0.0, center.x());
   EXPECT_EQ(0.0, center.y());
-  EXPECT_EQ(height/2 - 1, center.z());
+  EXPECT_EQ(height / 2 - 1, center.z());
 }
 
 TEST(ConeBoundingSphere, Cone4)
 {
-  shapes::Shape *shape = new shapes::Cone(3, 10);
+  shapes::Shape* shape = new shapes::Cone(3, 10);
   Eigen::Vector3d center;
   double radius;
   computeShapeBoundingSphere(shape, center, radius);
 
-  EXPECT_EQ(109.0/20, radius);
+  EXPECT_EQ(109.0 / 20, radius);
   EXPECT_EQ(0.0, center.x());
   EXPECT_EQ(0.0, center.y());
-  EXPECT_EQ(5 - (109.0/20), center.z());
+  EXPECT_EQ(5 - (109.0 / 20), center.z());
 }
 
 TEST(MeshBoundingSphere, Mesh1)
 {
-  shapes::Shape *shape = new shapes::Mesh(8, 12);
-  shapes::Mesh *m = dynamic_cast<shapes::Mesh*>(shape);
+  shapes::Shape* shape = new shapes::Mesh(8, 12);
+  shapes::Mesh* m = dynamic_cast<shapes::Mesh*>(shape);
   EXPECT_TRUE(m);
 
   // box mesh
 
-  m->vertices[3*0 + 0] = 0;
-  m->vertices[3*0 + 1] = 0;
-  m->vertices[3*0 + 2] = 0;
+  m->vertices[3 * 0 + 0] = 0;
+  m->vertices[3 * 0 + 1] = 0;
+  m->vertices[3 * 0 + 2] = 0;
 
-  m->vertices[3*1 + 0] = 1;
-  m->vertices[3*1 + 1] = 0;
-  m->vertices[3*1 + 2] = 0;
+  m->vertices[3 * 1 + 0] = 1;
+  m->vertices[3 * 1 + 1] = 0;
+  m->vertices[3 * 1 + 2] = 0;
 
-  m->vertices[3*2 + 0] = 0;
-  m->vertices[3*2 + 1] = 1;
-  m->vertices[3*2 + 2] = 0;
+  m->vertices[3 * 2 + 0] = 0;
+  m->vertices[3 * 2 + 1] = 1;
+  m->vertices[3 * 2 + 2] = 0;
 
-  m->vertices[3*3 + 0] = 1;
-  m->vertices[3*3 + 1] = 1;
-  m->vertices[3*3 + 2] = 0;
+  m->vertices[3 * 3 + 0] = 1;
+  m->vertices[3 * 3 + 1] = 1;
+  m->vertices[3 * 3 + 2] = 0;
 
-  m->vertices[3*4 + 0] = 0;
-  m->vertices[3*4 + 1] = 0;
-  m->vertices[3*4 + 2] = 1;
+  m->vertices[3 * 4 + 0] = 0;
+  m->vertices[3 * 4 + 1] = 0;
+  m->vertices[3 * 4 + 2] = 1;
 
-  m->vertices[3*5 + 0] = 1;
-  m->vertices[3*5 + 1] = 0;
-  m->vertices[3*5 + 2] = 1;
+  m->vertices[3 * 5 + 0] = 1;
+  m->vertices[3 * 5 + 1] = 0;
+  m->vertices[3 * 5 + 2] = 1;
 
-  m->vertices[3*6 + 0] = 0;
-  m->vertices[3*6 + 1] = 1;
-  m->vertices[3*6 + 2] = 1;
+  m->vertices[3 * 6 + 0] = 0;
+  m->vertices[3 * 6 + 1] = 1;
+  m->vertices[3 * 6 + 2] = 1;
 
-  m->vertices[3*7 + 0] = 1;
-  m->vertices[3*7 + 1] = 1;
-  m->vertices[3*7 + 2] = 1;
+  m->vertices[3 * 7 + 0] = 1;
+  m->vertices[3 * 7 + 1] = 1;
+  m->vertices[3 * 7 + 2] = 1;
 
+  m->triangles[3 * 0 + 0] = 0;
+  m->triangles[3 * 0 + 1] = 1;
+  m->triangles[3 * 0 + 2] = 2;
 
-  m->triangles[3*0 + 0] = 0;
-  m->triangles[3*0 + 1] = 1;
-  m->triangles[3*0 + 2] = 2;
+  m->triangles[3 * 1 + 0] = 1;
+  m->triangles[3 * 1 + 1] = 3;
+  m->triangles[3 * 1 + 2] = 2;
 
-  m->triangles[3*1 + 0] = 1;
-  m->triangles[3*1 + 1] = 3;
-  m->triangles[3*1 + 2] = 2;
+  m->triangles[3 * 2 + 0] = 5;
+  m->triangles[3 * 2 + 1] = 4;
+  m->triangles[3 * 2 + 2] = 6;
 
-  m->triangles[3*2 + 0] = 5;
-  m->triangles[3*2 + 1] = 4;
-  m->triangles[3*2 + 2] = 6;
+  m->triangles[3 * 3 + 0] = 5;
+  m->triangles[3 * 3 + 1] = 6;
+  m->triangles[3 * 3 + 2] = 7;
 
-  m->triangles[3*3 + 0] = 5;
-  m->triangles[3*3 + 1] = 6;
-  m->triangles[3*3 + 2] = 7;
+  m->triangles[3 * 4 + 0] = 1;
+  m->triangles[3 * 4 + 1] = 5;
+  m->triangles[3 * 4 + 2] = 3;
 
-  m->triangles[3*4 + 0] = 1;
-  m->triangles[3*4 + 1] = 5;
-  m->triangles[3*4 + 2] = 3;
+  m->triangles[3 * 5 + 0] = 5;
+  m->triangles[3 * 5 + 1] = 7;
+  m->triangles[3 * 5 + 2] = 3;
 
-  m->triangles[3*5 + 0] = 5;
-  m->triangles[3*5 + 1] = 7;
-  m->triangles[3*5 + 2] = 3;
+  m->triangles[3 * 6 + 0] = 4;
+  m->triangles[3 * 6 + 1] = 0;
+  m->triangles[3 * 6 + 2] = 2;
 
-  m->triangles[3*6 + 0] = 4;
-  m->triangles[3*6 + 1] = 0;
-  m->triangles[3*6 + 2] = 2;
+  m->triangles[3 * 7 + 0] = 4;
+  m->triangles[3 * 7 + 1] = 2;
+  m->triangles[3 * 7 + 2] = 6;
 
-  m->triangles[3*7 + 0] = 4;
-  m->triangles[3*7 + 1] = 2;
-  m->triangles[3*7 + 2] = 6;
+  m->triangles[3 * 8 + 0] = 2;
+  m->triangles[3 * 8 + 1] = 3;
+  m->triangles[3 * 8 + 2] = 6;
 
-  m->triangles[3*8 + 0] = 2;
-  m->triangles[3*8 + 1] = 3;
-  m->triangles[3*8 + 2] = 6;
+  m->triangles[3 * 9 + 0] = 3;
+  m->triangles[3 * 9 + 1] = 7;
+  m->triangles[3 * 9 + 2] = 6;
 
-  m->triangles[3*9 + 0] = 3;
-  m->triangles[3*9 + 1] = 7;
-  m->triangles[3*9 + 2] = 6;
+  m->triangles[3 * 10 + 0] = 1;
+  m->triangles[3 * 10 + 1] = 0;
+  m->triangles[3 * 10 + 2] = 4;
 
-  m->triangles[3*10 + 0] = 1;
-  m->triangles[3*10 + 1] = 0;
-  m->triangles[3*10 + 2] = 4;
-
-  m->triangles[3*11 + 0] = 1;
-  m->triangles[3*11 + 1] = 4;
-  m->triangles[3*11 + 2] = 5;
-
+  m->triangles[3 * 11 + 0] = 1;
+  m->triangles[3 * 11 + 1] = 4;
+  m->triangles[3 * 11 + 2] = 5;
 
   Eigen::Vector3d center;
   double radius;
@@ -273,8 +270,8 @@ TEST(MeshBoundingSphere, Mesh1)
   EXPECT_EQ(0.5, center.z());
 }
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
-    testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+  testing::InitGoogleTest(&argc, argv);
+  return RUN_ALL_TESTS();
 }

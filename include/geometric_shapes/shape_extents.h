@@ -40,13 +40,11 @@
 
 namespace geometric_shapes
 {
-
 /** \brief Get the dimensions of an axis-aligned bounding box for the shape described by \e shape_msg */
 void getShapeExtents(const shape_msgs::SolidPrimitive& shape_msg, double& x_extent, double& y_extent, double& z_extent);
 
 /** \brief Get the dimensions of an axis-aligned bounding box for the shape described by \e shape_msg */
 void getShapeExtents(const shape_msgs::Mesh& shape_msg, double& x_extent, double& y_extent, double& z_extent);
-
 }
 
 #endif

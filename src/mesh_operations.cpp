@@ -56,13 +56,10 @@
 
 namespace shapes
 {
-
 namespace detail
 {
-
 namespace
 {
-
 /// Local representation of a vertex that knows its position in an array (used for sorting)
 struct LocalVertexType
 {
@@ -70,18 +67,18 @@ struct LocalVertexType
   {
   }
 
-  LocalVertexType(const Eigen::Vector3d &v) : x(v.x()), y(v.y()), z(v.z())
+  LocalVertexType(const Eigen::Vector3d& v) : x(v.x()), y(v.y()), z(v.z())
   {
   }
 
-  double x,y,z;
+  double x, y, z;
   unsigned int index;
 };
 
 /// Sorting operator by point value
 struct ltLocalVertexValue
 {
-  bool operator()(const LocalVertexType &p1, const LocalVertexType &p2) const
+  bool operator()(const LocalVertexType& p1, const LocalVertexType& p2) const
   {
     if (p1.x < p2.x)
       return true;
@@ -100,22 +97,21 @@ struct ltLocalVertexValue
 /// Sorting operator by point index
 struct ltLocalVertexIndex
 {
-  bool operator()(const LocalVertexType &p1, const LocalVertexType &p2) const
+  bool operator()(const LocalVertexType& p1, const LocalVertexType& p2) const
   {
     return p1.index < p2.index;
   }
 };
-
 }
 }
 
-Mesh* createMeshFromVertices(const EigenSTL::vector_Vector3d &vertices, const std::vector<unsigned int> &triangles)
+Mesh* createMeshFromVertices(const EigenSTL::vector_Vector3d& vertices, const std::vector<unsigned int>& triangles)
 {
   unsigned int nt = triangles.size() / 3;
-  Mesh *mesh = new Mesh(vertices.size(), nt);
-  for (unsigned int i = 0 ; i < vertices.size() ; ++i)
+  Mesh* mesh = new Mesh(vertices.size(), nt);
+  for (unsigned int i = 0; i < vertices.size(); ++i)
   {
-    mesh->vertices[3 * i    ] = vertices[i].x();
+    mesh->vertices[3 * i] = vertices[i].x();
     mesh->vertices[3 * i + 1] = vertices[i].y();
     mesh->vertices[3 * i + 2] = vertices[i].z();
   }
@@ -127,19 +123,20 @@ Mesh* createMeshFromVertices(const EigenSTL::vector_Vector3d &vertices, const st
   return mesh;
 }
 
-Mesh* createMeshFromVertices(const EigenSTL::vector_Vector3d &source)
+Mesh* createMeshFromVertices(const EigenSTL::vector_Vector3d& source)
 {
   if (source.size() < 3)
     return NULL;
 
   if (source.size() % 3 != 0)
-    CONSOLE_BRIDGE_logError("The number of vertices to construct a mesh from is not divisible by 3. Probably constructed triangles will not make sense.");
+    CONSOLE_BRIDGE_logError("The number of vertices to construct a mesh from is not divisible by 3. Probably "
+                            "constructed triangles will not make sense.");
 
   std::set<detail::LocalVertexType, detail::ltLocalVertexValue> vertices;
   std::vector<unsigned int> triangles;
 
   unsigned int n = source.size() / 3;
-  for (unsigned int i = 0 ; i < n ; ++i)
+  for (unsigned int i = 0; i < n; ++i)
   {
     // check if we have new vertices
     unsigned int i3 = i * 3;
@@ -186,11 +183,11 @@ Mesh* createMeshFromVertices(const EigenSTL::vector_Vector3d &source)
   // copy the data to a mesh structure
   unsigned int nt = triangles.size() / 3;
 
-  Mesh *mesh = new Mesh(vt.size(), nt);
-  for (unsigned int i = 0 ; i < vt.size() ; ++i)
+  Mesh* mesh = new Mesh(vt.size(), nt);
+  for (unsigned int i = 0; i < vt.size(); ++i)
   {
     unsigned int i3 = i * 3;
-    mesh->vertices[i3    ] = vt[i].x;
+    mesh->vertices[i3] = vt[i].x;
     mesh->vertices[i3 + 1] = vt[i].y;
     mesh->vertices[i3 + 2] = vt[i].z;
   }
@@ -208,15 +205,14 @@ Mesh* createMeshFromResource(const std::string& resource)
   return createMeshFromResource(resource, one);
 }
 
-Mesh* createMeshFromBinary(const char* buffer, std::size_t size,
-                           const std::string &assimp_hint)
+Mesh* createMeshFromBinary(const char* buffer, std::size_t size, const std::string& assimp_hint)
 {
   static const Eigen::Vector3d one(1.0, 1.0, 1.0);
   return createMeshFromBinary(buffer, size, one, assimp_hint);
 }
 
-Mesh* createMeshFromBinary(const char *buffer, std::size_t size, const Eigen::Vector3d &scale,
-                           const std::string &assimp_hint)
+Mesh* createMeshFromBinary(const char* buffer, std::size_t size, const Eigen::Vector3d& scale,
+                           const std::string& assimp_hint)
 {
   if (!buffer || size < 1)
   {
@@ -233,31 +229,24 @@ Mesh* createMeshFromBinary(const char *buffer, std::size_t size, const Eigen::Ve
     std::transform(hint.begin(), hint.end(), hint.begin(), ::tolower);
   }
   if (hint.empty())
-    hint = assimp_hint; // send entire file name as hint if no extension was found
+    hint = assimp_hint;  // send entire file name as hint if no extension was found
 
   // Create an instance of the Importer class
   Assimp::Importer importer;
 
   // Issue #38 fix: as part of the post-processing, we remove all other components in file but
   // the meshes, as anyway the resulting shapes:Mesh object just receives vertices and triangles.
-  importer.SetPropertyInteger(AI_CONFIG_PP_RVC_FLAGS,
-          aiComponent_NORMALS                  |
-          aiComponent_TANGENTS_AND_BITANGENTS  |
-          aiComponent_COLORS                   |
-          aiComponent_TEXCOORDS                |
-          aiComponent_BONEWEIGHTS              |
-          aiComponent_ANIMATIONS               |
-          aiComponent_TEXTURES                 |
-          aiComponent_LIGHTS                   |
-          aiComponent_CAMERAS                  |
-          aiComponent_MATERIALS);
+  importer.SetPropertyInteger(AI_CONFIG_PP_RVC_FLAGS, aiComponent_NORMALS | aiComponent_TANGENTS_AND_BITANGENTS |
+                                                          aiComponent_COLORS | aiComponent_TEXCOORDS |
+                                                          aiComponent_BONEWEIGHTS | aiComponent_ANIMATIONS |
+                                                          aiComponent_TEXTURES | aiComponent_LIGHTS |
+                                                          aiComponent_CAMERAS | aiComponent_MATERIALS);
 
   // And have it read the given file with some post-processing
   const aiScene* scene = importer.ReadFileFromMemory(reinterpret_cast<const void*>(buffer), size,
-                                                     aiProcess_Triangulate            |
-                                                     aiProcess_JoinIdenticalVertices  |
-                                                     aiProcess_SortByPType            |
-                                                     aiProcess_RemoveComponent, hint.c_str());
+                                                     aiProcess_Triangulate | aiProcess_JoinIdenticalVertices |
+                                                         aiProcess_SortByPType | aiProcess_RemoveComponent,
+                                                     hint.c_str());
   if (!scene)
     return NULL;
 
@@ -275,7 +264,7 @@ Mesh* createMeshFromBinary(const char *buffer, std::size_t size, const Eigen::Ve
   return createMeshFromAsset(scene, scale, hint);
 }
 
-Mesh* createMeshFromResource(const std::string& resource, const Eigen::Vector3d &scale)
+Mesh* createMeshFromResource(const std::string& resource, const Eigen::Vector3d& scale)
 {
   resource_retriever::Retriever retriever;
   resource_retriever::MemoryResource res;
@@ -295,32 +284,34 @@ Mesh* createMeshFromResource(const std::string& resource, const Eigen::Vector3d 
     return NULL;
   }
 
-  Mesh *m = createMeshFromBinary(reinterpret_cast<const char*>(res.data.get()), res.size, scale, resource);
+  Mesh* m = createMeshFromBinary(reinterpret_cast<const char*>(res.data.get()), res.size, scale, resource);
   if (!m)
   {
     CONSOLE_BRIDGE_logWarn("Assimp reports no scene in %s.", resource.c_str());
-    CONSOLE_BRIDGE_logWarn("This could be because of a resource filename that is too long for the Assimp library, a known bug. As a workaround shorten the filename/path.");
+    CONSOLE_BRIDGE_logWarn("This could be because of a resource filename that is too long for the Assimp library, a "
+                           "known bug. As a workaround shorten the filename/path.");
   }
   return m;
 }
 
 namespace
 {
-void extractMeshData(const aiScene *scene, const aiNode *node, const aiMatrix4x4 &parent_transform, const Eigen::Vector3d &scale,
-                     EigenSTL::vector_Vector3d &vertices, std::vector<unsigned int> &triangles)
+void extractMeshData(const aiScene* scene, const aiNode* node, const aiMatrix4x4& parent_transform,
+                     const Eigen::Vector3d& scale, EigenSTL::vector_Vector3d& vertices,
+                     std::vector<unsigned int>& triangles)
 {
   aiMatrix4x4 transform = parent_transform;
   transform *= node->mTransformation;
-  for (unsigned int j = 0 ; j < node->mNumMeshes; ++j)
+  for (unsigned int j = 0; j < node->mNumMeshes; ++j)
   {
     const aiMesh* a = scene->mMeshes[node->mMeshes[j]];
     unsigned int offset = vertices.size();
-    for (unsigned int i = 0 ; i < a->mNumVertices ; ++i)
+    for (unsigned int i = 0; i < a->mNumVertices; ++i)
     {
       aiVector3D v = transform * a->mVertices[i];
       vertices.push_back(Eigen::Vector3d(v.x * scale.x(), v.y * scale.y(), v.z * scale.z()));
     }
-    for (unsigned int i = 0 ; i < a->mNumFaces ; ++i)
+    for (unsigned int i = 0; i < a->mNumFaces; ++i)
       if (a->mFaces[i].mNumIndices == 3)
       {
         triangles.push_back(offset + a->mFaces[i].mIndices[0]);
@@ -334,13 +325,13 @@ void extractMeshData(const aiScene *scene, const aiNode *node, const aiMatrix4x4
 }
 }
 
-Mesh* createMeshFromAsset(const aiScene* scene, const std::string &resource_name)
+Mesh* createMeshFromAsset(const aiScene* scene, const std::string& resource_name)
 {
   static const Eigen::Vector3d one(1.0, 1.0, 1.0);
   return createMeshFromAsset(scene, one, resource_name);
 }
 
-Mesh* createMeshFromAsset(const aiScene* scene, const Eigen::Vector3d &scale, const std::string &resource_name)
+Mesh* createMeshFromAsset(const aiScene* scene, const Eigen::Vector3d& scale, const std::string& resource_name)
 {
   if (!scene->HasMeshes())
   {
@@ -364,32 +355,29 @@ Mesh* createMeshFromAsset(const aiScene* scene, const Eigen::Vector3d &scale, co
   return createMeshFromVertices(vertices, triangles);
 }
 
-Mesh* createMeshFromShape(const Shape *shape)
+Mesh* createMeshFromShape(const Shape* shape)
 {
   if (shape->type == shapes::SPHERE)
     return shapes::createMeshFromShape(static_cast<const shapes::Sphere&>(*shape));
+  else if (shape->type == shapes::BOX)
+    return shapes::createMeshFromShape(static_cast<const shapes::Box&>(*shape));
+  else if (shape->type == shapes::CYLINDER)
+    return shapes::createMeshFromShape(static_cast<const shapes::Cylinder&>(*shape));
+  else if (shape->type == shapes::CONE)
+    return shapes::createMeshFromShape(static_cast<const shapes::Cone&>(*shape));
   else
-    if (shape->type == shapes::BOX)
-      return shapes::createMeshFromShape(static_cast<const shapes::Box&>(*shape));
-    else
-      if (shape->type == shapes::CYLINDER)
-        return shapes::createMeshFromShape(static_cast<const shapes::Cylinder&>(*shape));
-      else
-        if (shape->type == shapes::CONE)
-          return shapes::createMeshFromShape(static_cast<const shapes::Cone&>(*shape));
-        else
-          CONSOLE_BRIDGE_logError("Conversion of shape of type '%s' to a mesh is not known", shapeStringName(shape).c_str());
+    CONSOLE_BRIDGE_logError("Conversion of shape of type '%s' to a mesh is not known", shapeStringName(shape).c_str());
   return NULL;
 }
 
-Mesh* createMeshFromShape(const Box &box)
+Mesh* createMeshFromShape(const Box& box)
 {
   double x = box.size[0] / 2.0;
   double y = box.size[1] / 2.0;
   double z = box.size[2] / 2.0;
 
   // define vertices of box mesh
-  Mesh *result = new Mesh(8, 12);
+  Mesh* result = new Mesh(8, 12);
   result->vertices[0] = -x;
   result->vertices[1] = -y;
   result->vertices[2] = -z;
@@ -422,25 +410,15 @@ Mesh* createMeshFromShape(const Box &box)
   result->vertices[22] = y;
   result->vertices[23] = -z;
 
-  static const unsigned int tri[] = {0, 1, 2,
-                                     2, 3, 0,
-                                     4, 3, 2,
-                                     2, 6, 4,
-                                     7, 6, 2,
-                                     2, 1, 7,
-                                     3, 4, 5,
-                                     5, 0, 3,
-                                     0, 5, 7,
-                                     7, 1, 0,
-                                     7, 5, 4,
-                                     4, 6, 7};
+  static const unsigned int tri[] = { 0, 1, 2, 2, 3, 0, 4, 3, 2, 2, 6, 4, 7, 6, 2, 2, 1, 7,
+                                      3, 4, 5, 5, 0, 3, 0, 5, 7, 7, 1, 0, 7, 5, 4, 4, 6, 7 };
   memcpy(result->triangles, tri, sizeof(unsigned int) * 36);
   result->computeTriangleNormals();
   result->computeVertexNormals();
   return result;
 }
 
-Mesh* createMeshFromShape(const Sphere &sphere)
+Mesh* createMeshFromShape(const Sphere& sphere)
 {
   // this code is adapted from FCL
   EigenSTL::vector_Vector3d vertices;
@@ -448,8 +426,12 @@ Mesh* createMeshFromShape(const Sphere &sphere)
 
   const double r = sphere.radius;
   const double pi = boost::math::constants::pi<double>();
-  const unsigned int seg = std::max<unsigned int>(6, 0.5 + 2.0 * pi * r / 0.01); // split the sphere longitudinally up to a resolution of 1 cm at the ecuator, or a minimum of 6 segments
-  const unsigned int ring = std::max<unsigned int>(6, 2.0 * r / 0.01); // split the sphere into rings along latitude, up to a height of at most 1 cm, or a minimum of 6 rings
+  const unsigned int seg = std::max<unsigned int>(6, 0.5 + 2.0 * pi * r / 0.01);  // split the sphere longitudinally up
+                                                                                  // to a resolution of 1 cm at the
+                                                                                  // ecuator, or a minimum of 6 segments
+  const unsigned int ring = std::max<unsigned int>(6, 2.0 * r / 0.01);  // split the sphere into rings along latitude,
+                                                                        // up to a height of at most 1 cm, or a minimum
+                                                                        // of 6 rings
 
   double phi, phid;
   phid = pi * 2.0 / seg;
@@ -463,16 +445,15 @@ Mesh* createMeshFromShape(const Sphere &sphere)
   {
     double theta_ = theta + thetad * (i + 1);
     for (unsigned int j = 0; j < seg; ++j)
-      vertices.push_back(Eigen::Vector3d(r * sin(theta_) * cos(phi + j * phid),
-                                         r * sin(theta_) * sin(phi + j * phid),
+      vertices.push_back(Eigen::Vector3d(r * sin(theta_) * cos(phi + j * phid), r * sin(theta_) * sin(phi + j * phid),
                                          r * cos(theta_)));
   }
   vertices.push_back(Eigen::Vector3d(0.0, 0.0, r));
   vertices.push_back(Eigen::Vector3d(0.0, 0.0, -r));
 
-  for (unsigned int i = 0 ; i < ring - 1; ++i)
+  for (unsigned int i = 0; i < ring - 1; ++i)
   {
-    for (unsigned int j = 0 ; j < seg ; ++j)
+    for (unsigned int j = 0; j < seg; ++j)
     {
       unsigned int a, b, c, d;
       a = i * seg + j;
@@ -488,7 +469,7 @@ Mesh* createMeshFromShape(const Sphere &sphere)
     }
   }
 
-  for (unsigned int j = 0 ; j < seg ; ++j)
+  for (unsigned int j = 0; j < seg; ++j)
   {
     unsigned int a, b;
     a = j;
@@ -506,7 +487,7 @@ Mesh* createMeshFromShape(const Sphere &sphere)
   return createMeshFromVertices(vertices, triangles);
 }
 
-Mesh* createMeshFromShape(const Cylinder &cylinder)
+Mesh* createMeshFromShape(const Cylinder& cylinder)
 {
   // this code is adapted from FCL
   EigenSTL::vector_Vector3d vertices;
@@ -528,20 +509,20 @@ Mesh* createMeshFromShape(const Cylinder &cylinder)
   double phi = 0;
   double hd = h / h_num;
 
-  for (unsigned int i = 0 ; i < tot ; ++i)
+  for (unsigned int i = 0; i < tot; ++i)
     vertices.push_back(Eigen::Vector3d(r * cos(phi + phid * i), r * sin(phi + phid * i), h / 2));
 
-  for (unsigned int i = 0; i < h_num - 1 ; ++i)
-    for(unsigned int j = 0; j < tot; ++j)
+  for (unsigned int i = 0; i < h_num - 1; ++i)
+    for (unsigned int j = 0; j < tot; ++j)
       vertices.push_back(Eigen::Vector3d(r * cos(phi + phid * j), r * sin(phi + phid * j), h / 2 - (i + 1) * hd));
 
   for (unsigned int i = 0; i < tot; ++i)
-    vertices.push_back(Eigen::Vector3d(r * cos(phi + phid * i), r * sin(phi + phid * i), - h / 2));
+    vertices.push_back(Eigen::Vector3d(r * cos(phi + phid * i), r * sin(phi + phid * i), -h / 2));
 
   vertices.push_back(Eigen::Vector3d(0, 0, h / 2));
   vertices.push_back(Eigen::Vector3d(0, 0, -h / 2));
 
-  for (unsigned int i = 0; i < tot ; ++i)
+  for (unsigned int i = 0; i < tot; ++i)
   {
     triangles.push_back((h_num + 1) * tot);
     triangles.push_back(i);
@@ -577,7 +558,7 @@ Mesh* createMeshFromShape(const Cylinder &cylinder)
   return createMeshFromVertices(vertices, triangles);
 }
 
-Mesh* createMeshFromShape(const Cone &cone)
+Mesh* createMeshFromShape(const Cone& cone)
 {
   // this code is adapted from FCL
   EigenSTL::vector_Vector3d vertices;
@@ -603,12 +584,12 @@ Mesh* createMeshFromShape(const Cone &cone)
   {
     double h_i = h / 2 - (i + 1) * hd;
     double rh = r * (0.5 - h_i / h);
-    for(unsigned int j = 0; j < tot; ++j)
+    for (unsigned int j = 0; j < tot; ++j)
       vertices.push_back(Eigen::Vector3d(rh * cos(phi + phid * j), rh * sin(phi + phid * j), h_i));
   }
 
   for (unsigned int i = 0; i < tot; ++i)
-    vertices.push_back(Eigen::Vector3d(r * cos(phi + phid * i), r * sin(phi + phid * i), - h / 2));
+    vertices.push_back(Eigen::Vector3d(r * cos(phi + phid * i), r * sin(phi + phid * i), -h / 2));
 
   vertices.push_back(Eigen::Vector3d(0, 0, h / 2));
   vertices.push_back(Eigen::Vector3d(0, 0, -h / 2));
@@ -649,28 +630,28 @@ Mesh* createMeshFromShape(const Cone &cone)
 
 namespace
 {
-  inline void writeFloatToSTL(char *&ptr , float data)
-  {
-    memcpy(ptr, &data, sizeof(float));
-    ptr += sizeof(float);
-  }
-  inline void writeFloatToSTL(char *&ptr , double datad)
-  {
-    float data = datad;
-    memcpy(ptr, &data, sizeof(float));
-    ptr += sizeof(float);
-  }
+inline void writeFloatToSTL(char*& ptr, float data)
+{
+  memcpy(ptr, &data, sizeof(float));
+  ptr += sizeof(float);
+}
+inline void writeFloatToSTL(char*& ptr, double datad)
+{
+  float data = datad;
+  memcpy(ptr, &data, sizeof(float));
+  ptr += sizeof(float);
+}
 }
 
-void writeSTLBinary(const Mesh* mesh, std::vector<char> &buffer)
+void writeSTLBinary(const Mesh* mesh, std::vector<char>& buffer)
 {
   buffer.resize(84 + mesh->triangle_count * 50);
   memset(&buffer[0], 0, 80);
-  char *ptr = &buffer[80];
+  char* ptr = &buffer[80];
   uint32_t nt = mesh->triangle_count;
   memcpy(ptr, &nt, sizeof(uint32_t));
   ptr += sizeof(uint32_t);
-  for (unsigned int i = 0 ; i < mesh->triangle_count ; ++i)
+  for (unsigned int i = 0; i < mesh->triangle_count; ++i)
   {
     unsigned int i3 = i * 3;
 
@@ -702,5 +683,4 @@ void writeSTLBinary(const Mesh* mesh, std::vector<char> &buffer)
     ptr += 2;
   }
 }
-
 }

@@ -41,7 +41,6 @@
 #include <gtest/gtest.h>
 #include "resources/config.h"
 
-
 /**
  * Test fixture that generates meshes from the primitive shapes SPHERE, CYLINDER, CONE and BOX,
  * and load their twins from STL files. All the following tests are intended to verify that both
@@ -98,18 +97,17 @@ TEST_F(CompareMeshVsPrimitive, ContainsPoint)
   // Any point inside a mesh must be inside the other too
   for (int i = 0; i < shape_meshes.size(); ++i)
   {
-    shapes::Mesh *shape_ms = shape_meshes[i];
-    shapes::Mesh *loaded_ms = loaded_meshes[i];
+    shapes::Mesh* shape_ms = shape_meshes[i];
+    shapes::Mesh* loaded_ms = loaded_meshes[i];
 
-    bodies::Body *shape_cms = shape_convex_meshes[i];
-    bodies::Body *loaded_cms = loaded_convex_meshes[i];
+    bodies::Body* shape_cms = shape_convex_meshes[i];
+    bodies::Body* loaded_cms = loaded_convex_meshes[i];
 
     Eigen::Vector3d p;
     bool found = false;
     for (int i = 0; i < 100; ++i)
     {
-      if ((shape_cms->samplePointInside(rng, 10000, p)) ||
-          (loaded_cms->samplePointInside(rng, 10000, p)))
+      if ((shape_cms->samplePointInside(rng, 10000, p)) || (loaded_cms->samplePointInside(rng, 10000, p)))
       {
         found = true;
         EXPECT_EQ(shape_cms->containsPoint(p), loaded_cms->containsPoint(p));
@@ -124,32 +122,28 @@ TEST_F(CompareMeshVsPrimitive, IntersectsRay)
   // Random rays must intersect both meshes nearly at the same points
   for (int i = 0; i < shape_meshes.size(); ++i)
   {
-    shapes::Mesh *shape_ms = shape_meshes[i];
-    shapes::Mesh *loaded_ms = loaded_meshes[i];
+    shapes::Mesh* shape_ms = shape_meshes[i];
+    shapes::Mesh* loaded_ms = loaded_meshes[i];
 
-    bodies::Body *shape_cms = shape_convex_meshes[i];
-    bodies::Body *loaded_cms = loaded_convex_meshes[i];
+    bodies::Body* shape_cms = shape_convex_meshes[i];
+    bodies::Body* loaded_cms = loaded_convex_meshes[i];
 
     bool intersects = false;
     for (int i = 0; i < 100; ++i)
     {
-      Eigen::Vector3d ray_o(rng.uniformReal(-1.0, +1.0),
-                            rng.uniformReal(-1.0, +1.0),
-                            rng.uniformReal(-1.0, +1.0));
-      Eigen::Vector3d ray_d(rng.uniformReal(-1.0, +1.0),
-                            rng.uniformReal(-1.0, +1.0),
-                            rng.uniformReal(-1.0, +1.0));
+      Eigen::Vector3d ray_o(rng.uniformReal(-1.0, +1.0), rng.uniformReal(-1.0, +1.0), rng.uniformReal(-1.0, +1.0));
+      Eigen::Vector3d ray_d(rng.uniformReal(-1.0, +1.0), rng.uniformReal(-1.0, +1.0), rng.uniformReal(-1.0, +1.0));
       EigenSTL::vector_Vector3d vi1, vi2;
       shape_cms->intersectsRay(ray_o, ray_d, &vi1);
       loaded_cms->intersectsRay(ray_o, ray_d, &vi2);
 
-  // DEBUG printing
-  //    if (vi1.size() != vi2.size() && vi1.size() > 0 && vi2.size() > 0)
-  //    {
-  //        std::cout << vi1.size() << "   " << vi2.size() << "\n";
-  //        std::cout << ray_o.x() << "  "<< ray_o.y() << "  "<< ray_o.z()
-  //          << "\n" << ray_d.x() << "  "<< ray_d.y() << "  "<< ray_d.z() << "\n";
-  //    }
+      // DEBUG printing
+      //    if (vi1.size() != vi2.size() && vi1.size() > 0 && vi2.size() > 0)
+      //    {
+      //        std::cout << vi1.size() << "   " << vi2.size() << "\n";
+      //        std::cout << ray_o.x() << "  "<< ray_o.y() << "  "<< ray_o.z()
+      //          << "\n" << ray_d.x() << "  "<< ray_d.y() << "  "<< ray_d.z() << "\n";
+      //    }
 
       EXPECT_EQ(vi1.size(), vi2.size());
       if (vi1.size() > 0 && vi2.size() > 0)
@@ -171,11 +165,11 @@ TEST_F(CompareMeshVsPrimitive, BoundingSphere)
   // Bounding spheres must be nearly identical
   for (int i = 0; i < shape_meshes.size(); ++i)
   {
-    shapes::Mesh *shape_ms = shape_meshes[i];
-    shapes::Mesh *loaded_ms = loaded_meshes[i];
+    shapes::Mesh* shape_ms = shape_meshes[i];
+    shapes::Mesh* loaded_ms = loaded_meshes[i];
 
-    bodies::Body *shape_cms = shape_convex_meshes[i];
-    bodies::Body *loaded_cms = loaded_convex_meshes[i];
+    bodies::Body* shape_cms = shape_convex_meshes[i];
+    bodies::Body* loaded_cms = loaded_convex_meshes[i];
 
     shapes::Sphere shape(1.0);
     Eigen::Vector3d center1, center2;
@@ -183,7 +177,7 @@ TEST_F(CompareMeshVsPrimitive, BoundingSphere)
     computeShapeBoundingSphere(shape_ms, center1, radius1);
     computeShapeBoundingSphere(loaded_ms, center2, radius2);
 
-    EXPECT_NEAR(radius1,     radius2,     0.001);
+    EXPECT_NEAR(radius1, radius2, 0.001);
     EXPECT_NEAR(center1.x(), center2.x(), 0.001);
     EXPECT_NEAR(center1.y(), center2.y(), 0.001);
     EXPECT_NEAR(center1.z(), center2.z(), 0.001);
@@ -204,8 +198,7 @@ TEST_F(CompareMeshVsPrimitive, BoxTriangleCount)
   EXPECT_EQ(shape_meshes.back()->triangle_count, loaded_meshes.back()->triangle_count);
 }
 
-
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
   testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();

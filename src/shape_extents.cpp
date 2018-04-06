@@ -35,7 +35,8 @@
 #include <geometric_shapes/shape_extents.h>
 #include <limits>
 
-void geometric_shapes::getShapeExtents(const shape_msgs::SolidPrimitive& shape_msg, double& x_extent, double& y_extent, double& z_extent)
+void geometric_shapes::getShapeExtents(const shape_msgs::SolidPrimitive& shape_msg, double& x_extent, double& y_extent,
+                                       double& z_extent)
 {
   x_extent = y_extent = z_extent = 0.0;
 
@@ -54,7 +55,7 @@ void geometric_shapes::getShapeExtents(const shape_msgs::SolidPrimitive& shape_m
       y_extent = shape_msg.dimensions[shape_msgs::SolidPrimitive::BOX_Y];
       z_extent = shape_msg.dimensions[shape_msgs::SolidPrimitive::BOX_Z];
     }
-  } 
+  }
   else if (shape_msg.type == shape_msgs::SolidPrimitive::CYLINDER)
   {
     if (shape_msg.dimensions.size() > shape_msgs::SolidPrimitive::CYLINDER_RADIUS &&
@@ -63,7 +64,7 @@ void geometric_shapes::getShapeExtents(const shape_msgs::SolidPrimitive& shape_m
       x_extent = y_extent = shape_msg.dimensions[shape_msgs::SolidPrimitive::CYLINDER_RADIUS] * 2.0;
       z_extent = shape_msg.dimensions[shape_msgs::SolidPrimitive::CYLINDER_HEIGHT];
     }
-  } 
+  }
   else if (shape_msg.type == shape_msgs::SolidPrimitive::CONE)
   {
     if (shape_msg.dimensions.size() > shape_msgs::SolidPrimitive::CONE_RADIUS &&
@@ -75,14 +76,17 @@ void geometric_shapes::getShapeExtents(const shape_msgs::SolidPrimitive& shape_m
   }
 }
 
-void geometric_shapes::getShapeExtents(const shape_msgs::Mesh& shape_msg, double& x_extent, double& y_extent, double& z_extent)
+void geometric_shapes::getShapeExtents(const shape_msgs::Mesh& shape_msg, double& x_extent, double& y_extent,
+                                       double& z_extent)
 {
   x_extent = y_extent = z_extent = 0.0;
-  if (shape_msg.vertices.size() > 0) 
+  if (shape_msg.vertices.size() > 0)
   {
-    double xmin = std::numeric_limits<double>::max(), ymin = std::numeric_limits<double>::max(), zmin = std::numeric_limits<double>::max();
-    double xmax = -std::numeric_limits<double>::max(), ymax = -std::numeric_limits<double>::max(), zmax = -std::numeric_limits<double>::max();
-    for (std::size_t i = 0; i < shape_msg.vertices.size() ; ++i)
+    double xmin = std::numeric_limits<double>::max(), ymin = std::numeric_limits<double>::max(),
+           zmin = std::numeric_limits<double>::max();
+    double xmax = -std::numeric_limits<double>::max(), ymax = -std::numeric_limits<double>::max(),
+           zmax = -std::numeric_limits<double>::max();
+    for (std::size_t i = 0; i < shape_msg.vertices.size(); ++i)
     {
       if (shape_msg.vertices[i].x > xmax)
         xmax = shape_msg.vertices[i].x;
@@ -97,9 +101,8 @@ void geometric_shapes::getShapeExtents(const shape_msgs::Mesh& shape_msg, double
       if (shape_msg.vertices[i].z < zmin)
         zmin = shape_msg.vertices[i].z;
     }
-    x_extent = xmax-xmin;
-    y_extent = ymax-ymin;
-    z_extent = zmax-zmin;
+    x_extent = xmax - xmin;
+    y_extent = ymax - ymin;
+    z_extent = zmax - zmin;
   }
 }
-

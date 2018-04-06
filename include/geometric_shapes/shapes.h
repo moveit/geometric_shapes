@@ -57,9 +57,18 @@ class OcTree;
     dimensions of shapes. */
 namespace shapes
 {
-
 /** \brief A list of known shape types */
-enum ShapeType { UNKNOWN_SHAPE, SPHERE, CYLINDER, CONE, BOX, PLANE, MESH, OCTREE };
+enum ShapeType
+{
+  UNKNOWN_SHAPE,
+  SPHERE,
+  CYLINDER,
+  CONE,
+  BOX,
+  PLANE,
+  MESH,
+  OCTREE
+};
 
 /* convert above enum to printable */
 std::ostream& operator<<(std::ostream& ss, ShapeType type);
@@ -75,7 +84,7 @@ public:
   virtual Shape* clone() const = 0;
 
   /** \brief Print information about this shape */
-  virtual void print(std::ostream &out = std::cout) const;
+  virtual void print(std::ostream& out = std::cout) const;
 
   /** \brief Scale this shape by a factor */
   void scale(double scale);
@@ -107,7 +116,7 @@ public:
 
   virtual void scaleAndPadd(double scale, double padd);
   virtual Shape* clone() const;
-  virtual void print(std::ostream &out = std::cout) const;
+  virtual void print(std::ostream& out = std::cout) const;
 
   /** \brief The radius of the sphere */
   double radius;
@@ -128,7 +137,7 @@ public:
 
   virtual void scaleAndPadd(double scale, double padd);
   virtual Shape* clone() const;
-  virtual void print(std::ostream &out = std::cout) const;
+  virtual void print(std::ostream& out = std::cout) const;
 
   /** \brief The length of the cylinder */
   double length;
@@ -151,7 +160,7 @@ public:
 
   virtual void scaleAndPadd(double scale, double padd);
   virtual Shape* clone() const;
-  virtual void print(std::ostream &out = std::cout) const;
+  virtual void print(std::ostream& out = std::cout) const;
 
   /** \brief The length (height) of the cone */
   double length;
@@ -173,7 +182,7 @@ public:
 
   virtual void scaleAndPadd(double scale, double padd);
   virtual Shape* clone() const;
-  virtual void print(std::ostream &out = std::cout) const;
+  virtual void print(std::ostream& out = std::cout) const;
 
   /** \brief x, y, z dimensions of the box (axis-aligned) */
   double size[3];
@@ -187,7 +196,6 @@ public:
 class Mesh : public Shape
 {
 public:
-
   Mesh();
   Mesh(unsigned int v_count, unsigned int t_count);
   virtual ~Mesh();
@@ -197,45 +205,46 @@ public:
 
   virtual void scaleAndPadd(double scale, double padd);
   virtual Shape* clone() const;
-  virtual void print(std::ostream &out = std::cout) const;
+  virtual void print(std::ostream& out = std::cout) const;
 
-  /** \brief The normals to each triangle can be computed from the vertices using cross products. This function performs this computation and allocates memory for normals if needed */
+  /** \brief The normals to each triangle can be computed from the vertices using cross products. This function performs
+   * this computation and allocates memory for normals if needed */
   void computeTriangleNormals();
 
-  /** \brief The normals to each vertex, averaged from the triangle normals. computeTriangleNormals() is automatically called if needed. */
+  /** \brief The normals to each vertex, averaged from the triangle normals. computeTriangleNormals() is automatically
+   * called if needed. */
   void computeVertexNormals();
 
   /** \brief Merge vertices that are very close to each other, up to a threshold*/
   void mergeVertices(double threshold);
 
   /** \brief The number of available vertices */
-  unsigned int  vertex_count;
+  unsigned int vertex_count;
 
   /** \brief The position for each vertex vertex k has values at
    * index (3k, 3k+1, 3k+2) = (x,y,z) */
-  double       *vertices;
+  double* vertices;
 
   /** \brief The number of triangles formed with the vertices */
-  unsigned int  triangle_count;
+  unsigned int triangle_count;
 
   /** \brief The vertex indices for each triangle
    * triangle k has vertices at index (3k, 3k+1, 3k+2) = (v1, v2, v3) */
-  unsigned int *triangles;
+  unsigned int* triangles;
 
   /** \brief The normal to each triangle; unit vector represented
       as (x,y,z); If missing from the mesh, these vectors can be computed using computeTriangleNormals() */
-  double       *triangle_normals;
+  double* triangle_normals;
 
   /** \brief The normal to each vertex; unit vector represented
       as (x,y,z); If missing from the mesh, these vectors can be computed using computeVertexNormals()  */
-  double       *vertex_normals;
+  double* vertex_normals;
 };
 
 /** \brief Definition of a plane with equation ax + by + cz + d = 0 */
 class Plane : public Shape
 {
 public:
-
   Plane();
   Plane(double pa, double pb, double pc, double pd);
 
@@ -243,7 +252,7 @@ public:
   static const std::string STRING_NAME;
 
   virtual Shape* clone() const;
-  virtual void print(std::ostream &out = std::cout) const;
+  virtual void print(std::ostream& out = std::cout) const;
   virtual void scaleAndPadd(double scale, double padd);
   virtual bool isFixed() const;
 
@@ -256,26 +265,24 @@ class OcTree : public Shape
 {
 public:
   OcTree();
-  OcTree(const std::shared_ptr<const octomap::OcTree> &t);
+  OcTree(const std::shared_ptr<const octomap::OcTree>& t);
 
   /** \brief The type of the shape, as a string */
   static const std::string STRING_NAME;
 
   virtual Shape* clone() const;
-  virtual void print(std::ostream &out = std::cout) const;
+  virtual void print(std::ostream& out = std::cout) const;
   virtual void scaleAndPadd(double scale, double padd);
   virtual bool isFixed() const;
 
   std::shared_ptr<const octomap::OcTree> octree;
 };
 
-
 /** \brief Shared pointer to a Shape */
 typedef std::shared_ptr<Shape> ShapePtr;
 
 /** \brief Shared pointer to a const Shape */
 typedef std::shared_ptr<const Shape> ShapeConstPtr;
-
 }
 
 #endif
