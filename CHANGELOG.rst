@@ -2,6 +2,15 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* gracefully handle negative cylinder height: `#64 <https://github.com/ros-planning/geometric_shapes/issues/64>`_, `#80 <https://github.com/ros-planning/geometric_shapes/issues/80>`_
+* clang-formatting of whole repo: `#79 <https://github.com/ros-planning/geometric_shapes/issues/79>`_
+* operator<< for ShapeType: `#80 <https://github.com/ros-planning/geometric_shapes/issues/80>`_
+* adaption to new CONSOLE_BRIDGE_logXXX API: `#75 <https://github.com/ros-planning/geometric_shapes/issues/75>`_, `#72 <https://github.com/ros-planning/geometric_shapes/issues/72>`_
+* [fix] box-ray intersection: `#73 <https://github.com/ros-planning/geometric_shapes/issues/73>`_
+* Contributors: Dave Coleman, Leroy Rügemer, Malcolm Mielle, Mike Purvis, Robert Haschke, Michael Goerner
+
 0.5.3 (2017-11-26)
 ------------------
 * [enhance] Add warning about common Assimp bug (`#63 <https://github.com/ros-planning/geometric_shapes/issues/63>`_)
