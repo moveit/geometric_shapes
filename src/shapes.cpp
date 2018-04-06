@@ -47,6 +47,33 @@ const std::string shapes::Mesh::STRING_NAME = "mesh";
 const std::string shapes::Plane::STRING_NAME = "plane";
 const std::string shapes::OcTree::STRING_NAME = "octree";
 
+namespace shapes {
+std::ostream& operator<<(std::ostream& ss, ShapeType type)
+{
+   switch(type){
+      case UNKNOWN_SHAPE:
+         ss << "unknown"; break;
+      case SPHERE:
+         ss << Sphere::STRING_NAME; break;
+      case CYLINDER:
+         ss << Cylinder::STRING_NAME; break;
+      case CONE:
+         ss << Cone::STRING_NAME; break;
+      case BOX:
+         ss << Box::STRING_NAME; break;
+      case PLANE:
+         ss << Plane::STRING_NAME; break;
+      case MESH:
+         ss << Mesh::STRING_NAME; break;
+      case OCTREE:
+         ss << OcTree::STRING_NAME; break;
+      default:
+         ss << "impossible"; break;
+   }
+   return ss;
+}
+}
+
 shapes::Shape::Shape()
 {
   type = UNKNOWN_SHAPE;

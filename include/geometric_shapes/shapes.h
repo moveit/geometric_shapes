@@ -61,6 +61,8 @@ namespace shapes
 /** \brief A list of known shape types */
 enum ShapeType { UNKNOWN_SHAPE, SPHERE, CYLINDER, CONE, BOX, PLANE, MESH, OCTREE };
 
+/* convert above enum to printable */
+std::ostream& operator<<(std::ostream& ss, ShapeType type);
 
 /** \brief A basic definition of a shape. Shapes are considered centered at origin */
 class Shape
