@@ -171,11 +171,11 @@ public:
       changes induced by scaling and padding */
   virtual double computeVolume() const = 0;
 
-  /** \brief Sample a point that is included in the body using a given random number generator. Sometimes multiple
-     attempts need to be generated;
-      the function terminates with failure (returns false) after \e max_attempts attempts. If the call is successful
-     (returns true) the point is
-      written to \e result */
+  /** \brief Sample a point that is included in the body using a given random number generator.
+
+     Sometimes multiple attempts need to be generated.
+     The function terminates with failure (returns false) after \e max_attempts attempts.
+     If the call is successful (returns true) the point is written to \e result */
   virtual bool samplePointInside(random_numbers::RandomNumberGenerator& rng, unsigned int max_attempts,
                                  Eigen::Vector3d& result);
 
@@ -205,8 +205,7 @@ protected:
       reasons are kept up to date. */
   virtual void updateInternalData() = 0;
 
-  /** \brief Depending on the shape, this function copies the relevant
-      data to the body. */
+  /** \brief Depending on the shape, this function copies the relevant data to the body. */
   virtual void useDimensions(const shapes::Shape* shape) = 0;
 
   /** \brief The scale that was set for this body */
@@ -473,9 +472,9 @@ protected:
   Box bounding_box_;
 
   // pointer to an array of scaled vertices
-  // if the padding is 0 & scaling is 1, then there is no need to have scaled vertices; we can just point to the
-  // vertices in mesh_data_
-  // otherwise, point to scaled_vertices_storage_
+  // If the padding is 0 & scaling is 1, then there is no need to have scaled vertices;
+  // we can just point to the vertices in mesh_data_.
+  // Otherwise, point to scaled_vertices_storage_
   EigenSTL::vector_Vector3d* scaled_vertices_;
 
 private:
@@ -501,30 +500,29 @@ public:
   /** \brief Add a body*/
   void addBody(Body* body);
 
-  /** \brief Add a body from a shape, a pose for the body and a padding*/
+  /** \brief Add a body from a shape, a pose for the body and a padding */
   void addBody(const shapes::Shape* shape, const Eigen::Affine3d& pose, double padding = 0.0);
 
   /** \brief Clear all bodies from the vector*/
   void clear();
 
-  /** \brief Set the pose of a particular body in the vector of bodies*/
+  /** \brief Set the pose of a particular body in the vector of bodies */
   void setPose(unsigned int i, const Eigen::Affine3d& pose);
 
   /** \brief Get the number of bodies in this vector*/
   std::size_t getCount() const;
 
-  /** \brief Check if any of the bodies in the vector contains the input point*/
+  /** \brief Check if any body in the vector contains the input point */
   bool containsPoint(const Eigen::Vector3d& p, bool verbose = false) const;
 
-  /** \brief Check if any of the bodies in the vector contains the input point, and report the index at which the first
-   * body that contains the point was found. */
+  /** \brief Check if any body contains the input point, and report the first body's index if so */
   bool containsPoint(const Eigen::Vector3d& p, std::size_t& index, bool verbose = false) const;
 
   /** \brief Check if any of the bodies intersects the ray defined by \e origin and \e dir.
       When the first intersection is found, this function terminates. The index of the body that
       does intersect the ray is set to \e index (unset if no intersections were found). Optionally,
-      the intersection points are computed and set to \e intersections (only for the first body that is found to
-     intersect the ray) */
+      the intersection points are computed and set to \e intersections
+      (only for the first body that is found to intersect the ray) */
   bool intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vector3d& dir, std::size_t& index,
                      EigenSTL::vector_Vector3d* intersections = NULL, unsigned int count = 0) const;
 

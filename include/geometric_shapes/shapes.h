@@ -207,12 +207,12 @@ public:
   virtual Shape* clone() const;
   virtual void print(std::ostream& out = std::cout) const;
 
-  /** \brief The normals to each triangle can be computed from the vertices using cross products. This function performs
-   * this computation and allocates memory for normals if needed */
+  /** \brief Compute the normals of each triangle from its vertices via cross product. */
   void computeTriangleNormals();
 
-  /** \brief The normals to each vertex, averaged from the triangle normals. computeTriangleNormals() is automatically
-   * called if needed. */
+  /** \brief Compute vertex normals by averaging from adjacent triangle normals.
+
+     Calls computeTriangleNormals() if needed. */
   void computeVertexNormals();
 
   /** \brief Merge vertices that are very close to each other, up to a threshold*/

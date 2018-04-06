@@ -46,16 +46,16 @@ class aiScene;
 
 namespace shapes
 {
-/** \brief Load a mesh from a set of vertices. Triangles are
-    constructed using index values from the triangles
-    vector. Triangle k has vertices at index values triangles[3k],
-    triangles[3k+1], triangles[3k+2]  */
+/** \brief Load a mesh from a set of vertices.
+
+    Triangles are constructed using index values from the triangles vector.
+    Triangle k has vertices at index values triangles[3k], triangles[3k+1], triangles[3k+2] */
 Mesh* createMeshFromVertices(const EigenSTL::vector_Vector3d& vertices, const std::vector<unsigned int>& triangles);
 
-/** \brief Load a mesh from a set of vertices. Every 3 vertices
-    are considered a triangle. Repeating vertices are identified
-    and the set of triangle indices is constructed. The normal at
-    each triangle is also computed */
+/** \brief Load a mesh from a set of vertices.
+
+    Every 3 vertices are considered a triangle. Repeating vertices are identified and
+    the set of triangle indices is constructed. The normal at each triangle is also computed */
 Mesh* createMeshFromVertices(const EigenSTL::vector_Vector3d& source);
 
 /** \brief Load a mesh from a resource that contains a mesh that can be loaded by assimp */
