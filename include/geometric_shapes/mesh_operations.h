@@ -46,59 +46,55 @@ class aiScene;
 
 namespace shapes
 {
+/** \brief Load a mesh from a set of vertices.
 
-/** \brief Load a mesh from a set of vertices. Triangles are
-    constructed using index values from the triangles
-    vector. Triangle k has vertices at index values triangles[3k],
-    triangles[3k+1], triangles[3k+2]  */
-Mesh* createMeshFromVertices(const EigenSTL::vector_Vector3d &vertices, const std::vector<unsigned int> &triangles);
+    Triangles are constructed using index values from the triangles vector.
+    Triangle k has vertices at index values triangles[3k], triangles[3k+1], triangles[3k+2] */
+Mesh* createMeshFromVertices(const EigenSTL::vector_Vector3d& vertices, const std::vector<unsigned int>& triangles);
 
-/** \brief Load a mesh from a set of vertices. Every 3 vertices
-    are considered a triangle. Repeating vertices are identified
-    and the set of triangle indices is constructed. The normal at
-    each triangle is also computed */
-Mesh* createMeshFromVertices(const EigenSTL::vector_Vector3d &source);
+/** \brief Load a mesh from a set of vertices.
+
+    Every 3 vertices are considered a triangle. Repeating vertices are identified and
+    the set of triangle indices is constructed. The normal at each triangle is also computed */
+Mesh* createMeshFromVertices(const EigenSTL::vector_Vector3d& source);
 
 /** \brief Load a mesh from a resource that contains a mesh that can be loaded by assimp */
 Mesh* createMeshFromResource(const std::string& resource);
 
 /** \brief Load a mesh from a resource that contains a mesh that can be loaded by assimp */
-Mesh* createMeshFromResource(const std::string& resource, const Eigen::Vector3d &scale);
+Mesh* createMeshFromResource(const std::string& resource, const Eigen::Vector3d& scale);
 
 /** \brief Load a mesh from a binary stream that contains a mesh that can be loaded by assimp */
-Mesh* createMeshFromBinary(const char* buffer, std::size_t size,
-                           const std::string &assimp_hint = std::string());
+Mesh* createMeshFromBinary(const char* buffer, std::size_t size, const std::string& assimp_hint = std::string());
 
 /** \brief Load a mesh from a resource that contains a mesh that can be loaded by assimp */
-Mesh* createMeshFromBinary(const char *buffer, std::size_t size, const Eigen::Vector3d &scale,
-                           const std::string &assimp_hint = std::string());
+Mesh* createMeshFromBinary(const char* buffer, std::size_t size, const Eigen::Vector3d& scale,
+                           const std::string& assimp_hint = std::string());
 
 /** \brief Load a mesh from an assimp datastructure */
-Mesh* createMeshFromAsset(const aiScene* scene, const Eigen::Vector3d &scale,
-                          const std::string &assimp_hint = std::string());
+Mesh* createMeshFromAsset(const aiScene* scene, const Eigen::Vector3d& scale,
+                          const std::string& assimp_hint = std::string());
 
 /** \brief Load a mesh from an assimp datastructure */
-Mesh* createMeshFromAsset(const aiScene* scene,
-                          const std::string &assimp_hint = std::string());
+Mesh* createMeshFromAsset(const aiScene* scene, const std::string& assimp_hint = std::string());
 
 /** \brief Construct a mesh from a primitive shape that is NOT already a mesh. This call allocates a new object. */
-Mesh* createMeshFromShape(const Shape *shape);
+Mesh* createMeshFromShape(const Shape* shape);
 
 /** \brief Construct a mesh from a box */
-Mesh* createMeshFromShape(const Box &box);
+Mesh* createMeshFromShape(const Box& box);
 
 /** \brief Construct a mesh from a sphere */
-Mesh* createMeshFromShape(const Sphere &sphere);
+Mesh* createMeshFromShape(const Sphere& sphere);
 
 /** \brief Construct a mesh from a cylinder */
-Mesh* createMeshFromShape(const Cylinder &cylinder);
+Mesh* createMeshFromShape(const Cylinder& cylinder);
 
 /** \brief Construct a mesh from a cone */
-Mesh* createMeshFromShape(const Cone &cone);
+Mesh* createMeshFromShape(const Cone& cone);
 
 /** \brief Write the mesh to a buffer in STL format */
-void writeSTLBinary(const Mesh* mesh, std::vector<char> &buffer);
-
+void writeSTLBinary(const Mesh* mesh, std::vector<char>& buffer);
 }
 
 #endif

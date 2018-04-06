@@ -41,20 +41,18 @@
 
 namespace geometric_shapes
 {
+/** \brief Convert a shape_msgs::Mesh \e shape_msg to a visualization_msgs::Marker \e marker.
 
-/** \brief Convert a shape_msgs::Mesh \e shape_msg to a
-    visualization_msgs::Marker \e marker. The corresponding marker
-    will be constructed as a LINE_LIST (if \e use_mesh_triangle_list
-    is false) or as a TRIANGLE_LIST (if \e use_mesh_triangle_list is
-    true). On incorrect input, this function throws a
-    std::runtime_error. */
-void constructMarkerFromShape(const shape_msgs::Mesh &shape_msg, visualization_msgs::Marker &marker, bool use_mesh_triangle_list = true);
+    The corresponding marker will be constructed as a LINE_LIST (if \e use_mesh_triangle_list
+    is false) or as a TRIANGLE_LIST (if \e use_mesh_triangle_list is true).
+    On incorrect input, this function throws a std::runtime_error. */
+void constructMarkerFromShape(const shape_msgs::Mesh& shape_msg, visualization_msgs::Marker& marker,
+                              bool use_mesh_triangle_list = true);
 
-/** \brief Convert a shape_msgs::SolidPrimitive \e shape_msg to a
-    visualization_msgs::Marker \e marker. On incorrect input, this
-    function throws a std::runtime_error. */
-void constructMarkerFromShape(const shape_msgs::SolidPrimitive &shape_msg, visualization_msgs::Marker &marker);
+/** \brief Convert a shape_msgs::SolidPrimitive \e shape_msg to a visualization_msgs::Marker \e marker.
 
+    On incorrect input, this function throws a std::runtime_error. */
+void constructMarkerFromShape(const shape_msgs::SolidPrimitive& shape_msg, visualization_msgs::Marker& marker);
 }
 
 #endif

@@ -45,24 +45,22 @@
 
 namespace bodies
 {
+/** \brief Create a body from a given shape */
+Body* createBodyFromShape(const shapes::Shape* shape);
 
 /** \brief Create a body from a given shape */
-Body* createBodyFromShape(const shapes::Shape *shape);
+Body* constructBodyFromMsg(const shape_msgs::Mesh& shape, const geometry_msgs::Pose& pose);
 
 /** \brief Create a body from a given shape */
-Body* constructBodyFromMsg(const shape_msgs::Mesh &shape, const geometry_msgs::Pose &pose);
+Body* constructBodyFromMsg(const shape_msgs::SolidPrimitive& shape, const geometry_msgs::Pose& pose);
 
 /** \brief Create a body from a given shape */
-Body* constructBodyFromMsg(const shape_msgs::SolidPrimitive &shape, const geometry_msgs::Pose &pose);
-
-/** \brief Create a body from a given shape */
-Body* constructBodyFromMsg(const shapes::ShapeMsg &shape, const geometry_msgs::Pose &pose);
+Body* constructBodyFromMsg(const shapes::ShapeMsg& shape, const geometry_msgs::Pose& pose);
 
 /** \brief Compute a bounding sphere to enclose a set of bounding spheres */
-void mergeBoundingSpheres(const std::vector<BoundingSphere> &spheres, BoundingSphere &mergedSphere);
+void mergeBoundingSpheres(const std::vector<BoundingSphere>& spheres, BoundingSphere& mergedSphere);
 
 /** \brief Compute the bounding sphere for a set of \e bodies and store the resulting sphere in \e mergedSphere */
-void computeBoundingSphere(const std::vector<const Body*>& bodies, BoundingSphere &mergedSphere);
-
+void computeBoundingSphere(const std::vector<const Body*>& bodies, BoundingSphere& mergedSphere);
 }
 #endif

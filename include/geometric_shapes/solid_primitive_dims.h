@@ -39,61 +39,74 @@
 
 namespace geometric_shapes
 {
-
 /** \brief The number of dimensions of a particular shape */
-template<int>
+template <int>
 struct SolidPrimitiveDimCount
 {
-  enum { value = 0 };
+  enum
+  {
+    value = 0
+  };
 };
 
-template<>
+template <>
 struct SolidPrimitiveDimCount<shape_msgs::SolidPrimitive::SPHERE>
 {
   enum
-    {
-      value = static_cast<int>(shape_msgs::SolidPrimitive::SPHERE_RADIUS) + 1
-    };
+  {
+    value = static_cast<int>(shape_msgs::SolidPrimitive::SPHERE_RADIUS) + 1
+  };
 };
 
-template<>
+template <>
 struct SolidPrimitiveDimCount<shape_msgs::SolidPrimitive::BOX>
 {
   enum
-    {
-      value = (static_cast<int>(shape_msgs::SolidPrimitive::BOX_X) >= static_cast<int>(shape_msgs::SolidPrimitive::BOX_Y) &&
-               static_cast<int>(shape_msgs::SolidPrimitive::BOX_X) >= static_cast<int>(shape_msgs::SolidPrimitive::BOX_Z)) ?
-      static_cast<int>(shape_msgs::SolidPrimitive::BOX_X) :
-      (((static_cast<int>(shape_msgs::SolidPrimitive::BOX_Y) >= static_cast<int>(shape_msgs::SolidPrimitive::BOX_X) &&
-         static_cast<int>(shape_msgs::SolidPrimitive::BOX_Y) >= static_cast<int>(shape_msgs::SolidPrimitive::BOX_Z))) ?
-       static_cast<int>(shape_msgs::SolidPrimitive::BOX_Y) :
-       ((static_cast<int>(shape_msgs::SolidPrimitive::BOX_Z) >= static_cast<int>(shape_msgs::SolidPrimitive::BOX_X) &&
-         static_cast<int>(shape_msgs::SolidPrimitive::BOX_Z) >= static_cast<int>(shape_msgs::SolidPrimitive::BOX_Y)) ?
-        static_cast<int>(shape_msgs::SolidPrimitive::BOX_Z) : 0)) + 1
-    };
+  {
+    value =
+        (static_cast<int>(shape_msgs::SolidPrimitive::BOX_X) >= static_cast<int>(shape_msgs::SolidPrimitive::BOX_Y) &&
+         static_cast<int>(shape_msgs::SolidPrimitive::BOX_X) >= static_cast<int>(shape_msgs::SolidPrimitive::BOX_Z)) ?
+            static_cast<int>(shape_msgs::SolidPrimitive::BOX_X) :
+            (((static_cast<int>(shape_msgs::SolidPrimitive::BOX_Y) >=
+                   static_cast<int>(shape_msgs::SolidPrimitive::BOX_X) &&
+               static_cast<int>(shape_msgs::SolidPrimitive::BOX_Y) >=
+                   static_cast<int>(shape_msgs::SolidPrimitive::BOX_Z))) ?
+                 static_cast<int>(shape_msgs::SolidPrimitive::BOX_Y) :
+                 ((static_cast<int>(shape_msgs::SolidPrimitive::BOX_Z) >=
+                       static_cast<int>(shape_msgs::SolidPrimitive::BOX_X) &&
+                   static_cast<int>(shape_msgs::SolidPrimitive::BOX_Z) >=
+                       static_cast<int>(shape_msgs::SolidPrimitive::BOX_Y)) ?
+                      static_cast<int>(shape_msgs::SolidPrimitive::BOX_Z) :
+                      0)) +
+                1
+  };
 };
 
-template<>
+template <>
 struct SolidPrimitiveDimCount<shape_msgs::SolidPrimitive::CONE>
 {
   enum
-    {
-      value = (static_cast<int>(shape_msgs::SolidPrimitive::CONE_RADIUS) >= static_cast<int>(shape_msgs::SolidPrimitive::CONE_HEIGHT) ?
-               static_cast<int>(shape_msgs::SolidPrimitive::CONE_RADIUS) : static_cast<int>(shape_msgs::SolidPrimitive::CONE_HEIGHT)) + 1
-    };
+  {
+    value = (static_cast<int>(shape_msgs::SolidPrimitive::CONE_RADIUS) >=
+                     static_cast<int>(shape_msgs::SolidPrimitive::CONE_HEIGHT) ?
+                 static_cast<int>(shape_msgs::SolidPrimitive::CONE_RADIUS) :
+                 static_cast<int>(shape_msgs::SolidPrimitive::CONE_HEIGHT)) +
+            1
+  };
 };
 
-template<>
+template <>
 struct SolidPrimitiveDimCount<shape_msgs::SolidPrimitive::CYLINDER>
 {
   enum
-    {
-      value = (static_cast<int>(shape_msgs::SolidPrimitive::CYLINDER_RADIUS) >= static_cast<int>(shape_msgs::SolidPrimitive::CYLINDER_HEIGHT) ?
-               static_cast<int>(shape_msgs::SolidPrimitive::CYLINDER_RADIUS) : static_cast<int>(shape_msgs::SolidPrimitive::CYLINDER_HEIGHT)) + 1
-    };
+  {
+    value = (static_cast<int>(shape_msgs::SolidPrimitive::CYLINDER_RADIUS) >=
+                     static_cast<int>(shape_msgs::SolidPrimitive::CYLINDER_HEIGHT) ?
+                 static_cast<int>(shape_msgs::SolidPrimitive::CYLINDER_RADIUS) :
+                 static_cast<int>(shape_msgs::SolidPrimitive::CYLINDER_HEIGHT)) +
+            1
+  };
 };
-
-
 }
 
 #endif

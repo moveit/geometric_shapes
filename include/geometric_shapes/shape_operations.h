@@ -45,43 +45,41 @@
 
 namespace shapes
 {
+/** \brief Construct the shape that corresponds to the message. Return NULL on failure. */
+Shape* constructShapeFromMsg(const shape_msgs::SolidPrimitive& shape_msg);
 
 /** \brief Construct the shape that corresponds to the message. Return NULL on failure. */
-Shape* constructShapeFromMsg(const shape_msgs::SolidPrimitive &shape_msg);
+Shape* constructShapeFromMsg(const shape_msgs::Plane& shape_msg);
 
 /** \brief Construct the shape that corresponds to the message. Return NULL on failure. */
-Shape* constructShapeFromMsg(const shape_msgs::Plane &shape_msg);
+Shape* constructShapeFromMsg(const shape_msgs::Mesh& shape_msg);
 
 /** \brief Construct the shape that corresponds to the message. Return NULL on failure. */
-Shape* constructShapeFromMsg(const shape_msgs::Mesh &shape_msg);
-
-/** \brief Construct the shape that corresponds to the message. Return NULL on failure. */
-Shape* constructShapeFromMsg(const ShapeMsg &shape_msg);
+Shape* constructShapeFromMsg(const ShapeMsg& shape_msg);
 
 /** \brief Construct the message that corresponds to the shape. Return false on failure. */
-bool constructMsgFromShape(const Shape* shape, ShapeMsg &shape_msg);
+bool constructMsgFromShape(const Shape* shape, ShapeMsg& shape_msg);
 
 /** \brief Construct the marker that corresponds to the shape. Return false on failure. */
-bool constructMarkerFromShape(const Shape* shape, visualization_msgs::Marker &mk, bool use_mesh_triangle_list = false);
+bool constructMarkerFromShape(const Shape* shape, visualization_msgs::Marker& mk, bool use_mesh_triangle_list = false);
 
 /** \brief Compute the extents of a shape */
-Eigen::Vector3d computeShapeExtents(const ShapeMsg &shape_msg);
+Eigen::Vector3d computeShapeExtents(const ShapeMsg& shape_msg);
 
 /** \brief Compute the extents of a shape */
-Eigen::Vector3d computeShapeExtents(const Shape *shape);
+Eigen::Vector3d computeShapeExtents(const Shape* shape);
 
 /** \brief Compute a sphere bounding a shape */
-void computeShapeBoundingSphere(const Shape *shape, Eigen::Vector3d& center, double& radius);
+void computeShapeBoundingSphere(const Shape* shape, Eigen::Vector3d& center, double& radius);
 
 /** \brief Get the string name of the shape */
-const std::string& shapeStringName(const Shape *shape);
+const std::string& shapeStringName(const Shape* shape);
 
 /** \brief Save all the information about this shape as plain text */
-void saveAsText(const Shape *shape, std::ostream &out);
+void saveAsText(const Shape* shape, std::ostream& out);
 
 /** \brief Construct a shape from plain text description */
-Shape* constructShapeFromText(std::istream &in);
-
+Shape* constructShapeFromText(std::istream& in);
 }
 
 #endif
