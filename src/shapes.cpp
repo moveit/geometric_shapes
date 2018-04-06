@@ -39,15 +39,16 @@
 #include <octomap/octomap.h>
 #include <console_bridge/console.h>
 
-const std::string shapes::Sphere::STRING_NAME = "sphere";
-const std::string shapes::Box::STRING_NAME = "box";
-const std::string shapes::Cylinder::STRING_NAME = "cylinder";
-const std::string shapes::Cone::STRING_NAME = "cone";
-const std::string shapes::Mesh::STRING_NAME = "mesh";
-const std::string shapes::Plane::STRING_NAME = "plane";
-const std::string shapes::OcTree::STRING_NAME = "octree";
-
 namespace shapes {
+
+const std::string Sphere::STRING_NAME = "sphere";
+const std::string Box::STRING_NAME = "box";
+const std::string Cylinder::STRING_NAME = "cylinder";
+const std::string Cone::STRING_NAME = "cone";
+const std::string Mesh::STRING_NAME = "mesh";
+const std::string Plane::STRING_NAME = "plane";
+const std::string OcTree::STRING_NAME = "octree";
+
 std::ostream& operator<<(std::ostream& ss, ShapeType type)
 {
    switch(type){
@@ -72,62 +73,61 @@ std::ostream& operator<<(std::ostream& ss, ShapeType type)
    }
    return ss;
 }
-}
 
-shapes::Shape::Shape()
+Shape::Shape()
 {
   type = UNKNOWN_SHAPE;
 }
 
-shapes::Shape::~Shape()
+Shape::~Shape()
 {
 }
 
-shapes::Sphere::Sphere() : Shape()
+Sphere::Sphere() : Shape()
 {
   type   = SPHERE;
   radius = 0.0;
 }
 
-shapes::Sphere::Sphere(double r) : Shape()
+Sphere::Sphere(double r) : Shape()
 {
   type   = SPHERE;
   radius = r;
 }
 
-shapes::Cylinder::Cylinder() : Shape()
+Cylinder::Cylinder() : Shape()
 {
   type   = CYLINDER;
   length = radius = 0.0;
 }
 
-shapes::Cylinder::Cylinder(double r, double l) : Shape()
+Cylinder::Cylinder(double r, double l) : Shape()
 {
   type   = CYLINDER;
   length = l;
   radius = r;
 }
 
-shapes::Cone::Cone() : Shape()
+Cone::Cone() : Shape()
 {
   type   = CONE;
   length = radius = 0.0;
 }
 
-shapes::Cone::Cone(double r, double l) : Shape()
+Cone::Cone(double r, double l) : Shape()
 {
   type   = CONE;
   length = l;
   radius = r;
 }
 
-shapes::Box::Box() : Shape()
+Box::Box() : Shape()
 {
   type = BOX;
   size[0] = size[1] = size[2] = 0.0;
 }
 
-shapes::Box::Box(double x, double y, double z) : Shape()
+Box::Box(double x, double y, double z) : Shape()
 {
   type = BOX;
   size[0] = x;
@@ -135,7 +135,7 @@ shapes::Box::Box(double x, double y, double z) : Shape()
   size[2] = z;
 }
 
-shapes::Mesh::Mesh() : Shape()
+Mesh::Mesh() : Shape()
 {
   type = MESH;
   vertex_count = 0;
@@ -146,7 +146,7 @@ shapes::Mesh::Mesh() : Shape()
   vertex_normals = NULL;
 }
 
-shapes::Mesh::Mesh(unsigned int v_count, unsigned int t_count) : Shape()
+Mesh::Mesh(unsigned int v_count, unsigned int t_count) : Shape()
 {
   type = MESH;
   vertex_count = v_count;
@@ -157,7 +157,7 @@ shapes::Mesh::Mesh(unsigned int v_count, unsigned int t_count) : Shape()
   vertex_normals = new double[v_count * 3];
 }
 
-shapes::Mesh::~Mesh()
+Mesh::~Mesh()
 {
   if (vertices)
     delete[] vertices;
@@ -169,49 +169,49 @@ shapes::Mesh::~Mesh()
     delete[] vertex_normals;
 }
 
-shapes::Plane::Plane() : Shape()
+Plane::Plane() : Shape()
 {
   type = PLANE;
   a = b = c = d = 0.0;
 }
 
-shapes::Plane::Plane(double pa, double pb, double pc, double pd) : Shape()
+Plane::Plane(double pa, double pb, double pc, double pd) : Shape()
 {
   type = PLANE;
   a = pa; b = pb; c = pc; d = pd;
 }
 
-shapes::OcTree::OcTree() : Shape()
+OcTree::OcTree() : Shape()
 {
   type = OCTREE;
 }
 
-shapes::OcTree::OcTree(const std::shared_ptr<const octomap::OcTree> &t) : octree(t)
+OcTree::OcTree(const std::shared_ptr<const octomap::OcTree> &t) : octree(t)
 {
   type = OCTREE;
 }
 
-shapes::Shape* shapes::Sphere::clone() const
+Shape* Sphere::clone() const
 {
   return new Sphere(radius);
 }
 
-shapes::Shape* shapes::Cylinder::clone() const
+Shape* Cylinder::clone() const
 {
   return new Cylinder(radius, length);
 }
 
-shapes::Shape* shapes::Cone::clone() const
+Shape* Cone::clone() const
 {
   return new Cone(radius, length);
 }
 
-shapes::Shape* shapes::Box::clone() const
+Shape* Box::clone() const
 {
   return new Box(size[0], size[1], size[2]);
 }
 
-shapes::Shape* shapes::Mesh::clone() const
+Shape* Mesh::clone() const
 {
   Mesh *dest = new Mesh(vertex_count, triangle_count);
   unsigned int n = 3 * vertex_count;
@@ -239,54 +239,54 @@ shapes::Shape* shapes::Mesh::clone() const
   return dest;
 }
 
-shapes::Shape* shapes::Plane::clone() const
+Shape* Plane::clone() const
 {
   return new Plane(a, b, c, d);
 }
 
-shapes::Shape* shapes::OcTree::clone() const
+Shape* OcTree::clone() const
 {
   return new OcTree(octree);
 }
 
-void shapes::OcTree::scaleAndPadd(double scale, double padd)
+void OcTree::scaleAndPadd(double scale, double padd)
 {
   CONSOLE_BRIDGE_logWarn("OcTrees cannot be scaled or padded");
 }
 
-void shapes::Plane::scaleAndPadd(double scale, double padding)
+void Plane::scaleAndPadd(double scale, double padding)
 {
   CONSOLE_BRIDGE_logWarn("Planes cannot be scaled or padded");
 }
 
-void shapes::Shape::scale(double scale)
+void Shape::scale(double scale)
 {
   scaleAndPadd(scale, 0.0);
 }
 
-void shapes::Shape::padd(double padding)
+void Shape::padd(double padding)
 {
   scaleAndPadd(1.0, padding);
 }
 
-void shapes::Sphere::scaleAndPadd(double scale, double padding)
+void Sphere::scaleAndPadd(double scale, double padding)
 {
   radius = radius * scale + padding;
 }
 
-void shapes::Cylinder::scaleAndPadd(double scale, double padding)
-{
-  radius = radius * scale + padding;
-  length = length * scale + 2.0 * padding;
-}
-
-void shapes::Cone::scaleAndPadd(double scale, double padding)
+void Cylinder::scaleAndPadd(double scale, double padding)
 {
   radius = radius * scale + padding;
   length = length * scale + 2.0 * padding;
 }
 
-void shapes::Box::scaleAndPadd(double scale, double padding)
+void Cone::scaleAndPadd(double scale, double padding)
+{
+  radius = radius * scale + padding;
+  length = length * scale + 2.0 * padding;
+}
+
+void Box::scaleAndPadd(double scale, double padding)
 {
   double p2 = padding * 2.0;
   size[0] = size[0] * scale + p2;
@@ -294,7 +294,7 @@ void shapes::Box::scaleAndPadd(double scale, double padding)
   size[2] = size[2] * scale + p2;
 }
 
-void shapes::Mesh::scaleAndPadd(double scale, double padding)
+void Mesh::scaleAndPadd(double scale, double padding)
 {
   // find the center of the mesh
   double sx = 0.0, sy = 0.0, sz = 0.0;
@@ -340,42 +340,42 @@ void shapes::Mesh::scaleAndPadd(double scale, double padding)
   }
 }
 
-void shapes::Shape::print(std::ostream &out) const
+void Shape::print(std::ostream &out) const
 {
   out << this << std::endl;
 }
 
-void shapes::Sphere::print(std::ostream &out) const
+void Sphere::print(std::ostream &out) const
 {
   out << "Sphere[radius=" << radius << "]" << std::endl;
 }
 
-void shapes::Cylinder::print(std::ostream &out) const
+void Cylinder::print(std::ostream &out) const
 {
   out << "Cylinder[radius=" << radius << ", length=" << length << "]" << std::endl;
 }
 
-void shapes::Cone::print(std::ostream &out) const
+void Cone::print(std::ostream &out) const
 {
   out << "Cone[radius=" << radius << ", length=" << length << "]" << std::endl;
 }
 
-void shapes::Box::print(std::ostream &out) const
+void Box::print(std::ostream &out) const
 {
   out << "Box[x=length=" << size[0] << ", y=width=" << size[1] << "z=height=" << size[2] << "]" << std::endl;
 }
 
-void shapes::Mesh::print(std::ostream &out) const
+void Mesh::print(std::ostream &out) const
 {
   out << "Mesh[vertices=" << vertex_count << ", triangles=" << triangle_count << "]" << std::endl;
 }
 
-void shapes::Plane::print(std::ostream &out) const
+void Plane::print(std::ostream &out) const
 {
   out << "Plane[a=" << a << ", b=" << b << ", c=" << c << ", d=" << d << "]" << std::endl;
 }
 
-void shapes::OcTree::print(std::ostream &out) const
+void OcTree::print(std::ostream &out) const
 {
   if (octree)
   {
@@ -390,22 +390,22 @@ void shapes::OcTree::print(std::ostream &out) const
     out << "OcTree[NULL]" << std::endl;
 }
 
-bool shapes::Shape::isFixed() const
+bool Shape::isFixed() const
 {
   return false;
 }
 
-bool shapes::OcTree::isFixed() const
+bool OcTree::isFixed() const
 {
   return true;
 }
 
-bool shapes::Plane::isFixed() const
+bool Plane::isFixed() const
 {
   return true;
 }
 
-void shapes::Mesh::computeTriangleNormals()
+void Mesh::computeTriangleNormals()
 {
   if (triangle_count && !triangle_normals)
     triangle_normals = new double[triangle_count * 3];
@@ -428,7 +428,7 @@ void shapes::Mesh::computeTriangleNormals()
   }
 }
 
-void shapes::Mesh::computeVertexNormals()
+void Mesh::computeVertexNormals()
 {
   if (!triangle_normals)
     computeTriangleNormals();
@@ -469,7 +469,7 @@ void shapes::Mesh::computeVertexNormals()
   }
 }
 
-void shapes::Mesh::mergeVertices(double threshold)
+void Mesh::mergeVertices(double threshold)
 {
   const double thresholdSQR = threshold * threshold;
 
@@ -530,3 +530,5 @@ void shapes::Mesh::mergeVertices(double threshold)
   if (vertex_normals)
     computeVertexNormals();
 }
+
+} /* namespace shapes */
