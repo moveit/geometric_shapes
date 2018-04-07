@@ -430,11 +430,10 @@ public:
   const EigenSTL::vector_Vector3d& getScaledVertices() const;
 
   /**
-   * @brief getPlanes Get the planes that define the convex shape.
-   * @return A a list of vector4d(nx, ny, nz, d).
+   * @brief Get the planes that define the convex shape.
+   * @return A list of Vector4d(nx, ny, nz, d).
    */
   const EigenSTL::vector_Vector4d& getPlanes() const;
-
 
   virtual BodyPtr cloneAt(const Eigen::Affine3d& pose, double padding, double scale) const;
 
