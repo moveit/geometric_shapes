@@ -847,7 +847,7 @@ void bodies::ConvexMesh::useDimensions(const shapes::Shape* shape)
   facetT* facet;
   FORALLfacets
   {
-    Eigen::Vector4f planeEquation(facet->normal[0], facet->normal[1], facet->normal[2], facet->offset);
+    Eigen::Vector4d planeEquation(facet->normal[0], facet->normal[1], facet->normal[2], facet->offset);
     if (!mesh_data_->planes_.empty())
     {
       // filter equal planes - assuming same ones follow each other
@@ -910,7 +910,7 @@ void bodies::ConvexMesh::computeScaledVerticesFromPlaneProjections()
     EigenSTL::vector_Vector3d projected_vertices;
     for (unsigned int t = 0; t < vertex_to_tris[i].size(); ++t)
     {
-      const Eigen::Vector4f& plane = mesh_data_->planes_[mesh_data_->plane_for_triangle_[vertex_to_tris[i][t]]];
+      const Eigen::Vector4d& plane = mesh_data_->planes_[mesh_data_->plane_for_triangle_[vertex_to_tris[i][t]]];
       Eigen::Vector3d plane_normal(plane.x(), plane.y(), plane.z());
       double d_scaled_padded =
           scale_ * plane.w() - (1 - scale_) * mesh_data_->mesh_center_.dot(plane_normal) - padding_;
@@ -996,6 +996,12 @@ const EigenSTL::vector_Vector3d& bodies::ConvexMesh::getScaledVertices() const
   return scaled_vertices_ ? *scaled_vertices_ : getVertices();
 }
 
+const EigenSTL::vector_Vector4d& bodies::ConvexMesh::getPlanes() const
+{
+  static const EigenSTL::vector_Vector4d empty;
+  return mesh_data_ ? mesh_data_->planes_ : empty;
+}
+
 std::shared_ptr<bodies::Body> bodies::ConvexMesh::cloneAt(const Eigen::Affine3d& pose, double padding,
                                                           double scale) const
 {
@@ -1029,7 +1035,7 @@ bool bodies::ConvexMesh::isPointInsidePlanes(const Eigen::Vector3d& point) const
   unsigned int numplanes = mesh_data_->planes_.size();
   for (unsigned int i = 0; i < numplanes; ++i)
   {
-    const Eigen::Vector4f& plane = mesh_data_->planes_[i];
+    const Eigen::Vector4d& plane = mesh_data_->planes_[i];
     Eigen::Vector3d plane_vec(plane.x(), plane.y(), plane.z());
     double dist = plane_vec.dot(point) + plane.w() - padding_ - 1e-6;
     if (dist > 0.0)
