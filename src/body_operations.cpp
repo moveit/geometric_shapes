@@ -36,7 +36,7 @@
 
 #include <geometric_shapes/body_operations.h>
 #include <geometric_shapes/shape_operations.h>
-#include <console_bridge/console.h>
+#include <geometric_shapes/console_bridge_compatibility.hpp>
 #include <Eigen/Geometry>
 
 bodies::Body* bodies::createBodyFromShape(const shapes::Shape* shape)

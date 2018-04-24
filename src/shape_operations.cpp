@@ -42,7 +42,7 @@
 #include <set>
 #include <float.h>
 
-#include <console_bridge/console.h>
+#include "geometric_shapes/console_bridge_compatibility.hpp"
 
 #include <Eigen/Geometry>
 

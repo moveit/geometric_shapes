@@ -37,7 +37,7 @@
 #include "geometric_shapes/bodies.h"
 #include "geometric_shapes/body_operations.h"
 
-#include <console_bridge/console.h>
+#include "geometric_shapes/console_bridge_compatibility.hpp"
 
 extern "C" {
 #ifdef GEOMETRIC_SHAPES_HAVE_QHULL_2011
