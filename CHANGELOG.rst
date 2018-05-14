@@ -2,6 +2,11 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.6.0 (2018-05-14)
+------------------
+* Add method getPlanes and use double precision for planes (`#82 <https://github.com/ros-planning/geometric_shapes/issues/82>`_)
+* Contributors: Bence Magyar
+
 0.5.4 (2018-04-06)
 ------------------
 * gracefully handle negative cylinder height: `#64 <https://github.com/ros-planning/geometric_shapes/issues/64>`_, `#80 <https://github.com/ros-planning/geometric_shapes/issues/80>`_
