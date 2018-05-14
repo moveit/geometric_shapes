@@ -43,7 +43,7 @@
 #include <set>
 #include <float.h>
 
-#include <console_bridge/console.h>
+#include "geometric_shapes/console_bridge_compatibility.hpp"
 #include <resource_retriever/retriever.h>
 
 #include <assimp/scene.h>
