@@ -151,7 +151,7 @@ void bodies::Sphere::updateInternalData()
   center_ = pose_.translation();
 }
 
-std::shared_ptr<bodies::Body> bodies::Sphere::cloneAt(const Eigen::Affine3d& pose, double padding, double scale) const
+std::shared_ptr<bodies::Body> bodies::Sphere::cloneAt(const Eigen::Isometry3d& pose, double padding, double scale) const
 {
   Sphere* s = new Sphere();
   s->radius_ = radius_;
@@ -330,7 +330,7 @@ bool bodies::Cylinder::samplePointInside(random_numbers::RandomNumberGenerator& 
   return true;
 }
 
-std::shared_ptr<bodies::Body> bodies::Cylinder::cloneAt(const Eigen::Affine3d& pose, double padding, double scale) const
+std::shared_ptr<bodies::Body> bodies::Cylinder::cloneAt(const Eigen::Isometry3d& pose, double padding, double scale) const
 {
   Cylinder* c = new Cylinder();
   c->length_ = length_;
@@ -530,7 +530,7 @@ void bodies::Box::updateInternalData()
   corner2_ = center_ + tmp;
 }
 
-std::shared_ptr<bodies::Body> bodies::Box::cloneAt(const Eigen::Affine3d& pose, double padding, double scale) const
+std::shared_ptr<bodies::Body> bodies::Box::cloneAt(const Eigen::Isometry3d& pose, double padding, double scale) const
 {
   Box* b = new Box();
   b->length_ = length_;
@@ -563,7 +563,7 @@ void bodies::Box::computeBoundingCylinder(BoundingCylinder& cylinder) const
     cylinder.length = length2_ * 2.0;
     a = width2_;
     b = height2_;
-    Eigen::Affine3d rot(Eigen::AngleAxisd(90.0f * (M_PI / 180.0f), Eigen::Vector3d::UnitY()));
+    Eigen::Isometry3d rot(Eigen::AngleAxisd(90.0f * (M_PI / 180.0f), Eigen::Vector3d::UnitY()));
     cylinder.pose = pose_ * rot;
   }
   else if (width2_ > height2_)
@@ -572,7 +572,7 @@ void bodies::Box::computeBoundingCylinder(BoundingCylinder& cylinder) const
     a = height2_;
     b = length2_;
     cylinder.radius = sqrt(height2_ * height2_ + length2_ * length2_);
-    Eigen::Affine3d rot(Eigen::AngleAxisd(90.0f * (M_PI / 180.0f), Eigen::Vector3d::UnitX()));
+    Eigen::Isometry3d rot(Eigen::AngleAxisd(90.0f * (M_PI / 180.0f), Eigen::Vector3d::UnitX()));
     cylinder.pose = pose_ * rot;
   }
   else
@@ -946,7 +946,7 @@ void bodies::ConvexMesh::updateInternalData()
 {
   if (!mesh_data_)
     return;
-  Eigen::Affine3d pose = pose_;
+  Eigen::Isometry3d pose = pose_;
   pose.translation() = Eigen::Vector3d(pose_ * mesh_data_->box_offset_);
 
   std::unique_ptr<shapes::Box> box_shape(
@@ -1002,7 +1002,7 @@ const EigenSTL::vector_Vector4d& bodies::ConvexMesh::getPlanes() const
   return mesh_data_ ? mesh_data_->planes_ : empty;
 }
 
-std::shared_ptr<bodies::Body> bodies::ConvexMesh::cloneAt(const Eigen::Affine3d& pose, double padding,
+std::shared_ptr<bodies::Body> bodies::ConvexMesh::cloneAt(const Eigen::Isometry3d& pose, double padding,
                                                           double scale) const
 {
   ConvexMesh* m = new ConvexMesh();
@@ -1169,7 +1169,7 @@ bodies::BodyVector::BodyVector()
 {
 }
 
-bodies::BodyVector::BodyVector(const std::vector<shapes::Shape*>& shapes, const EigenSTL::vector_Affine3d& poses,
+bodies::BodyVector::BodyVector(const std::vector<shapes::Shape*>& shapes, const EigenSTL::vector_Isometry3d& poses,
                                double padding)
 {
   for (unsigned int i = 0; i < shapes.size(); i++)
@@ -1195,7 +1195,7 @@ void bodies::BodyVector::addBody(Body* body)
   body->computeBoundingSphere(sphere);
 }
 
-void bodies::BodyVector::addBody(const shapes::Shape* shape, const Eigen::Affine3d& pose, double padding)
+void bodies::BodyVector::addBody(const shapes::Shape* shape, const Eigen::Isometry3d& pose, double padding)
 {
   bodies::Body* body = bodies::createBodyFromShape(shape);
   body->setPose(pose);
@@ -1208,7 +1208,7 @@ std::size_t bodies::BodyVector::getCount() const
   return bodies_.size();
 }
 
-void bodies::BodyVector::setPose(unsigned int i, const Eigen::Affine3d& pose)
+void bodies::BodyVector::setPose(unsigned int i, const Eigen::Isometry3d& pose)
 {
   if (i >= bodies_.size())
   {

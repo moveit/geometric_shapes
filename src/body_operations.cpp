@@ -115,7 +115,7 @@ Body* constructBodyFromMsgHelper(const T& shape_msg, const geometry_msgs::Pose& 
         CONSOLE_BRIDGE_logError("Quaternion is not normalized. Assuming identity.");
         q = Eigen::Quaterniond(1.0, 0.0, 0.0, 0.0);
       }
-      Eigen::Affine3d af(Eigen::Translation3d(pose.position.x, pose.position.y, pose.position.z) *
+      Eigen::Isometry3d af(Eigen::Translation3d(pose.position.x, pose.position.y, pose.position.z) *
                          q.toRotationMatrix());
       body->setPose(af);
       return body;
