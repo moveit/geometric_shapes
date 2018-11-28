@@ -70,7 +70,7 @@ TEST(SpherePointContainment, ComplexInside)
   shapes::Sphere shape(1.0);
   bodies::Body* sphere = new bodies::Sphere(&shape);
   sphere->setScale(0.95);
-  Eigen::Affine3d pose;
+  Eigen::Isometry3d pose;
   pose.setIdentity();
   pose.translation() = Eigen::Vector3d(1.0, 1.0, 1.0);
   sphere->setPose(pose);
@@ -84,7 +84,7 @@ TEST(SpherePointContainment, ComplexOutside)
   shapes::Sphere shape(1.0);
   bodies::Body* sphere = new bodies::Sphere(&shape);
   sphere->setScale(0.95);
-  Eigen::Affine3d pose;
+  Eigen::Isometry3d pose;
   pose.setIdentity();
   pose.translation() = Eigen::Vector3d(1.0, 1.0, 1.0);
   sphere->setPose(pose);
@@ -158,7 +158,7 @@ TEST(BoxPointContainment, ComplexInside)
   shapes::Box shape(1.0, 1.0, 1.0);
   bodies::Body* box = new bodies::Box(&shape);
   box->setScale(1.01);
-  Eigen::Affine3d pose(Eigen::AngleAxisd(M_PI / 3.0, Eigen::Vector3d::UnitX()));
+  Eigen::Isometry3d pose(Eigen::AngleAxisd(M_PI / 3.0, Eigen::Vector3d::UnitX()));
   pose.translation() = Eigen::Vector3d(1.0, 1.0, 1.0);
   box->setPose(pose);
 
@@ -181,7 +181,7 @@ TEST(BoxPointContainment, ComplexOutside)
   shapes::Box shape(1.0, 1.0, 1.0);
   bodies::Body* box = new bodies::Box(&shape);
   box->setScale(1.01);
-  Eigen::Affine3d pose(Eigen::AngleAxisd(M_PI / 3.0, Eigen::Vector3d::UnitX()));
+  Eigen::Isometry3d pose(Eigen::AngleAxisd(M_PI / 3.0, Eigen::Vector3d::UnitX()));
   pose.translation() = Eigen::Vector3d(1.0, 1.0, 1.0);
   box->setPose(pose);
 
@@ -214,7 +214,7 @@ TEST(BoxRayIntersection, SimpleRay2)
   shapes::Box shape(0.9, 0.01, 1.2);
   bodies::Body* box = new bodies::Box(&shape);
 
-  Eigen::Affine3d pose(Eigen::AngleAxisd(0, Eigen::Vector3d::UnitX()));
+  Eigen::Isometry3d pose(Eigen::AngleAxisd(0, Eigen::Vector3d::UnitX()));
   pose.translation() = Eigen::Vector3d(0, 0.005, 0.6);
   box->setPose(pose);
 
@@ -236,7 +236,7 @@ TEST(BoxRayIntersection, SimpleRay3)
   shapes::Box shape(0.02, 0.4, 1.2);
   bodies::Body* box = new bodies::Box(&shape);
 
-  Eigen::Affine3d pose(Eigen::AngleAxisd(0, Eigen::Vector3d::UnitX()));
+  Eigen::Isometry3d pose(Eigen::AngleAxisd(0, Eigen::Vector3d::UnitX()));
   pose.translation() = Eigen::Vector3d(0.45, -0.195, 0.6);
   box->setPose(pose);
 
@@ -304,7 +304,7 @@ TEST(MeshPointContainment, Pr2Forearm)
   ASSERT_TRUE(ms != NULL);
   bodies::Body* m = new bodies::ConvexMesh(ms);
   ASSERT_TRUE(m != NULL);
-  Eigen::Affine3d t(Eigen::Affine3d::Identity());
+  Eigen::Isometry3d t(Eigen::Isometry3d::Identity());
   t.translation().x() = 1.0;
   EXPECT_FALSE(m->cloneAt(t)->containsPoint(-1.0, 0.0, 0.0));
 

@@ -67,7 +67,7 @@ struct BoundingSphere
 /** \brief Definition of a cylinder */
 struct BoundingCylinder
 {
-  Eigen::Affine3d pose;
+  Eigen::Isometry3d pose;
   double radius;
   double length;
 
@@ -132,14 +132,14 @@ public:
   }
 
   /** \brief Set the pose of the body. Default is identity */
-  void setPose(const Eigen::Affine3d& pose)
+  void setPose(const Eigen::Isometry3d& pose)
   {
     pose_ = pose;
     updateInternalData();
   }
 
   /** \brief Retrieve the pose of the body */
-  const Eigen::Affine3d& getPose() const
+  const Eigen::Isometry3d& getPose() const
   {
     return pose_;
   }
@@ -188,7 +188,7 @@ public:
   virtual void computeBoundingCylinder(BoundingCylinder& cylinder) const = 0;
 
   /** \brief Get a clone of this body, but one that is located at the pose \e pose */
-  BodyPtr cloneAt(const Eigen::Affine3d& pose) const
+  BodyPtr cloneAt(const Eigen::Isometry3d& pose) const
   {
     return cloneAt(pose, padding_, scale_);
   }
@@ -197,7 +197,7 @@ public:
       pose \e pose and has possibly different passing and scaling: \e
       padding and \e scaling. This function is useful to implement
       thread safety, when bodies need to be moved around. */
-  virtual BodyPtr cloneAt(const Eigen::Affine3d& pose, double padding, double scaling) const = 0;
+  virtual BodyPtr cloneAt(const Eigen::Isometry3d& pose, double padding, double scaling) const = 0;
 
 protected:
   /** \brief This function is called every time a change to the body
@@ -218,7 +218,7 @@ protected:
   shapes::ShapeType type_;
 
   /** \brief The location of the body (position and orientation) */
-  Eigen::Affine3d pose_;
+  Eigen::Isometry3d pose_;
 
 public:
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
@@ -255,7 +255,7 @@ public:
   virtual bool intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vector3d& dir,
                              EigenSTL::vector_Vector3d* intersections = NULL, unsigned int count = 0) const;
 
-  virtual BodyPtr cloneAt(const Eigen::Affine3d& pose, double padding, double scale) const;
+  virtual BodyPtr cloneAt(const Eigen::Isometry3d& pose, double padding, double scale) const;
 
 protected:
   virtual void useDimensions(const shapes::Shape* shape);
@@ -304,7 +304,7 @@ public:
   virtual bool intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vector3d& dir,
                              EigenSTL::vector_Vector3d* intersections = NULL, unsigned int count = 0) const;
 
-  virtual BodyPtr cloneAt(const Eigen::Affine3d& pose, double padding, double scale) const;
+  virtual BodyPtr cloneAt(const Eigen::Isometry3d& pose, double padding, double scale) const;
 
 protected:
   virtual void useDimensions(const shapes::Shape* shape);
@@ -363,7 +363,7 @@ public:
   virtual bool intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vector3d& dir,
                              EigenSTL::vector_Vector3d* intersections = NULL, unsigned int count = 0) const;
 
-  virtual BodyPtr cloneAt(const Eigen::Affine3d& pose, double padding, double scale) const;
+  virtual BodyPtr cloneAt(const Eigen::Isometry3d& pose, double padding, double scale) const;
 
 protected:
   virtual void useDimensions(const shapes::Shape* shape);  // (x, y, z) = (length, width, height)
@@ -435,7 +435,7 @@ public:
    */
   const EigenSTL::vector_Vector4d& getPlanes() const;
 
-  virtual BodyPtr cloneAt(const Eigen::Affine3d& pose, double padding, double scale) const;
+  virtual BodyPtr cloneAt(const Eigen::Isometry3d& pose, double padding, double scale) const;
 
   /// Project the original vertex to the scaled and padded planes and average.
   void computeScaledVerticesFromPlaneProjections();
@@ -471,7 +471,7 @@ protected:
   std::shared_ptr<MeshData> mesh_data_;
 
   // pose/padding/scaling-dependent values & values computed for convenience and fast upcoming computations
-  Eigen::Affine3d i_pose_;
+  Eigen::Isometry3d i_pose_;
   Eigen::Vector3d center_;
   double radiusB_;
   double radiusBSqr_;
@@ -499,7 +499,7 @@ public:
   BodyVector();
 
   /** \brief Construct a body vector from a vector of shapes, a vector of poses and a padding */
-  BodyVector(const std::vector<shapes::Shape*>& shapes, const EigenSTL::vector_Affine3d& poses, double padding = 0.0);
+  BodyVector(const std::vector<shapes::Shape*>& shapes, const EigenSTL::vector_Isometry3d& poses, double padding = 0.0);
 
   ~BodyVector();
 
@@ -507,13 +507,13 @@ public:
   void addBody(Body* body);
 
   /** \brief Add a body from a shape, a pose for the body and a padding */
-  void addBody(const shapes::Shape* shape, const Eigen::Affine3d& pose, double padding = 0.0);
+  void addBody(const shapes::Shape* shape, const Eigen::Isometry3d& pose, double padding = 0.0);
 
   /** \brief Clear all bodies from the vector*/
   void clear();
 
   /** \brief Set the pose of a particular body in the vector of bodies */
-  void setPose(unsigned int i, const Eigen::Affine3d& pose);
+  void setPose(unsigned int i, const Eigen::Isometry3d& pose);
 
   /** \brief Get the number of bodies in this vector*/
   std::size_t getCount() const;
