@@ -2,6 +2,12 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.6.1 (2018-12-09)
+------------------
+* Limit minimum number of cylinder vertices (on circumference) to 6 (`#92 <https://github.com/ros-planning/geometric_shapes/issues/92>`_)
+* Eigen::Affine3d -> Eigen::Isometry3d (`#88 <https://github.com/ros-planning/geometric_shapes/issues/88>`_)
+* Contributors: Robert Haschke, eisoku9618
+
 0.6.0 (2018-05-14)
 ------------------
 * Add method getPlanes and use double precision for planes (`#82 <https://github.com/ros-planning/geometric_shapes/issues/82>`_)
