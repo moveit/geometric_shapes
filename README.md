@@ -17,8 +17,8 @@ Note: [shape_tools](https://github.com/ros-planning/shape_tools) package was rec
 
 ## Build Status
 
-Travis CI: [![Build Status](https://travis-ci.org/ros-planning/geometric_shapes.svg?branch=kinetic-devel)](https://travis-ci.org/ros-planning/geometric_shapes)
+Travis CI: [![Build Status](https://travis-ci.org/ros-planning/geometric_shapes.svg?branch=melodic-devel)](https://travis-ci.org/ros-planning/geometric_shapes)
 
-Devel Job: [![Build Status](http://build.ros.org/buildStatus/icon?job=Jbin_uT64__geometric_shapes__ubuntu_trusty_amd64__binary)](http://build.ros.org/view/Ibin_uT64/job/Jbin_uT64__geometric_shapes__ubuntu_trusty_amd64__binary/)
+Devel Job: [![Build Status](http://build.ros.org/buildStatus/icon?job=Msrc_uB__geometric_shapes__ubuntu_bionic__source)](http://build.ros.org/view/Msrc_uB/job/Msrc_uB__geometric_shapes__ubuntu_bionic__source)
 
-Debian Job: [![Build Status](http://build.ros.org/buildStatus/icon?job=Jdev__geometric_shapes__ubuntu_trusty_amd64)](http://build.ros.org/view/Idev/job/Jdev__geometric_shapes__ubuntu_trusty_amd64/)
+Debian Job: [![Build Status](http://build.ros.org/buildStatus/icon?job=Mbin_uB64__geometric_shapes__ubuntu_bionic_amd64__binary)](http://build.ros.org/view/Mbin_uB64/job/Mbin_uB64__geometric_shapes__ubuntu_bionic_amd64__binary)
