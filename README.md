@@ -13,6 +13,8 @@ Supported shapes:
 
 Note: Bodies for meshes compute the convex hull of those meshes in order to provide the point containment / ray intersection routines.
 
+Note: There was a recent change in point containment computations - now all bodies are expected to also contain their surface points. [The old behavior was inconsistent](https://github.com/ros-planning/geometric_shapes/issues/91). Rounding errors may still yield surprising results, though.
+
 Note: [shape_tools](https://github.com/ros-planning/shape_tools) package was recently merged into this package
 
 ## Build Status
