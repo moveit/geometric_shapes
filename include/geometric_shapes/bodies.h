@@ -157,7 +157,7 @@ public:
     return containsPoint(pt, verbose);
   }
 
-  /** \brief Check if a point is inside the body */
+  /** \brief Check if a point is inside the body. Surface points are included. */
   virtual bool containsPoint(const Eigen::Vector3d& p, bool verbose = false) const = 0;
 
   /** \brief Check if a ray intersects the body, and find the

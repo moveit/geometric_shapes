@@ -130,7 +130,7 @@ bool bodies::Body::samplePointInside(random_numbers::RandomNumberGenerator& rng,
 
 bool bodies::Sphere::containsPoint(const Eigen::Vector3d& p, bool verbose) const
 {
-  return (center_ - p).squaredNorm() < radius2_;
+  return (center_ - p).squaredNorm() <= radius2_;
 }
 
 void bodies::Sphere::useDimensions(const shapes::Shape* shape)  // radius
@@ -277,7 +277,7 @@ bool bodies::Cylinder::containsPoint(const Eigen::Vector3d& p, bool verbose) con
   else
   {
     double pB2 = v.dot(normalB2_);
-    return pB2 * pB2 < remaining;
+    return pB2 * pB2 <= remaining;
   }
 }
 

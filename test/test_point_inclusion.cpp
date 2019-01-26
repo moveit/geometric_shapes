@@ -41,14 +41,28 @@
 #include <gtest/gtest.h>
 #include "resources/config.h"
 
+// We expect surface points are counted inside.
 #define EXPECT_SURF EXPECT_TRUE
-//#define EXPECT_SURF EXPECT_FALSE
+
+// split length into the largest number elem, such that sqrt(elem^2 + elem^2) <= length
+double largestComponentForLength2D(const double length)
+{
+  // HACK: sqrt(2) / 2 is a problem due to rounding errors since the distance
+  //       is computed as 1.0000000000000002 . In such case we subtract an
+  //       epsilon.
+
+  double sq2 = sqrt(length / 2);
+  while (sq2 * sq2 + sq2 * sq2 > length)
+    sq2 -= std::numeric_limits<double>::epsilon();
+  return sq2;
+}
 
 TEST(SpherePointContainment, Basic)
 {
   shapes::Sphere shape(1.0);
   bodies::Sphere sphere(&shape);
 
+  // clang-format off
   // zero
   EXPECT_TRUE( sphere.containsPoint(Eigen::Vector3d(0.00, 0.00, 0.00)));
   // general point outside
@@ -66,15 +80,15 @@ TEST(SpherePointContainment, Basic)
   EXPECT_FALSE(sphere.containsPoint(Eigen::Vector3d(0.00, 0.00, 1.01)));
 
   // near two-axis maximum
-  const double sq2 = sqrt(2) / 2;
+  const double sq2e = largestComponentForLength2D(1.0);
   EXPECT_TRUE( sphere.containsPoint(Eigen::Vector3d(0.70, 0.70, 0.00)));
-  EXPECT_SURF( sphere.containsPoint(Eigen::Vector3d(sq2 , sq2 , 0.00)));
+  EXPECT_SURF( sphere.containsPoint(Eigen::Vector3d(sq2e, sq2e, 0.00)));
   EXPECT_FALSE(sphere.containsPoint(Eigen::Vector3d(0.71, 0.71, 0.00)));
   EXPECT_TRUE( sphere.containsPoint(Eigen::Vector3d(0.70, 0.00, 0.70)));
-  EXPECT_SURF( sphere.containsPoint(Eigen::Vector3d(sq2 , 0.00, sq2 )));
+  EXPECT_SURF( sphere.containsPoint(Eigen::Vector3d(sq2e, 0.00, sq2e)));
   EXPECT_FALSE(sphere.containsPoint(Eigen::Vector3d(0.71, 0.00, 0.71)));
   EXPECT_TRUE( sphere.containsPoint(Eigen::Vector3d(0.00, 0.70, 0.70)));
-  EXPECT_SURF( sphere.containsPoint(Eigen::Vector3d(0.00, sq2 , sq2 )));
+  EXPECT_SURF( sphere.containsPoint(Eigen::Vector3d(0.00, sq2e, sq2e)));
   EXPECT_FALSE(sphere.containsPoint(Eigen::Vector3d(0.00, 0.71, 0.71)));
 
   // near three-axis maximum
@@ -84,7 +98,7 @@ TEST(SpherePointContainment, Basic)
   EXPECT_FALSE(sphere.containsPoint(Eigen::Vector3d(0.58, 0.58, 0.58)));
 
   // near three-axis maximum with translation
-  Eigen::Affine3d pose;
+  Eigen::Isometry3d pose;
   pose.setIdentity();
   pose.translation() = Eigen::Vector3d(1.0, 0.0, 0.0);
   sphere.setPose(pose);
@@ -104,6 +118,7 @@ TEST(SpherePointContainment, Basic)
   EXPECT_TRUE( sphere.containsPoint(Eigen::Vector3d(0.57, 0.57, 1.57)));
   EXPECT_SURF( sphere.containsPoint(Eigen::Vector3d(sq3 , sq3, 1+sq3)));
   EXPECT_FALSE(sphere.containsPoint(Eigen::Vector3d(0.58, 0.58, 1.58)));
+  // clang-format on
 }
 
 TEST(SpherePointContainment, SimpleInside)
@@ -197,6 +212,7 @@ TEST(BoxPointContainment, Basic)
   shapes::Box shape(2.0, 2.0, 2.0);
   bodies::Box box(&shape);
 
+  // clang-format off
   // zero
   EXPECT_TRUE( box.containsPoint(Eigen::Vector3d(0.00, 0.00, 0.00)));
   // general point outside
@@ -231,7 +247,7 @@ TEST(BoxPointContainment, Basic)
   EXPECT_FALSE(box.containsPoint(Eigen::Vector3d(1.01, 1.01, 1.01)));
 
   // near three-axis maximum with translation
-  Eigen::Affine3d pose;
+  Eigen::Isometry3d pose;
   pose.setIdentity();
   pose.translation() = Eigen::Vector3d(1.0, 0.0, 0.0);
   box.setPose(pose);
@@ -251,6 +267,7 @@ TEST(BoxPointContainment, Basic)
   EXPECT_TRUE( box.containsPoint(Eigen::Vector3d(0.99, 0.99, 1.99)));
   EXPECT_SURF( box.containsPoint(Eigen::Vector3d(1.00, 1.00, 2.00)));
   EXPECT_FALSE(box.containsPoint(Eigen::Vector3d(1.01, 1.01, 2.01)));
+  // clang-format on
 }
 
 TEST(BoxPointContainment, SimpleInside)
@@ -384,6 +401,7 @@ TEST(CylinderPointContainment, Basic)
   shapes::Cylinder shape(1.0, 4.0);
   bodies::Cylinder cylinder(&shape);
 
+  // clang-format off
   // zero
   EXPECT_TRUE( cylinder.containsPoint(Eigen::Vector3d(0.00, 0.00, 0.00)));
   // general point outside
@@ -402,8 +420,10 @@ TEST(CylinderPointContainment, Basic)
 
   // near two-axis maximum
   const double sq2 = sqrt(2) / 2;
+  const double sq2e = largestComponentForLength2D(1);
+
   EXPECT_TRUE( cylinder.containsPoint(Eigen::Vector3d(0.70, 0.70, 0.00)));
-  EXPECT_SURF( cylinder.containsPoint(Eigen::Vector3d(sq2 , sq2 , 0.00)));
+  EXPECT_SURF( cylinder.containsPoint(Eigen::Vector3d(sq2e, sq2e, 0.00)));
   EXPECT_FALSE(cylinder.containsPoint(Eigen::Vector3d(0.71, 0.71, 0.00)));
   EXPECT_TRUE( cylinder.containsPoint(Eigen::Vector3d(0.99, 0.00, 1.99)));
   EXPECT_SURF( cylinder.containsPoint(Eigen::Vector3d(1.00, 0.00, 2.00)));
@@ -414,11 +434,11 @@ TEST(CylinderPointContainment, Basic)
 
   // near three-axis maximum
   EXPECT_TRUE( cylinder.containsPoint(Eigen::Vector3d(0.70, 0.70, 1.99)));
-  EXPECT_SURF( cylinder.containsPoint(Eigen::Vector3d(sq2 , sq2 , 2.00)));
+  EXPECT_SURF( cylinder.containsPoint(Eigen::Vector3d(sq2e, sq2e, 2.00)));
   EXPECT_FALSE(cylinder.containsPoint(Eigen::Vector3d(0.71, 0.71, 2.01)));
 
   // near three-axis maximum with translation
-  Eigen::Affine3d pose;
+  Eigen::Isometry3d pose;
   pose.setIdentity();
   pose.translation() = Eigen::Vector3d(1.0, 0.0, 0.0);
   cylinder.setPose(pose);
@@ -436,8 +456,9 @@ TEST(CylinderPointContainment, Basic)
   pose.translation() = Eigen::Vector3d(0.0, 0.0, 1.0);
   cylinder.setPose(pose);
   EXPECT_TRUE( cylinder.containsPoint(Eigen::Vector3d(0.70, 0.70, 2.99)));
-  EXPECT_SURF( cylinder.containsPoint(Eigen::Vector3d(sq2 , sq2 , 3.00)));
+  EXPECT_SURF( cylinder.containsPoint(Eigen::Vector3d(sq2e, sq2e, 3.00)));
   EXPECT_FALSE(cylinder.containsPoint(Eigen::Vector3d(0.71, 0.71, 3.01)));
+  // clang-format on
 }
 
 TEST(CylinderPointContainment, SimpleInside)
@@ -486,7 +507,9 @@ TEST(CylinderPointContainment, CylinderPadding)
 
 TEST(MeshPointContainment, Basic)
 {
-  shapes::Mesh *ms = shapes::createMeshFromResource("file://" + (boost::filesystem::path(TEST_RESOURCES_DIR) / "/box.dae").string());
+  // clang-format off
+  shapes::Mesh *ms = shapes::createMeshFromResource("file://" +
+    (boost::filesystem::path(TEST_RESOURCES_DIR) / "/box.dae").string());
   ASSERT_TRUE(ms != NULL);
   bodies::ConvexMesh cubeMesh(ms);
 
@@ -524,7 +547,7 @@ TEST(MeshPointContainment, Basic)
   EXPECT_FALSE(cubeMesh.containsPoint(Eigen::Vector3d(1.01, 1.01, 1.01)));
 
   // near three-axis maximum with translation
-  Eigen::Affine3d pose;
+  Eigen::Isometry3d pose;
   pose.setIdentity();
   pose.translation() = Eigen::Vector3d(1.0, 0.0, 0.0);
   cubeMesh.setPose(pose);
@@ -544,6 +567,7 @@ TEST(MeshPointContainment, Basic)
   EXPECT_TRUE( cubeMesh.containsPoint(Eigen::Vector3d(0.99, 0.99, 1.99)));
   EXPECT_SURF( cubeMesh.containsPoint(Eigen::Vector3d(1.00, 1.00, 2.00)));
   EXPECT_FALSE(cubeMesh.containsPoint(Eigen::Vector3d(1.01, 1.01, 2.01)));
+  // clang-format on
 
   delete ms;
 }
