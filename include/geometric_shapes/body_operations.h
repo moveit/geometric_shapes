@@ -52,7 +52,7 @@ Body* createBodyFromShape(const shapes::Shape* shape);
 Body* constructBodyFromMsg(const shape_msgs::Mesh& shape, const geometry_msgs::Pose& pose);
 
 /** \brief Create a body from a given shape */
-Body* constructBodyFromMsg(const shape_msgs::SolidPrimitive& shape, const geometry_msgs::Pose& pose);
+Body* constructBodyFromMsg(const shape_msgs::msg::SolidPrimitive& shape, const geometry_msgs::Pose& pose);
 
 /** \brief Create a body from a given shape */
 Body* constructBodyFromMsg(const shapes::ShapeMsg& shape, const geometry_msgs::Pose& pose);

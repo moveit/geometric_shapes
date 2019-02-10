@@ -46,7 +46,7 @@
 namespace shapes
 {
 /** \brief Construct the shape that corresponds to the message. Return NULL on failure. */
-Shape* constructShapeFromMsg(const shape_msgs::SolidPrimitive& shape_msg);
+Shape* constructShapeFromMsg(const shape_msgs::msg::SolidPrimitive& shape_msg);
 
 /** \brief Construct the shape that corresponds to the message. Return NULL on failure. */
 Shape* constructShapeFromMsg(const shape_msgs::Plane& shape_msg);

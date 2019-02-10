@@ -81,36 +81,36 @@ Shape* constructShapeFromMsg(const shape_msgs::Mesh& shape_msg)
   }
 }
 
-Shape* constructShapeFromMsg(const shape_msgs::SolidPrimitive& shape_msg)
+Shape* constructShapeFromMsg(const shape_msgs::msg::SolidPrimitive& shape_msg)
 {
   Shape* shape = NULL;
-  if (shape_msg.type == shape_msgs::SolidPrimitive::SPHERE)
+  if (shape_msg.type == shape_msgs::msg::SolidPrimitive::SPHERE)
   {
-    if (shape_msg.dimensions.size() > shape_msgs::SolidPrimitive::SPHERE_RADIUS)
-      shape = new Sphere(shape_msg.dimensions[shape_msgs::SolidPrimitive::SPHERE_RADIUS]);
+    if (shape_msg.dimensions.size() > shape_msgs::msg::SolidPrimitive::SPHERE_RADIUS)
+      shape = new Sphere(shape_msg.dimensions[shape_msgs::msg::SolidPrimitive::SPHERE_RADIUS]);
   }
-  else if (shape_msg.type == shape_msgs::SolidPrimitive::BOX)
+  else if (shape_msg.type == shape_msgs::msg::SolidPrimitive::BOX)
   {
-    if (shape_msg.dimensions.size() > shape_msgs::SolidPrimitive::BOX_X &&
-        shape_msg.dimensions.size() > shape_msgs::SolidPrimitive::BOX_Y &&
-        shape_msg.dimensions.size() > shape_msgs::SolidPrimitive::BOX_Z)
-      shape = new Box(shape_msg.dimensions[shape_msgs::SolidPrimitive::BOX_X],
-                      shape_msg.dimensions[shape_msgs::SolidPrimitive::BOX_Y],
-                      shape_msg.dimensions[shape_msgs::SolidPrimitive::BOX_Z]);
+    if (shape_msg.dimensions.size() > shape_msgs::msg::SolidPrimitive::BOX_X &&
+        shape_msg.dimensions.size() > shape_msgs::msg::SolidPrimitive::BOX_Y &&
+        shape_msg.dimensions.size() > shape_msgs::msg::SolidPrimitive::BOX_Z)
+      shape = new Box(shape_msg.dimensions[shape_msgs::msg::SolidPrimitive::BOX_X],
+                      shape_msg.dimensions[shape_msgs::msg::SolidPrimitive::BOX_Y],
+                      shape_msg.dimensions[shape_msgs::msg::SolidPrimitive::BOX_Z]);
   }
-  else if (shape_msg.type == shape_msgs::SolidPrimitive::CYLINDER)
+  else if (shape_msg.type == shape_msgs::msg::SolidPrimitive::CYLINDER)
   {
-    if (shape_msg.dimensions.size() > shape_msgs::SolidPrimitive::CYLINDER_RADIUS &&
-        shape_msg.dimensions.size() > shape_msgs::SolidPrimitive::CYLINDER_HEIGHT)
-      shape = new Cylinder(shape_msg.dimensions[shape_msgs::SolidPrimitive::CYLINDER_RADIUS],
-                           shape_msg.dimensions[shape_msgs::SolidPrimitive::CYLINDER_HEIGHT]);
+    if (shape_msg.dimensions.size() > shape_msgs::msg::SolidPrimitive::CYLINDER_RADIUS &&
+        shape_msg.dimensions.size() > shape_msgs::msg::SolidPrimitive::CYLINDER_HEIGHT)
+      shape = new Cylinder(shape_msg.dimensions[shape_msgs::msg::SolidPrimitive::CYLINDER_RADIUS],
+                           shape_msg.dimensions[shape_msgs::msg::SolidPrimitive::CYLINDER_HEIGHT]);
   }
-  else if (shape_msg.type == shape_msgs::SolidPrimitive::CONE)
+  else if (shape_msg.type == shape_msgs::msg::SolidPrimitive::CONE)
   {
-    if (shape_msg.dimensions.size() > shape_msgs::SolidPrimitive::CONE_RADIUS &&
-        shape_msg.dimensions.size() > shape_msgs::SolidPrimitive::CONE_HEIGHT)
-      shape = new Cone(shape_msg.dimensions[shape_msgs::SolidPrimitive::CONE_RADIUS],
-                       shape_msg.dimensions[shape_msgs::SolidPrimitive::CONE_HEIGHT]);
+    if (shape_msg.dimensions.size() > shape_msgs::msg::SolidPrimitive::CONE_RADIUS &&
+        shape_msg.dimensions.size() > shape_msgs::msg::SolidPrimitive::CONE_HEIGHT)
+      shape = new Cone(shape_msg.dimensions[shape_msgs::msg::SolidPrimitive::CONE_RADIUS],
+                       shape_msg.dimensions[shape_msgs::msg::SolidPrimitive::CONE_HEIGHT]);
   }
   if (shape == NULL)
     CONSOLE_BRIDGE_logError("Unable to construct shape corresponding to shape_msg of type %d", (int)shape_msg.type);
@@ -133,7 +133,7 @@ public:
     return constructShapeFromMsg(shape_msg);
   }
 
-  Shape* operator()(const shape_msgs::SolidPrimitive& shape_msg) const
+  Shape* operator()(const shape_msgs::msg::SolidPrimitive& shape_msg) const
   {
     return constructShapeFromMsg(shape_msg);
   }
@@ -165,7 +165,7 @@ public:
     geometric_shapes::constructMarkerFromShape(shape_msg, *marker_, use_mesh_triangle_list_);
   }
 
-  void operator()(const shape_msgs::SolidPrimitive& shape_msg) const
+  void operator()(const shape_msgs::msg::SolidPrimitive& shape_msg) const
   {
     geometric_shapes::constructMarkerFromShape(shape_msg, *marker_);
   }
@@ -216,7 +216,7 @@ public:
     return e;
   }
 
-  Eigen::Vector3d operator()(const shape_msgs::SolidPrimitive& shape_msg) const
+  Eigen::Vector3d operator()(const shape_msgs::msg::SolidPrimitive& shape_msg) const
   {
     double x_extent, y_extent, z_extent;
     geometric_shapes::getShapeExtents(shape_msg, x_extent, y_extent, z_extent);
@@ -351,39 +351,39 @@ bool constructMsgFromShape(const Shape* shape, ShapeMsg& shape_msg)
 {
   if (shape->type == SPHERE)
   {
-    shape_msgs::SolidPrimitive s;
-    s.type = shape_msgs::SolidPrimitive::SPHERE;
-    s.dimensions.resize(geometric_shapes::SolidPrimitiveDimCount<shape_msgs::SolidPrimitive::SPHERE>::value);
-    s.dimensions[shape_msgs::SolidPrimitive::SPHERE_RADIUS] = static_cast<const Sphere*>(shape)->radius;
+    shape_msgs::msg::SolidPrimitive s;
+    s.type = shape_msgs::msg::SolidPrimitive::SPHERE;
+    s.dimensions.resize(geometric_shapes::SolidPrimitiveDimCount<shape_msgs::msg::SolidPrimitive::SPHERE>::value);
+    s.dimensions[shape_msgs::msg::SolidPrimitive::SPHERE_RADIUS] = static_cast<const Sphere*>(shape)->radius;
     shape_msg = s;
   }
   else if (shape->type == BOX)
   {
-    shape_msgs::SolidPrimitive s;
-    s.type = shape_msgs::SolidPrimitive::BOX;
+    shape_msgs::msg::SolidPrimitive s;
+    s.type = shape_msgs::msg::SolidPrimitive::BOX;
     const double* sz = static_cast<const Box*>(shape)->size;
-    s.dimensions.resize(geometric_shapes::SolidPrimitiveDimCount<shape_msgs::SolidPrimitive::BOX>::value);
-    s.dimensions[shape_msgs::SolidPrimitive::BOX_X] = sz[0];
-    s.dimensions[shape_msgs::SolidPrimitive::BOX_Y] = sz[1];
-    s.dimensions[shape_msgs::SolidPrimitive::BOX_Z] = sz[2];
+    s.dimensions.resize(geometric_shapes::SolidPrimitiveDimCount<shape_msgs::msg::SolidPrimitive::BOX>::value);
+    s.dimensions[shape_msgs::msg::SolidPrimitive::BOX_X] = sz[0];
+    s.dimensions[shape_msgs::msg::SolidPrimitive::BOX_Y] = sz[1];
+    s.dimensions[shape_msgs::msg::SolidPrimitive::BOX_Z] = sz[2];
     shape_msg = s;
   }
   else if (shape->type == CYLINDER)
   {
-    shape_msgs::SolidPrimitive s;
-    s.type = shape_msgs::SolidPrimitive::CYLINDER;
-    s.dimensions.resize(geometric_shapes::SolidPrimitiveDimCount<shape_msgs::SolidPrimitive::CYLINDER>::value);
-    s.dimensions[shape_msgs::SolidPrimitive::CYLINDER_RADIUS] = static_cast<const Cylinder*>(shape)->radius;
-    s.dimensions[shape_msgs::SolidPrimitive::CYLINDER_HEIGHT] = static_cast<const Cylinder*>(shape)->length;
+    shape_msgs::msg::SolidPrimitive s;
+    s.type = shape_msgs::msg::SolidPrimitive::CYLINDER;
+    s.dimensions.resize(geometric_shapes::SolidPrimitiveDimCount<shape_msgs::msg::SolidPrimitive::CYLINDER>::value);
+    s.dimensions[shape_msgs::msg::SolidPrimitive::CYLINDER_RADIUS] = static_cast<const Cylinder*>(shape)->radius;
+    s.dimensions[shape_msgs::msg::SolidPrimitive::CYLINDER_HEIGHT] = static_cast<const Cylinder*>(shape)->length;
     shape_msg = s;
   }
   else if (shape->type == CONE)
   {
-    shape_msgs::SolidPrimitive s;
-    s.type = shape_msgs::SolidPrimitive::CONE;
-    s.dimensions.resize(geometric_shapes::SolidPrimitiveDimCount<shape_msgs::SolidPrimitive::CONE>::value);
-    s.dimensions[shape_msgs::SolidPrimitive::CONE_RADIUS] = static_cast<const Cone*>(shape)->radius;
-    s.dimensions[shape_msgs::SolidPrimitive::CONE_HEIGHT] = static_cast<const Cone*>(shape)->length;
+    shape_msgs::msg::SolidPrimitive s;
+    s.type = shape_msgs::msg::SolidPrimitive::CONE;
+    s.dimensions.resize(geometric_shapes::SolidPrimitiveDimCount<shape_msgs::msg::SolidPrimitive::CONE>::value);
+    s.dimensions[shape_msgs::msg::SolidPrimitive::CONE_RADIUS] = static_cast<const Cone*>(shape)->radius;
+    s.dimensions[shape_msgs::msg::SolidPrimitive::CONE_HEIGHT] = static_cast<const Cone*>(shape)->length;
     shape_msg = s;
   }
   else if (shape->type == PLANE)

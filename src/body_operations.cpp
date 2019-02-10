@@ -134,7 +134,7 @@ bodies::Body* bodies::constructBodyFromMsg(const shape_msgs::Mesh& shape_msg, co
   return constructBodyFromMsgHelper(shape_msg, pose);
 }
 
-bodies::Body* bodies::constructBodyFromMsg(const shape_msgs::SolidPrimitive& shape_msg, const geometry_msgs::Pose& pose)
+bodies::Body* bodies::constructBodyFromMsg(const shape_msgs::msg::SolidPrimitive& shape_msg, const geometry_msgs::Pose& pose)
 {
   return constructBodyFromMsgHelper(shape_msg, pose);
 }

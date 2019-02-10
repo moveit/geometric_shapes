@@ -36,56 +36,56 @@
 #include <sstream>
 #include <stdexcept>
 
-void geometric_shapes::constructMarkerFromShape(const shape_msgs::SolidPrimitive& shape_msg,
+void geometric_shapes::constructMarkerFromShape(const shape_msgs::msg::SolidPrimitive& shape_msg,
                                                 visualization_msgs::Marker& mk)
 {
   switch (shape_msg.type)
   {
-    case shape_msgs::SolidPrimitive::SPHERE:
-      if (shape_msg.dimensions.size() <= shape_msgs::SolidPrimitive::SPHERE_RADIUS)
+    case shape_msgs::msg::SolidPrimitive::SPHERE:
+      if (shape_msg.dimensions.size() <= shape_msgs::msg::SolidPrimitive::SPHERE_RADIUS)
         throw std::runtime_error("Insufficient dimensions in sphere definition");
       else
       {
         mk.type = visualization_msgs::Marker::SPHERE;
-        mk.scale.x = mk.scale.y = mk.scale.z = shape_msg.dimensions[shape_msgs::SolidPrimitive::SPHERE_RADIUS] * 2.0;
+        mk.scale.x = mk.scale.y = mk.scale.z = shape_msg.dimensions[shape_msgs::msg::SolidPrimitive::SPHERE_RADIUS] * 2.0;
       }
       break;
-    case shape_msgs::SolidPrimitive::BOX:
-      if (shape_msg.dimensions.size() <= shape_msgs::SolidPrimitive::BOX_X ||
-          shape_msg.dimensions.size() <= shape_msgs::SolidPrimitive::BOX_Y ||
-          shape_msg.dimensions.size() <= shape_msgs::SolidPrimitive::BOX_Z)
+    case shape_msgs::msg::SolidPrimitive::BOX:
+      if (shape_msg.dimensions.size() <= shape_msgs::msg::SolidPrimitive::BOX_X ||
+          shape_msg.dimensions.size() <= shape_msgs::msg::SolidPrimitive::BOX_Y ||
+          shape_msg.dimensions.size() <= shape_msgs::msg::SolidPrimitive::BOX_Z)
         throw std::runtime_error("Insufficient dimensions in box definition");
       else
       {
         mk.type = visualization_msgs::Marker::CUBE;
-        mk.scale.x = shape_msg.dimensions[shape_msgs::SolidPrimitive::BOX_X];
-        mk.scale.y = shape_msg.dimensions[shape_msgs::SolidPrimitive::BOX_Y];
-        mk.scale.z = shape_msg.dimensions[shape_msgs::SolidPrimitive::BOX_Z];
+        mk.scale.x = shape_msg.dimensions[shape_msgs::msg::SolidPrimitive::BOX_X];
+        mk.scale.y = shape_msg.dimensions[shape_msgs::msg::SolidPrimitive::BOX_Y];
+        mk.scale.z = shape_msg.dimensions[shape_msgs::msg::SolidPrimitive::BOX_Z];
       }
       break;
-    case shape_msgs::SolidPrimitive::CONE:
-      if (shape_msg.dimensions.size() <= shape_msgs::SolidPrimitive::CONE_RADIUS ||
-          shape_msg.dimensions.size() <= shape_msgs::SolidPrimitive::CONE_HEIGHT)
+    case shape_msgs::msg::SolidPrimitive::CONE:
+      if (shape_msg.dimensions.size() <= shape_msgs::msg::SolidPrimitive::CONE_RADIUS ||
+          shape_msg.dimensions.size() <= shape_msgs::msg::SolidPrimitive::CONE_HEIGHT)
         throw std::runtime_error("Insufficient dimensions in cone definition");
       else
       {
         // there is no CONE marker, so this produces a cylinder marker as well
         mk.type = visualization_msgs::Marker::CYLINDER;
-        mk.scale.x = shape_msg.dimensions[shape_msgs::SolidPrimitive::CONE_RADIUS] * 2.0;
+        mk.scale.x = shape_msg.dimensions[shape_msgs::msg::SolidPrimitive::CONE_RADIUS] * 2.0;
         mk.scale.y = mk.scale.x;
-        mk.scale.z = shape_msg.dimensions[shape_msgs::SolidPrimitive::CONE_HEIGHT];
+        mk.scale.z = shape_msg.dimensions[shape_msgs::msg::SolidPrimitive::CONE_HEIGHT];
       }
       break;
-    case shape_msgs::SolidPrimitive::CYLINDER:
-      if (shape_msg.dimensions.size() <= shape_msgs::SolidPrimitive::CYLINDER_RADIUS ||
-          shape_msg.dimensions.size() <= shape_msgs::SolidPrimitive::CYLINDER_HEIGHT)
+    case shape_msgs::msg::SolidPrimitive::CYLINDER:
+      if (shape_msg.dimensions.size() <= shape_msgs::msg::SolidPrimitive::CYLINDER_RADIUS ||
+          shape_msg.dimensions.size() <= shape_msgs::msg::SolidPrimitive::CYLINDER_HEIGHT)
         throw std::runtime_error("Insufficient dimensions in cylinder definition");
       else
       {
         mk.type = visualization_msgs::Marker::CYLINDER;
-        mk.scale.x = shape_msg.dimensions[shape_msgs::SolidPrimitive::CYLINDER_RADIUS] * 2.0;
+        mk.scale.x = shape_msg.dimensions[shape_msgs::msg::SolidPrimitive::CYLINDER_RADIUS] * 2.0;
         mk.scale.y = mk.scale.x;
-        mk.scale.z = shape_msg.dimensions[shape_msgs::SolidPrimitive::CYLINDER_HEIGHT];
+        mk.scale.z = shape_msg.dimensions[shape_msgs::msg::SolidPrimitive::CYLINDER_HEIGHT];
       }
       break;
     default:
