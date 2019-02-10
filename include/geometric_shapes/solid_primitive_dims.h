@@ -34,7 +34,7 @@
 
 #pragma once
 
-#include <shape_msgs/SolidPrimitive.h>
+#include <shape_msgs/msg/solid_primitive.hpp>
 
 namespace geometric_shapes
 {
@@ -43,25 +43,25 @@ template <int>
 constexpr unsigned int solidPrimitiveDimCount();
 
 template <>
-constexpr unsigned int solidPrimitiveDimCount<shape_msgs::SolidPrimitive::SPHERE>()
+constexpr unsigned int solidPrimitiveDimCount<shape_msgs::msg::SolidPrimitive::SPHERE>()
 {
   return 1u;
 }
 
 template <>
-constexpr unsigned int solidPrimitiveDimCount<shape_msgs::SolidPrimitive::BOX>()
+constexpr unsigned int solidPrimitiveDimCount<shape_msgs::msg::SolidPrimitive::BOX>()
 {
   return 3u;
 }
 
 template <>
-constexpr unsigned int solidPrimitiveDimCount<shape_msgs::SolidPrimitive::CYLINDER>()
+constexpr unsigned int solidPrimitiveDimCount<shape_msgs::msg::SolidPrimitive::CYLINDER>()
 {
   return 2u;
 }
 
 template <>
-constexpr unsigned int solidPrimitiveDimCount<shape_msgs::SolidPrimitive::CONE>()
+constexpr unsigned int solidPrimitiveDimCount<shape_msgs::msg::SolidPrimitive::CONE>()
 {
   return 2u;
 }
