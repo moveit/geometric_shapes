@@ -40,7 +40,7 @@
 #include "geometric_shapes/shapes.h"
 #include "geometric_shapes/bodies.h"
 #include "geometric_shapes/shape_messages.h"
-#include <geometry_msgs/Pose.h>
+#include <geometry_msgs/msg/pose.hpp>
 #include <vector>
 
 namespace bodies
@@ -49,13 +49,13 @@ namespace bodies
 Body* createBodyFromShape(const shapes::Shape* shape);
 
 /** \brief Create a body from a given shape */
-Body* constructBodyFromMsg(const shape_msgs::msg::Mesh& shape, const geometry_msgs::Pose& pose);
+Body* constructBodyFromMsg(const shape_msgs::msg::Mesh& shape, const geometry_msgs::msg::Pose& pose);
 
 /** \brief Create a body from a given shape */
-Body* constructBodyFromMsg(const shape_msgs::msg::SolidPrimitive& shape, const geometry_msgs::Pose& pose);
+Body* constructBodyFromMsg(const shape_msgs::msg::SolidPrimitive& shape, const geometry_msgs::msg::Pose& pose);
 
 /** \brief Create a body from a given shape */
-Body* constructBodyFromMsg(const shapes::ShapeMsg& shape, const geometry_msgs::Pose& pose);
+Body* constructBodyFromMsg(const shapes::ShapeMsg& shape, const geometry_msgs::msg::Pose& pose);
 
 /** \brief Compute a bounding sphere to enclose a set of bounding spheres */
 void mergeBoundingSpheres(const std::vector<BoundingSphere>& spheres, BoundingSphere& mergedSphere);
