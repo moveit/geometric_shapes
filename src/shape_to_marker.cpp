@@ -37,7 +37,7 @@
 #include <stdexcept>
 
 void geometric_shapes::constructMarkerFromShape(const shape_msgs::msg::SolidPrimitive& shape_msg,
-                                                visualization_msgs::Marker& mk)
+                                                visualization_msgs::msg::Marker& mk)
 {
   switch (shape_msg.type)
   {
@@ -46,7 +46,7 @@ void geometric_shapes::constructMarkerFromShape(const shape_msgs::msg::SolidPrim
         throw std::runtime_error("Insufficient dimensions in sphere definition");
       else
       {
-        mk.type = visualization_msgs::Marker::SPHERE;
+        mk.type = visualization_msgs::msg::Marker::SPHERE;
         mk.scale.x = mk.scale.y = mk.scale.z = shape_msg.dimensions[shape_msgs::msg::SolidPrimitive::SPHERE_RADIUS] * 2.0;
       }
       break;
@@ -57,7 +57,7 @@ void geometric_shapes::constructMarkerFromShape(const shape_msgs::msg::SolidPrim
         throw std::runtime_error("Insufficient dimensions in box definition");
       else
       {
-        mk.type = visualization_msgs::Marker::CUBE;
+        mk.type = visualization_msgs::msg::Marker::CUBE;
         mk.scale.x = shape_msg.dimensions[shape_msgs::msg::SolidPrimitive::BOX_X];
         mk.scale.y = shape_msg.dimensions[shape_msgs::msg::SolidPrimitive::BOX_Y];
         mk.scale.z = shape_msg.dimensions[shape_msgs::msg::SolidPrimitive::BOX_Z];
@@ -70,7 +70,7 @@ void geometric_shapes::constructMarkerFromShape(const shape_msgs::msg::SolidPrim
       else
       {
         // there is no CONE marker, so this produces a cylinder marker as well
-        mk.type = visualization_msgs::Marker::CYLINDER;
+        mk.type = visualization_msgs::msg::Marker::CYLINDER;
         mk.scale.x = shape_msg.dimensions[shape_msgs::msg::SolidPrimitive::CONE_RADIUS] * 2.0;
         mk.scale.y = mk.scale.x;
         mk.scale.z = shape_msg.dimensions[shape_msgs::msg::SolidPrimitive::CONE_HEIGHT];
@@ -82,7 +82,7 @@ void geometric_shapes::constructMarkerFromShape(const shape_msgs::msg::SolidPrim
         throw std::runtime_error("Insufficient dimensions in cylinder definition");
       else
       {
-        mk.type = visualization_msgs::Marker::CYLINDER;
+        mk.type = visualization_msgs::msg::Marker::CYLINDER;
         mk.scale.x = shape_msg.dimensions[shape_msgs::msg::SolidPrimitive::CYLINDER_RADIUS] * 2.0;
         mk.scale.y = mk.scale.x;
         mk.scale.z = shape_msg.dimensions[shape_msgs::msg::SolidPrimitive::CYLINDER_HEIGHT];
@@ -97,14 +97,14 @@ void geometric_shapes::constructMarkerFromShape(const shape_msgs::msg::SolidPrim
   }
 }
 
-void geometric_shapes::constructMarkerFromShape(const shape_msgs::msg::Mesh& shape_msg, visualization_msgs::Marker& mk,
+void geometric_shapes::constructMarkerFromShape(const shape_msgs::msg::Mesh& shape_msg, visualization_msgs::msg::Marker& mk,
                                                 bool use_mesh_triangle_list)
 {
   if (shape_msg.triangles.empty() || shape_msg.vertices.empty())
     throw std::runtime_error("Mesh definition is empty");
   if (use_mesh_triangle_list)
   {
-    mk.type = visualization_msgs::Marker::TRIANGLE_LIST;
+    mk.type = visualization_msgs::msg::Marker::TRIANGLE_LIST;
     mk.scale.x = mk.scale.y = mk.scale.z = 1.0;
     for (std::size_t i = 0; i < shape_msg.triangles.size(); ++i)
     {
@@ -115,7 +115,7 @@ void geometric_shapes::constructMarkerFromShape(const shape_msgs::msg::Mesh& sha
   }
   else
   {
-    mk.type = visualization_msgs::Marker::LINE_LIST;
+    mk.type = visualization_msgs::msg::Marker::LINE_LIST;
     mk.scale.x = mk.scale.y = mk.scale.z = 0.01;
     for (std::size_t i = 0; i < shape_msg.triangles.size(); ++i)
     {

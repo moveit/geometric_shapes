@@ -150,7 +150,7 @@ namespace
 class ShapeVisitorMarker : public boost::static_visitor<void>
 {
 public:
-  ShapeVisitorMarker(visualization_msgs::Marker* marker, bool use_mesh_triangle_list)
+  ShapeVisitorMarker(visualization_msgs::msg::Marker* marker, bool use_mesh_triangle_list)
     : boost::static_visitor<void>(), use_mesh_triangle_list_(use_mesh_triangle_list), marker_(marker)
   {
   }
@@ -172,11 +172,11 @@ public:
 
 private:
   bool use_mesh_triangle_list_;
-  visualization_msgs::Marker* marker_;
+  visualization_msgs::msg::Marker* marker_;
 };
 }
 
-bool constructMarkerFromShape(const Shape* shape, visualization_msgs::Marker& marker, bool use_mesh_triangle_list)
+bool constructMarkerFromShape(const Shape* shape, visualization_msgs::msg::Marker& marker, bool use_mesh_triangle_list)
 {
   ShapeMsg shape_msg;
   if (constructMsgFromShape(shape, shape_msg))
