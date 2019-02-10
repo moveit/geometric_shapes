@@ -1,7 +1,10 @@
-cmake_minimum_required(VERSION 2.8.12)
+cmake_minimum_required(VERSION 3.5)
 project(geometric_shapes)
 
-add_compile_options(-std=c++11)
+# Default to C++14
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 14)
+endif()
 
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/")
 
@@ -24,47 +27,27 @@ endif()
 find_library(ASSIMP_ABS_LIBRARIES NAMES ${ASSIMP_LIBRARIES} assimp HINTS ${ASSIMP_LIBRARY_DIRS} ${ASSIMP_PC_LIBRARY_DIRS})
 set(ASSIMP_LIBRARIES "${ASSIMP_ABS_LIBRARIES}")
 
+find_package(rclcpp REQUIRED)
 find_package(Boost REQUIRED system filesystem)
-
 find_package(console_bridge REQUIRED)
-
+find_package(eigen3_cmake_module REQUIRED)
 find_package(Eigen3 REQUIRED)
-
 find_package(octomap REQUIRED)
-
-find_package(catkin REQUIRED COMPONENTS
-  eigen_stl_containers
-  random_numbers
-  resource_retriever
-  shape_msgs
-  visualization_msgs
-)
-
-catkin_package(
-  INCLUDE_DIRS
-    include
-  LIBRARIES ${PROJECT_NAME} ${OCTOMAP_LIBRARIES}
-  CATKIN_DEPENDS
-    eigen_stl_containers
-    random_numbers
-    shape_msgs
-    visualization_msgs
-  DEPENDS
-    EIGEN3
-    OCTOMAP
-    console_bridge
-  )
-
+find_package(ament_cmake REQUIRED)
+find_package(eigen_stl_containers REQUIRED)
+find_package(random_numbers REQUIRED)
+find_package(resource_retriever REQUIRED)
+find_package(shape_msgs REQUIRED)
+find_package(visualization_msgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
 find_package(Qhull REQUIRED)
 if (HAVE_QHULL_2011)
   add_definitions(-DGEOMETRIC_SHAPES_HAVE_QHULL_2011)
 endif()
 
 include_directories(include)
-include_directories(${EIGEN3_INCLUDE_DIR} ${Boost_INCLUDE_DIR} ${ASSIMP_INCLUDE_DIRS} ${OCTOMAP_INCLUDE_DIRS})
-include_directories(${catkin_INCLUDE_DIRS} ${console_bridge_INCLUDE_DIRS})
 
-add_library(${PROJECT_NAME}
+add_library(${PROJECT_NAME} SHARED
   src/aabb.cpp
   src/bodies.cpp
   src/body_operations.cpp
@@ -74,19 +57,52 @@ add_library(${PROJECT_NAME}
   src/shape_to_marker.cpp
   src/shapes.cpp
 )
+ament_target_dependencies(${PROJECT_NAME}
+    Boost
+    Eigen3
+    rclcpp
+    shape_msgs
+    visualization_msgs
+    random_numbers
+    eigen_stl_containers
+    geometry_msgs
+    resource_retriever
+    console_bridge
+    ASSIMP
+    QHULL
+)
 
-target_link_libraries(${PROJECT_NAME} ${ASSIMP_LIBRARIES} ${QHULL_LIBRARIES} ${catkin_LIBRARIES} ${console_bridge_LIBRARIES} ${Boost_LIBRARIES})
+ament_export_libraries(${PROJECT_NAME})
+ament_export_include_directories(include)
+ament_export_dependencies(
+	Eigen3
+	eigen3_cmake_module  # export Eigen3 headers
+	Boost
+	ASSIMP
+	random_numbers
+	eigen_stl_containers
+	shape_msgs
+	visualization_msgs
+)
+target_link_libraries(${PROJECT_NAME}
+# resource_retriever doesn't support ament export hook (fixed in 2.1.1)
+   resource_retriever::resource_retriever
+)
 
-
-if(CATKIN_ENABLE_TESTING)
+if(BUILD_TESTING)
+  find_package(ament_cmake_gtest REQUIRED)
   # Unit tests
   add_subdirectory(test)
 endif()
 
 install(TARGETS ${PROJECT_NAME}
-        ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-        LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-        RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION})
+        ARCHIVE DESTINATION lib
+        LIBRARY DESTINATION lib
+        RUNTIME DESTINATION bin
+)
 
-install(DIRECTORY include/${PROJECT_NAME}/
-        DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})
+install(DIRECTORY include/
+        DESTINATION include
+)
+
+ament_package()
