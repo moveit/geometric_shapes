@@ -37,9 +37,9 @@
 #ifndef GEOMETRIC_SHAPES_SHAPE_MESSAGES_
 #define GEOMETRIC_SHAPES_SHAPE_MESSAGES_
 
-#include <shape_msgs/SolidPrimitive.h>
-#include <shape_msgs/Mesh.h>
-#include <shape_msgs/Plane.h>
+#include "shape_msgs/msg/solid_primitive.hpp"
+#include "shape_msgs/msg/mesh.hpp"
+#include "shape_msgs/msg/plane.hpp"
 #include <boost/variant.hpp>
 
 #if __cplusplus <= 199711L
@@ -49,7 +49,7 @@
 namespace shapes
 {
 /** \brief Type that can hold any of the desired shape message types */
-typedef boost::variant<shape_msgs::SolidPrimitive, shape_msgs::Mesh, shape_msgs::Plane> ShapeMsg;
+typedef boost::variant<shape_msgs::msg::SolidPrimitive, shape_msgs::msg::Mesh, shape_msgs::msg::Plane> ShapeMsg;
 }
 
 #endif

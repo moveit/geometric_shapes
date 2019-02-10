@@ -35,16 +35,16 @@
 #ifndef GEOMETRIC_SHAPES_SHAPE_EXTENTS_
 #define GEOMETRIC_SHAPES_SHAPE_EXTENTS_
 
-#include <shape_msgs/SolidPrimitive.h>
-#include <shape_msgs/Mesh.h>
+#include "shape_msgs/msg/solid_primitive.hpp"
+#include "shape_msgs/msg/mesh.hpp"
 
 namespace geometric_shapes
 {
 /** \brief Get the dimensions of an axis-aligned bounding box for the shape described by \e shape_msg */
-void getShapeExtents(const shape_msgs::SolidPrimitive& shape_msg, double& x_extent, double& y_extent, double& z_extent);
+void getShapeExtents(const shape_msgs::msg::SolidPrimitive& shape_msg, double& x_extent, double& y_extent, double& z_extent);
 
 /** \brief Get the dimensions of an axis-aligned bounding box for the shape described by \e shape_msg */
-void getShapeExtents(const shape_msgs::Mesh& shape_msg, double& x_extent, double& y_extent, double& z_extent);
+void getShapeExtents(const shape_msgs::msg::Mesh& shape_msg, double& x_extent, double& y_extent, double& z_extent);
 }
 
 #endif
