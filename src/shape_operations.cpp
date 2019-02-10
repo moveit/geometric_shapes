@@ -52,7 +52,7 @@
 
 namespace shapes
 {
-Shape* constructShapeFromMsg(const shape_msgs::Plane& shape_msg)
+Shape* constructShapeFromMsg(const shape_msgs::msg::Plane& shape_msg)
 {
   return new Plane(shape_msg.coef[0], shape_msg.coef[1], shape_msg.coef[2], shape_msg.coef[3]);
 }
@@ -123,7 +123,7 @@ namespace
 class ShapeVisitorAlloc : public boost::static_visitor<Shape*>
 {
 public:
-  Shape* operator()(const shape_msgs::Plane& shape_msg) const
+  Shape* operator()(const shape_msgs::msg::Plane& shape_msg) const
   {
     return constructShapeFromMsg(shape_msg);
   }
@@ -155,7 +155,7 @@ public:
   {
   }
 
-  void operator()(const shape_msgs::Plane& shape_msg) const
+  void operator()(const shape_msgs::msg::Plane& shape_msg) const
   {
     throw std::runtime_error("No visual markers can be constructed for planes");
   }
@@ -202,7 +202,7 @@ namespace
 class ShapeVisitorComputeExtents : public boost::static_visitor<Eigen::Vector3d>
 {
 public:
-  Eigen::Vector3d operator()(const shape_msgs::Plane& shape_msg) const
+  Eigen::Vector3d operator()(const shape_msgs::msg::Plane& shape_msg) const
   {
     Eigen::Vector3d e(0.0, 0.0, 0.0);
     return e;
@@ -388,7 +388,7 @@ bool constructMsgFromShape(const Shape* shape, ShapeMsg& shape_msg)
   }
   else if (shape->type == PLANE)
   {
-    shape_msgs::Plane s;
+    shape_msgs::msg::Plane s;
     const Plane* p = static_cast<const Plane*>(shape);
     s.coef[0] = p->a;
     s.coef[1] = p->b;

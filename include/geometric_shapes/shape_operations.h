@@ -40,7 +40,7 @@
 #include "geometric_shapes/shapes.h"
 #include "geometric_shapes/shape_messages.h"
 #include "geometric_shapes/mesh_operations.h"
-#include <visualization_msgs/Marker.h>
+#include "visualization_msgs/msg/marker.hpp"
 #include <iostream>
 
 namespace shapes
@@ -49,7 +49,7 @@ namespace shapes
 Shape* constructShapeFromMsg(const shape_msgs::msg::SolidPrimitive& shape_msg);
 
 /** \brief Construct the shape that corresponds to the message. Return NULL on failure. */
-Shape* constructShapeFromMsg(const shape_msgs::Plane& shape_msg);
+Shape* constructShapeFromMsg(const shape_msgs::msg::Plane& shape_msg);
 
 /** \brief Construct the shape that corresponds to the message. Return NULL on failure. */
 Shape* constructShapeFromMsg(const shape_msgs::msg::Mesh& shape_msg);
