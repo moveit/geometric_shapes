@@ -57,7 +57,7 @@ Shape* constructShapeFromMsg(const shape_msgs::Plane& shape_msg)
   return new Plane(shape_msg.coef[0], shape_msg.coef[1], shape_msg.coef[2], shape_msg.coef[3]);
 }
 
-Shape* constructShapeFromMsg(const shape_msgs::Mesh& shape_msg)
+Shape* constructShapeFromMsg(const shape_msgs::msg::Mesh& shape_msg)
 {
   if (shape_msg.triangles.empty() || shape_msg.vertices.empty())
   {
@@ -128,7 +128,7 @@ public:
     return constructShapeFromMsg(shape_msg);
   }
 
-  Shape* operator()(const shape_msgs::Mesh& shape_msg) const
+  Shape* operator()(const shape_msgs::msg::Mesh& shape_msg) const
   {
     return constructShapeFromMsg(shape_msg);
   }
@@ -160,7 +160,7 @@ public:
     throw std::runtime_error("No visual markers can be constructed for planes");
   }
 
-  void operator()(const shape_msgs::Mesh& shape_msg) const
+  void operator()(const shape_msgs::msg::Mesh& shape_msg) const
   {
     geometric_shapes::constructMarkerFromShape(shape_msg, *marker_, use_mesh_triangle_list_);
   }
@@ -208,7 +208,7 @@ public:
     return e;
   }
 
-  Eigen::Vector3d operator()(const shape_msgs::Mesh& shape_msg) const
+  Eigen::Vector3d operator()(const shape_msgs::msg::Mesh& shape_msg) const
   {
     double x_extent, y_extent, z_extent;
     geometric_shapes::getShapeExtents(shape_msg, x_extent, y_extent, z_extent);
@@ -398,7 +398,7 @@ bool constructMsgFromShape(const Shape* shape, ShapeMsg& shape_msg)
   }
   else if (shape->type == MESH)
   {
-    shape_msgs::Mesh s;
+    shape_msgs::msg::Mesh s;
     const Mesh* mesh = static_cast<const Mesh*>(shape);
     s.vertices.resize(mesh->vertex_count);
     s.triangles.resize(mesh->triangle_count);

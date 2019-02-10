@@ -76,7 +76,7 @@ void geometric_shapes::getShapeExtents(const shape_msgs::msg::SolidPrimitive& sh
   }
 }
 
-void geometric_shapes::getShapeExtents(const shape_msgs::Mesh& shape_msg, double& x_extent, double& y_extent,
+void geometric_shapes::getShapeExtents(const shape_msgs::msg::Mesh& shape_msg, double& x_extent, double& y_extent,
                                        double& z_extent)
 {
   x_extent = y_extent = z_extent = 0.0;

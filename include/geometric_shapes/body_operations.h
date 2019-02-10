@@ -49,7 +49,7 @@ namespace bodies
 Body* createBodyFromShape(const shapes::Shape* shape);
 
 /** \brief Create a body from a given shape */
-Body* constructBodyFromMsg(const shape_msgs::Mesh& shape, const geometry_msgs::Pose& pose);
+Body* constructBodyFromMsg(const shape_msgs::msg::Mesh& shape, const geometry_msgs::Pose& pose);
 
 /** \brief Create a body from a given shape */
 Body* constructBodyFromMsg(const shape_msgs::msg::SolidPrimitive& shape, const geometry_msgs::Pose& pose);

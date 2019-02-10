@@ -97,7 +97,7 @@ void geometric_shapes::constructMarkerFromShape(const shape_msgs::msg::SolidPrim
   }
 }
 
-void geometric_shapes::constructMarkerFromShape(const shape_msgs::Mesh& shape_msg, visualization_msgs::Marker& mk,
+void geometric_shapes::constructMarkerFromShape(const shape_msgs::msg::Mesh& shape_msg, visualization_msgs::Marker& mk,
                                                 bool use_mesh_triangle_list)
 {
   if (shape_msg.triangles.empty() || shape_msg.vertices.empty())
