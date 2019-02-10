@@ -100,7 +100,7 @@ void bodies::mergeBoundingSpheres(const std::vector<BoundingSphere>& spheres, Bo
 namespace bodies
 {
 template <typename T>
-Body* constructBodyFromMsgHelper(const T& shape_msg, const geometry_msgs::Pose& pose)
+Body* constructBodyFromMsgHelper(const T& shape_msg, const geometry_msgs::msg::Pose& pose)
 {
   shapes::Shape* shape = shapes::constructShapeFromMsg(shape_msg);
 
@@ -124,17 +124,18 @@ Body* constructBodyFromMsgHelper(const T& shape_msg, const geometry_msgs::Pose& 
 }
 }  // namespace bodies
 
-bodies::Body* bodies::constructBodyFromMsg(const shapes::ShapeMsg& shape_msg, const geometry_msgs::Pose& pose)
+bodies::Body* bodies::constructBodyFromMsg(const shapes::ShapeMsg& shape_msg, const geometry_msgs::msg::Pose& pose)
 {
   return constructBodyFromMsgHelper(shape_msg, pose);
 }
 
-bodies::Body* bodies::constructBodyFromMsg(const shape_msgs::Mesh& shape_msg, const geometry_msgs::Pose& pose)
+bodies::Body* bodies::constructBodyFromMsg(const shape_msgs::msg::Mesh& shape_msg, const geometry_msgs::msg::Pose& pose)
 {
   return constructBodyFromMsgHelper(shape_msg, pose);
 }
 
-bodies::Body* bodies::constructBodyFromMsg(const shape_msgs::SolidPrimitive& shape_msg, const geometry_msgs::Pose& pose)
+bodies::Body* bodies::constructBodyFromMsg(const shape_msgs::msg::SolidPrimitive& shape_msg,
+                                           const geometry_msgs::msg::Pose& pose)
 {
   return constructBodyFromMsgHelper(shape_msg, pose);
 }
