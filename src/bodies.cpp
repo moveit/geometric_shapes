@@ -151,7 +151,7 @@ void bodies::Sphere::updateInternalData()
   center_ = pose_.translation();
 }
 
-std::shared_ptr<bodies::Body> bodies::Sphere::cloneAt(const Eigen::Isometry3d& pose, double padding, double scale) const
+std::shared_ptr<bodies::Body> bodies::Sphere::cloneAt(const Eigen::Affine3d& pose, double padding, double scale) const
 {
   Sphere* s = new Sphere();
   s->radius_ = radius_;
@@ -330,7 +330,7 @@ bool bodies::Cylinder::samplePointInside(random_numbers::RandomNumberGenerator& 
   return true;
 }
 
-std::shared_ptr<bodies::Body> bodies::Cylinder::cloneAt(const Eigen::Isometry3d& pose, double padding,
+std::shared_ptr<bodies::Body> bodies::Cylinder::cloneAt(const Eigen::Affine3d& pose, double padding,
                                                         double scale) const
 {
   Cylinder* c = new Cylinder();
@@ -531,7 +531,7 @@ void bodies::Box::updateInternalData()
   corner2_ = center_ + tmp;
 }
 
-std::shared_ptr<bodies::Body> bodies::Box::cloneAt(const Eigen::Isometry3d& pose, double padding, double scale) const
+std::shared_ptr<bodies::Body> bodies::Box::cloneAt(const Eigen::Affine3d& pose, double padding, double scale) const
 {
   Box* b = new Box();
   b->length_ = length_;
@@ -947,7 +947,7 @@ void bodies::ConvexMesh::updateInternalData()
 {
   if (!mesh_data_)
     return;
-  Eigen::Isometry3d pose = pose_;
+  Eigen::Affine3d pose = pose_;
   pose.translation() = Eigen::Vector3d(pose_ * mesh_data_->box_offset_);
 
   std::unique_ptr<shapes::Box> box_shape(
@@ -1003,7 +1003,7 @@ const EigenSTL::vector_Vector4d& bodies::ConvexMesh::getPlanes() const
   return mesh_data_ ? mesh_data_->planes_ : empty;
 }
 
-std::shared_ptr<bodies::Body> bodies::ConvexMesh::cloneAt(const Eigen::Isometry3d& pose, double padding,
+std::shared_ptr<bodies::Body> bodies::ConvexMesh::cloneAt(const Eigen::Affine3d& pose, double padding,
                                                           double scale) const
 {
   ConvexMesh* m = new ConvexMesh();
