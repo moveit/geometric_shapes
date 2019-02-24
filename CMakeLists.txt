@@ -42,28 +42,11 @@ if (HAVE_QHULL_2011)
   add_definitions(-DGEOMETRIC_SHAPES_HAVE_QHULL_2011)
 endif()
 
-# catkin_package(
-#   INCLUDE_DIRS
-#     include
-#   LIBRARIES ${PROJECT_NAME} ${OCTOMAP_LIBRARIES}
-#   CATKIN_DEPENDS
-#     eigen_stl_containers
-#     random_numbers
-#     shape_msgs
-#     visualization_msgs
-#   DEPENDS
-#     EIGEN3
-#     OCTOMAP
-#     console_bridge
-#   )
-
-
 include_directories(include)
 include_directories(${EIGEN3_INCLUDE_DIR} ${Boost_INCLUDE_DIR} ${ASSIMP_INCLUDE_DIRS} ${OCTOMAP_INCLUDE_DIRS})
 include_directories(${rclcpp_INCLUDE_DIRS}
                     ${rmw_implementation_INCLUDE_DIRS}
                     ${console_bridge_INCLUDE_DIRS})
-# include_directories(${catkin_INCLUDE_DIRS} ${console_bridge_INCLUDE_DIRS})
 
 add_library(${PROJECT_NAME}
   src/bodies.cpp
@@ -81,9 +64,9 @@ ament_target_dependencies(${PROJECT_NAME}
     eigen_stl_containers
     geometry_msgs
     resource_retriever)
-# target_link_libraries(${PROJECT_NAME} ${ASSIMP_LIBRARIES} ${QHULL_LIBRARIES} ${catkin_LIBRARIES} ${console_bridge_LIBRARIES} ${Boost_LIBRARIES})
 
-# if(CATKIN_ENABLE_TESTING)
+# if(BUILD_TESTING)
+#   find_package(ament_cmake_gtest REQUIRED)
 #   # Unit tests
 #   add_subdirectory(test)
 # endif()
