@@ -19,7 +19,6 @@ env:
     - TEST="clang-format"
     - ROS_DISTRO=kinetic
     - ROS_DISTRO=melodic
-    - ROS_DISTRO=melodic ROS_REPO=ros-shadow-fixed UPSTREAM_WORKSPACE=https://raw.githubusercontent.com/ros-planning/moveit/melodic-devel/moveit.rosinstall
 
 before_script:
   - git clone -q --depth=1 https://github.com/ros-planning/moveit_ci.git .moveit_ci
