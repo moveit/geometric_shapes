@@ -499,7 +499,7 @@ public:
   BodyVector();
 
   /** \brief Construct a body vector from a vector of shapes, a vector of poses and a padding */
-  BodyVector(const std::vector<shapes::Shape*>& shapes, const EigenSTL::vector_Isometry3d& poses, double padding = 0.0);
+  BodyVector(const std::vector<shapes::Shape*>& shapes, const EigenSTL::vector_Affine3d& poses, double padding = 0.0);
 
   ~BodyVector();
 
@@ -507,13 +507,13 @@ public:
   void addBody(Body* body);
 
   /** \brief Add a body from a shape, a pose for the body and a padding */
-  void addBody(const shapes::Shape* shape, const Eigen::Isometry3d& pose, double padding = 0.0);
+  void addBody(const shapes::Shape* shape, const Eigen::Affine3d& pose, double padding = 0.0);
 
   /** \brief Clear all bodies from the vector*/
   void clear();
 
   /** \brief Set the pose of a particular body in the vector of bodies */
-  void setPose(unsigned int i, const Eigen::Isometry3d& pose);
+  void setPose(unsigned int i, const Eigen::Affine3d& pose);
 
   /** \brief Get the number of bodies in this vector*/
   std::size_t getCount() const;

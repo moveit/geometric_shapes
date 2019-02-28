@@ -564,7 +564,7 @@ void bodies::Box::computeBoundingCylinder(BoundingCylinder& cylinder) const
     cylinder.length = length2_ * 2.0;
     a = width2_;
     b = height2_;
-    Eigen::Isometry3d rot(Eigen::AngleAxisd(90.0f * (M_PI / 180.0f), Eigen::Vector3d::UnitY()));
+    Eigen::Affine3d rot(Eigen::AngleAxisd(90.0f * (M_PI / 180.0f), Eigen::Vector3d::UnitY()));
     cylinder.pose = pose_ * rot;
   }
   else if (width2_ > height2_)
@@ -573,7 +573,7 @@ void bodies::Box::computeBoundingCylinder(BoundingCylinder& cylinder) const
     a = height2_;
     b = length2_;
     cylinder.radius = sqrt(height2_ * height2_ + length2_ * length2_);
-    Eigen::Isometry3d rot(Eigen::AngleAxisd(90.0f * (M_PI / 180.0f), Eigen::Vector3d::UnitX()));
+    Eigen::Affine3d rot(Eigen::AngleAxisd(90.0f * (M_PI / 180.0f), Eigen::Vector3d::UnitX()));
     cylinder.pose = pose_ * rot;
   }
   else
@@ -1170,7 +1170,7 @@ bodies::BodyVector::BodyVector()
 {
 }
 
-bodies::BodyVector::BodyVector(const std::vector<shapes::Shape*>& shapes, const EigenSTL::vector_Isometry3d& poses,
+bodies::BodyVector::BodyVector(const std::vector<shapes::Shape*>& shapes, const EigenSTL::vector_Affine3d& poses,
                                double padding)
 {
   for (unsigned int i = 0; i < shapes.size(); i++)
@@ -1196,7 +1196,7 @@ void bodies::BodyVector::addBody(Body* body)
   body->computeBoundingSphere(sphere);
 }
 
-void bodies::BodyVector::addBody(const shapes::Shape* shape, const Eigen::Isometry3d& pose, double padding)
+void bodies::BodyVector::addBody(const shapes::Shape* shape, const Eigen::Affine3d& pose, double padding)
 {
   bodies::Body* body = bodies::createBodyFromShape(shape);
   body->setPose(pose);
@@ -1209,7 +1209,7 @@ std::size_t bodies::BodyVector::getCount() const
   return bodies_.size();
 }
 
-void bodies::BodyVector::setPose(unsigned int i, const Eigen::Isometry3d& pose)
+void bodies::BodyVector::setPose(unsigned int i, const Eigen::Affine3d& pose)
 {
   if (i >= bodies_.size())
   {
