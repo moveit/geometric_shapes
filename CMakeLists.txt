@@ -57,6 +57,8 @@ include_directories(include)
 include_directories(${EIGEN3_INCLUDE_DIR} ${Boost_INCLUDE_DIR} ${ASSIMP_INCLUDE_DIRS} ${OCTOMAP_INCLUDE_DIRS})
 include_directories(${catkin_INCLUDE_DIRS} ${console_bridge_INCLUDE_DIRS})
 
+link_directories(${ASSIMP_LIBRARY_DIRS})
+
 add_library(${PROJECT_NAME}
   src/bodies.cpp
   src/body_operations.cpp
