@@ -13,15 +13,14 @@ notifications:
       - 130s@2000.jukuin.keio.ac.jp
 env:
   global:
-    - ROS_DISTRO=melodic
+    - ROS_DISTRO=crystal
     - ROS_REPO=ros
   matrix:
     - TEST="clang-format"
-    - ROS_DISTRO=kinetic
-    - ROS_DISTRO=melodic
+    - ROS_DISTRO=crystal
 
 before_script:
-  - git clone -q --depth=1 https://github.com/ros-planning/moveit_ci.git .moveit_ci
+  - git clone -b ros2 -q --depth=1 https://github.com/ros-planning/moveit_ci.git .moveit_ci
 
 script:
   - .moveit_ci/travis.sh
