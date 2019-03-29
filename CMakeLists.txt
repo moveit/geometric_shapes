@@ -14,7 +14,10 @@ find_package(ASSIMP QUIET)
 if (NOT ASSIMP_FOUND)
   find_package(PkgConfig REQUIRED)
   # assimp is required, so REQUIRE the second attempt
-  pkg_check_modules(ASSIMP REQUIRED assimp)
+  pkg_check_modules(ASSIMP_PC REQUIRED assimp)
+  # find *absolute* paths to ASSIMP_LIBRARIES
+  set(ASSIMP_INCLUDE_DIRS ${ASSIMP_PC_INCLUDE_DIRS})
+  find_library(ASSIMP_LIBRARIES assimp HINTS ${ASSIMP_LIBRARY_DIRS})
 endif()
 
 find_package(Boost REQUIRED system filesystem)
@@ -56,8 +59,6 @@ endif()
 include_directories(include)
 include_directories(${EIGEN3_INCLUDE_DIR} ${Boost_INCLUDE_DIR} ${ASSIMP_INCLUDE_DIRS} ${OCTOMAP_INCLUDE_DIRS})
 include_directories(${catkin_INCLUDE_DIRS} ${console_bridge_INCLUDE_DIRS})
-
-link_directories(${ASSIMP_LIBRARY_DIRS})
 
 add_library(${PROJECT_NAME}
   src/bodies.cpp
