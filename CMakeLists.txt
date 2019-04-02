@@ -15,10 +15,14 @@ if (NOT ASSIMP_FOUND)
   find_package(PkgConfig REQUIRED)
   # assimp is required, so REQUIRE the second attempt
   pkg_check_modules(ASSIMP_PC REQUIRED assimp)
-  # find *absolute* paths to ASSIMP_LIBRARIES
   set(ASSIMP_INCLUDE_DIRS ${ASSIMP_PC_INCLUDE_DIRS})
-  find_library(ASSIMP_LIBRARIES assimp HINTS ${ASSIMP_LIBRARY_DIRS})
 endif()
+
+# find *absolute* paths to ASSIMP_LIBRARIES
+# Both, pkg-config and assimp's cmake-config don't provide an absolute library path.
+# For, pkg-config the path is in ASSIMP_PC_LIBRARY_DIRS, for cmake in ASSIMP_LIBRARY_DIRS.
+find_library(ASSIMP_ABS_LIBRARIES NAMES ${ASSIMP_LIBRARIES} assimp HINTS ${ASSIMP_LIBRARY_DIRS} ${ASSIMP_PC_LIBRARY_DIRS})
+set(ASSIMP_LIBRARIES "${ASSIMP_ABS_LIBRARIES}")
 
 find_package(Boost REQUIRED system filesystem)
 
