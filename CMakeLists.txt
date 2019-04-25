@@ -52,7 +52,7 @@ include_directories(include
                     ${console_bridge_INCLUDE_DIRS}
 )
 
-add_library(${PROJECT_NAME}
+add_library(${PROJECT_NAME} SHARED
   src/bodies.cpp
   src/body_operations.cpp
   src/mesh_operations.cpp
