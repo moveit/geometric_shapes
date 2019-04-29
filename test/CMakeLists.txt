@@ -7,13 +7,13 @@ configure_file(resources/config.h.in "${CMAKE_CURRENT_BINARY_DIR}/resources/conf
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 ament_add_gtest(test_point_inclusion test_point_inclusion.cpp)
-target_link_libraries(test_point_inclusion ${PROJECT_NAME} ${Boost_LIBRARIES})
+target_link_libraries(test_point_inclusion ${PROJECT_NAME} ${Boost_LIBRARIES} console_bridge assimp )
 
 ament_add_gtest(test_bounding_sphere test_bounding_sphere.cpp)
-target_link_libraries(test_bounding_sphere ${PROJECT_NAME} ${Boost_LIBRARIES})
+target_link_libraries(test_bounding_sphere ${PROJECT_NAME} ${Boost_LIBRARIES} console_bridge assimp )
 
 ament_add_gtest(test_create_mesh test_create_mesh.cpp)
-target_link_libraries(test_create_mesh ${PROJECT_NAME} ${Boost_LIBRARIES})
+target_link_libraries(test_create_mesh ${PROJECT_NAME} ${Boost_LIBRARIES} console_bridge assimp )
 
 ament_add_gtest(test_loaded_meshes test_loaded_meshes.cpp)
-target_link_libraries(test_loaded_meshes ${PROJECT_NAME} ${Boost_LIBRARIES})
+target_link_libraries(test_loaded_meshes ${PROJECT_NAME} ${Boost_LIBRARIES} console_bridge assimp )

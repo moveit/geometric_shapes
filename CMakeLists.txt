@@ -42,13 +42,17 @@ if (HAVE_QHULL_2011)
   add_definitions(-DGEOMETRIC_SHAPES_HAVE_QHULL_2011)
 endif()
 
-include_directories(include)
-include_directories(${EIGEN3_INCLUDE_DIR} ${Boost_INCLUDE_DIR} ${ASSIMP_INCLUDE_DIRS} ${OCTOMAP_INCLUDE_DIRS})
-include_directories(${rclcpp_INCLUDE_DIRS}
+include_directories(include
+                    ${EIGEN3_INCLUDE_DIR}
+                    ${Boost_INCLUDE_DIR}
+                    ${ASSIMP_INCLUDE_DIRS}
+                    ${OCTOMAP_INCLUDE_DIRS}
+                    ${QHULL_INCLUDE_DIRS}
                     ${rmw_implementation_INCLUDE_DIRS}
-                    ${console_bridge_INCLUDE_DIRS})
+                    ${console_bridge_INCLUDE_DIRS}
+)
 
-add_library(${PROJECT_NAME}
+add_library(${PROJECT_NAME} SHARED
   src/bodies.cpp
   src/body_operations.cpp
   src/mesh_operations.cpp
@@ -58,18 +62,27 @@ add_library(${PROJECT_NAME}
   src/shapes.cpp
 )
 ament_target_dependencies(${PROJECT_NAME}
-    rclcpp shape_msgs
-    visualization_msgs
-    random_numbers
-    eigen_stl_containers
-    geometry_msgs
-    resource_retriever)
+		rclcpp
+		shape_msgs
+		visualization_msgs
+		random_numbers
+		eigen_stl_containers
+		geometry_msgs
+		assimp
+		QHULL)
 
-# if(BUILD_TESTING)
-#   find_package(ament_cmake_gtest REQUIRED)
-#   # Unit tests
-#   add_subdirectory(test)
-# endif()
+ament_export_libraries(${PROJECT_NAME})
+ament_export_include_directories(include)
+ament_export_dependencies(ASSIMP)
+target_link_libraries(${PROJECT_NAME}
+  resource_retriever::resource_retriever
+)
+
+if(BUILD_TESTING)
+  find_package(ament_cmake_gtest REQUIRED)
+  # Unit tests
+  add_subdirectory(test)
+endif()
 
 install(TARGETS ${PROJECT_NAME}
         ARCHIVE DESTINATION lib
