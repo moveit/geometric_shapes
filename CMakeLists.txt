@@ -62,14 +62,15 @@ add_library(${PROJECT_NAME} SHARED
   src/shapes.cpp
 )
 ament_target_dependencies(${PROJECT_NAME}
-		rclcpp
-		shape_msgs
-		visualization_msgs
-		random_numbers
-		eigen_stl_containers
-		geometry_msgs
-		assimp
-		QHULL)
+    rclcpp
+    shape_msgs
+    visualization_msgs
+    random_numbers
+    eigen_stl_containers
+    geometry_msgs
+    console_bridge
+    ASSIMP
+    QHULL)
 
 ament_export_libraries(${PROJECT_NAME})
 ament_export_include_directories(include)
