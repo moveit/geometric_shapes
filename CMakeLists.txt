@@ -65,6 +65,7 @@ include_directories(${EIGEN3_INCLUDE_DIR} ${Boost_INCLUDE_DIR} ${ASSIMP_INCLUDE_
 include_directories(${catkin_INCLUDE_DIRS} ${console_bridge_INCLUDE_DIRS})
 
 add_library(${PROJECT_NAME}
+  src/aabb.cpp
   src/bodies.cpp
   src/body_operations.cpp
   src/mesh_operations.cpp
