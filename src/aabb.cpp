@@ -44,6 +44,13 @@ void bodies::AABB::extendWithTransformedBox(const Eigen::Isometry3d& transform, 
   //
   // Here's a nice explanation why it works: https://zeuxcg.org/2010/10/17/aabb-from-obb-with-component-wise-abs/
 
+  // TODO: In FCL 0.6, the inefficencies are gone and the AABB can be computed like this:
+  // #include <fcl/shape/geometric_shapes_utility.h>
+  // fcl::AABB aabb;
+  // fcl::computeBV(fcl::Box(box), transform, aabb);
+  // extend(aabb.min_);
+  // extend(aabb.max_);
+
   const Eigen::Matrix3d& r = transform.rotation();
   const Eigen::Vector3d& t = transform.translation();
 
