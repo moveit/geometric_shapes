@@ -47,6 +47,8 @@ TEST(SphereBoundingBox, Sphere1)
   bodies::Sphere body(&shape);
   bodies::AABB bbox;
   body.computeBoundingBox(bbox);
+  bodies::OBB obbox;
+  body.computeBoundingBox(obbox);
 
   EXPECT_NEAR(-1.0, bbox.min().x(), 1e-4);
   EXPECT_NEAR(-1.0, bbox.min().y(), 1e-4);
@@ -54,6 +56,15 @@ TEST(SphereBoundingBox, Sphere1)
   EXPECT_NEAR(1.0, bbox.max().x(), 1e-4);
   EXPECT_NEAR(1.0, bbox.max().y(), 1e-4);
   EXPECT_NEAR(1.0, bbox.max().z(), 1e-4);
+
+  EXPECT_NEAR(2.0, obbox.getExtents().x(), 1e-4);
+  EXPECT_NEAR(2.0, obbox.getExtents().y(), 1e-4);
+  EXPECT_NEAR(2.0, obbox.getExtents().z(), 1e-4);
+  EXPECT_NEAR(0.0, obbox.getPose().translation().x(), 1e-4);
+  EXPECT_NEAR(0.0, obbox.getPose().translation().y(), 1e-4);
+  EXPECT_NEAR(0.0, obbox.getPose().translation().z(), 1e-4);
+
+  EXPECT_TRUE(obbox.getPose().linear().isApprox(Eigen::Matrix3d::Identity(), 1e-4));
 }
 
 TEST(SphereBoundingBox, Sphere2)
@@ -66,6 +77,8 @@ TEST(SphereBoundingBox, Sphere2)
   body.setPose(pose);
   bodies::AABB bbox;
   body.computeBoundingBox(bbox);
+  bodies::OBB obbox;
+  body.computeBoundingBox(obbox);
 
   EXPECT_NEAR(-1.0, bbox.min().x(), 1e-4);
   EXPECT_NEAR(0.0, bbox.min().y(), 1e-4);
@@ -73,10 +86,17 @@ TEST(SphereBoundingBox, Sphere2)
   EXPECT_NEAR(3.0, bbox.max().x(), 1e-4);
   EXPECT_NEAR(4.0, bbox.max().y(), 1e-4);
   EXPECT_NEAR(5.0, bbox.max().z(), 1e-4);
+
+  EXPECT_NEAR(4.0, obbox.getExtents().x(), 1e-4);
+  EXPECT_NEAR(4.0, obbox.getExtents().y(), 1e-4);
+  EXPECT_NEAR(4.0, obbox.getExtents().z(), 1e-4);
+
+  EXPECT_TRUE(obbox.getPose().isApprox(pose, 1e-4));
 
   pose *= Eigen::AngleAxisd(M_PI_2, Eigen::Vector3d(1, 1, 1).normalized());
   body.setPose(pose);
   body.computeBoundingBox(bbox);
+  body.computeBoundingBox(obbox);
 
   EXPECT_NEAR(-1.0, bbox.min().x(), 1e-4);
   EXPECT_NEAR(0.0, bbox.min().y(), 1e-4);
@@ -84,6 +104,14 @@ TEST(SphereBoundingBox, Sphere2)
   EXPECT_NEAR(3.0, bbox.max().x(), 1e-4);
   EXPECT_NEAR(4.0, bbox.max().y(), 1e-4);
   EXPECT_NEAR(5.0, bbox.max().z(), 1e-4);
+
+  EXPECT_NEAR(4.0, obbox.getExtents().x(), 1e-4);
+  EXPECT_NEAR(4.0, obbox.getExtents().y(), 1e-4);
+  EXPECT_NEAR(4.0, obbox.getExtents().z(), 1e-4);
+
+  // oriented bounding box doesn't rotate with the sphere
+  EXPECT_TRUE(obbox.getPose().translation().isApprox(pose.translation(), 1e-4));
+  EXPECT_TRUE(obbox.getPose().linear().isApprox(Eigen::Matrix3d::Identity(), 1e-4));
 
   // verify the bounding box is rotation-invariant
 
@@ -101,7 +129,9 @@ TEST(SphereBoundingBox, Sphere2)
     pose.linear() = quat.toRotationMatrix();
     body.setPose(pose);
     bodies::AABB bbox2;
+    bodies::OBB obbox2;
     body.computeBoundingBox(bbox2);
+    body.computeBoundingBox(obbox2);
 
     EXPECT_NEAR(bbox2.min().x(), bbox.min().x(), 1e-4);
     EXPECT_NEAR(bbox2.min().y(), bbox.min().y(), 1e-4);
@@ -109,6 +139,12 @@ TEST(SphereBoundingBox, Sphere2)
     EXPECT_NEAR(bbox2.max().x(), bbox.max().x(), 1e-4);
     EXPECT_NEAR(bbox2.max().y(), bbox.max().y(), 1e-4);
     EXPECT_NEAR(bbox2.max().z(), bbox.max().z(), 1e-4);
+
+    EXPECT_NEAR(obbox.getExtents().x(), obbox2.getExtents().x(), 1e-4);
+    EXPECT_NEAR(obbox.getExtents().y(), obbox2.getExtents().y(), 1e-4);
+    EXPECT_NEAR(obbox.getExtents().z(), obbox2.getExtents().z(), 1e-4);
+
+    EXPECT_TRUE(obbox2.getPose().isApprox(obbox.getPose(), 1e-4));
   }
 }
 
@@ -118,6 +154,8 @@ TEST(BoxBoundingBox, Box1)
   bodies::Box body(&shape);
   bodies::AABB bbox;
   body.computeBoundingBox(bbox);
+  bodies::OBB obbox;
+  body.computeBoundingBox(obbox);
 
   EXPECT_NEAR(-0.5, bbox.min().x(), 1e-4);
   EXPECT_NEAR(-1.0, bbox.min().y(), 1e-4);
@@ -125,6 +163,15 @@ TEST(BoxBoundingBox, Box1)
   EXPECT_NEAR(0.5, bbox.max().x(), 1e-4);
   EXPECT_NEAR(1.0, bbox.max().y(), 1e-4);
   EXPECT_NEAR(1.5, bbox.max().z(), 1e-4);
+
+  EXPECT_NEAR(1.0, obbox.getExtents().x(), 1e-4);
+  EXPECT_NEAR(2.0, obbox.getExtents().y(), 1e-4);
+  EXPECT_NEAR(3.0, obbox.getExtents().z(), 1e-4);
+  EXPECT_NEAR(0.0, obbox.getPose().translation().x(), 1e-4);
+  EXPECT_NEAR(0.0, obbox.getPose().translation().y(), 1e-4);
+  EXPECT_NEAR(0.0, obbox.getPose().translation().z(), 1e-4);
+
+  EXPECT_TRUE(obbox.getPose().linear().isApprox(Eigen::Matrix3d::Identity(), 1e-4));
 }
 
 TEST(BoxBoundingBox, Box2)
@@ -137,6 +184,8 @@ TEST(BoxBoundingBox, Box2)
   body.setPose(pose);
   bodies::AABB bbox;
   body.computeBoundingBox(bbox);
+  bodies::OBB obbox;
+  body.computeBoundingBox(obbox);
 
   EXPECT_NEAR(0.5, bbox.min().x(), 1e-4);
   EXPECT_NEAR(1.0, bbox.min().y(), 1e-4);
@@ -145,9 +194,19 @@ TEST(BoxBoundingBox, Box2)
   EXPECT_NEAR(3.0, bbox.max().y(), 1e-4);
   EXPECT_NEAR(4.5, bbox.max().z(), 1e-4);
 
+  EXPECT_NEAR(1.0, obbox.getExtents().x(), 1e-4);
+  EXPECT_NEAR(2.0, obbox.getExtents().y(), 1e-4);
+  EXPECT_NEAR(3.0, obbox.getExtents().z(), 1e-4);
+  EXPECT_NEAR(1.0, obbox.getPose().translation().x(), 1e-4);
+  EXPECT_NEAR(2.0, obbox.getPose().translation().y(), 1e-4);
+  EXPECT_NEAR(3.0, obbox.getPose().translation().z(), 1e-4);
+
+  EXPECT_TRUE(obbox.getPose().linear().isApprox(Eigen::Matrix3d::Identity(), 1e-4));
+
   pose *= Eigen::AngleAxisd(M_PI_2, Eigen::Vector3d(1, 1, 1).normalized());
   body.setPose(pose);
   body.computeBoundingBox(bbox);
+  body.computeBoundingBox(obbox);
 
   EXPECT_NEAR(-0.7767, bbox.min().x(), 1e-4);
   EXPECT_NEAR(0.8452, bbox.min().y(), 1e-4);
@@ -155,6 +214,15 @@ TEST(BoxBoundingBox, Box2)
   EXPECT_NEAR(2.7767, bbox.max().x(), 1e-4);
   EXPECT_NEAR(3.1547, bbox.max().y(), 1e-4);
   EXPECT_NEAR(4.5326, bbox.max().z(), 1e-4);
+
+  EXPECT_NEAR(1.0, obbox.getExtents().x(), 1e-4);
+  EXPECT_NEAR(2.0, obbox.getExtents().y(), 1e-4);
+  EXPECT_NEAR(3.0, obbox.getExtents().z(), 1e-4);
+  EXPECT_NEAR(1.0, obbox.getPose().translation().x(), 1e-4);
+  EXPECT_NEAR(2.0, obbox.getPose().translation().y(), 1e-4);
+  EXPECT_NEAR(3.0, obbox.getPose().translation().z(), 1e-4);
+
+  EXPECT_TRUE(obbox.getPose().linear().isApprox(pose.linear(), 1e-4));
 }
 
 TEST(CylinderBoundingBox, Cylinder1)
@@ -163,6 +231,8 @@ TEST(CylinderBoundingBox, Cylinder1)
   bodies::Cylinder body(&shape);
   bodies::AABB bbox;
   body.computeBoundingBox(bbox);
+  bodies::OBB obbox;
+  body.computeBoundingBox(obbox);
 
   EXPECT_NEAR(-1.0, bbox.min().x(), 1e-4);
   EXPECT_NEAR(-1.0, bbox.min().y(), 1e-4);
@@ -170,6 +240,15 @@ TEST(CylinderBoundingBox, Cylinder1)
   EXPECT_NEAR(1.0, bbox.max().x(), 1e-4);
   EXPECT_NEAR(1.0, bbox.max().y(), 1e-4);
   EXPECT_NEAR(1.0, bbox.max().z(), 1e-4);
+
+  EXPECT_NEAR(2.0, obbox.getExtents().x(), 1e-4);
+  EXPECT_NEAR(2.0, obbox.getExtents().y(), 1e-4);
+  EXPECT_NEAR(2.0, obbox.getExtents().z(), 1e-4);
+  EXPECT_NEAR(0.0, obbox.getPose().translation().x(), 1e-4);
+  EXPECT_NEAR(0.0, obbox.getPose().translation().y(), 1e-4);
+  EXPECT_NEAR(0.0, obbox.getPose().translation().z(), 1e-4);
+
+  EXPECT_TRUE(obbox.getPose().linear().isApprox(Eigen::Matrix3d::Identity(), 1e-4));
 }
 
 TEST(CylinderBoundingBox, Cylinder2)
@@ -182,6 +261,8 @@ TEST(CylinderBoundingBox, Cylinder2)
   body.setPose(pose);
   bodies::AABB bbox;
   body.computeBoundingBox(bbox);
+  bodies::OBB obbox;
+  body.computeBoundingBox(obbox);
 
   EXPECT_NEAR(0.0, bbox.min().x(), 1e-4);
   EXPECT_NEAR(1.0, bbox.min().y(), 1e-4);
@@ -190,9 +271,19 @@ TEST(CylinderBoundingBox, Cylinder2)
   EXPECT_NEAR(3.0, bbox.max().y(), 1e-4);
   EXPECT_NEAR(4.0, bbox.max().z(), 1e-4);
 
+  EXPECT_NEAR(2.0, obbox.getExtents().x(), 1e-4);
+  EXPECT_NEAR(2.0, obbox.getExtents().y(), 1e-4);
+  EXPECT_NEAR(2.0, obbox.getExtents().z(), 1e-4);
+  EXPECT_NEAR(1.0, obbox.getPose().translation().x(), 1e-4);
+  EXPECT_NEAR(2.0, obbox.getPose().translation().y(), 1e-4);
+  EXPECT_NEAR(3.0, obbox.getPose().translation().z(), 1e-4);
+
+  EXPECT_TRUE(obbox.getPose().linear().isApprox(Eigen::Matrix3d::Identity(), 1e-4));
+
   pose *= Eigen::AngleAxisd(M_PI_2, Eigen::Vector3d(1, 1, 1).normalized());
   body.setPose(pose);
   body.computeBoundingBox(bbox);
+  body.computeBoundingBox(obbox);
 
   EXPECT_NEAR(-0.3238, bbox.min().x(), 1e-4);
   EXPECT_NEAR(0.7862, bbox.min().y(), 1e-4);
@@ -200,6 +291,15 @@ TEST(CylinderBoundingBox, Cylinder2)
   EXPECT_NEAR(2.3238, bbox.max().x(), 1e-4);
   EXPECT_NEAR(3.2138, bbox.max().y(), 1e-4);
   EXPECT_NEAR(4.2761, bbox.max().z(), 1e-4);
+
+  EXPECT_NEAR(2.0, obbox.getExtents().x(), 1e-4);
+  EXPECT_NEAR(2.0, obbox.getExtents().y(), 1e-4);
+  EXPECT_NEAR(2.0, obbox.getExtents().z(), 1e-4);
+  EXPECT_NEAR(1.0, obbox.getPose().translation().x(), 1e-4);
+  EXPECT_NEAR(2.0, obbox.getPose().translation().y(), 1e-4);
+  EXPECT_NEAR(3.0, obbox.getPose().translation().z(), 1e-4);
+
+  EXPECT_TRUE(obbox.getPose().linear().isApprox(pose.linear(), 1e-4));
 
   // verify the bounding box is yaw-invariant
 
@@ -212,6 +312,7 @@ TEST(CylinderBoundingBox, Cylinder2)
   body.computeBoundingBox(bbox);
 
   bodies::AABB bbox2;
+  bodies::OBB obbox2;
   for (size_t i = 0; i < 10; ++i)
   {
     const auto angle = gen.uniformReal(-M_PI, M_PI);
@@ -219,6 +320,7 @@ TEST(CylinderBoundingBox, Cylinder2)
     pose.linear() = (rollPitch * yaw).toRotationMatrix();
     body.setPose(pose);
     body.computeBoundingBox(bbox2);
+    body.computeBoundingBox(obbox2);
 
     EXPECT_NEAR(bbox2.min().x(), bbox.min().x(), 1e-4);
     EXPECT_NEAR(bbox2.min().y(), bbox.min().y(), 1e-4);
@@ -226,6 +328,16 @@ TEST(CylinderBoundingBox, Cylinder2)
     EXPECT_NEAR(bbox2.max().x(), bbox.max().x(), 1e-4);
     EXPECT_NEAR(bbox2.max().y(), bbox.max().y(), 1e-4);
     EXPECT_NEAR(bbox2.max().z(), bbox.max().z(), 1e-4);
+
+    EXPECT_NEAR(2.0, obbox2.getExtents().x(), 1e-4);
+    EXPECT_NEAR(2.0, obbox2.getExtents().y(), 1e-4);
+    EXPECT_NEAR(2.0, obbox2.getExtents().z(), 1e-4);
+    EXPECT_NEAR(1.0, obbox2.getPose().translation().x(), 1e-4);
+    EXPECT_NEAR(2.0, obbox2.getPose().translation().y(), 1e-4);
+    EXPECT_NEAR(3.0, obbox2.getPose().translation().z(), 1e-4);
+
+    // oriented bounding boxes are not yaw-invariant
+    EXPECT_TRUE(obbox2.getPose().linear().isApprox(pose.linear(), 1e-4));
   }
 }
 
@@ -323,6 +435,8 @@ TEST(MeshBoundingBox, Mesh1)
   bodies::ConvexMesh body(m);
   bodies::AABB bbox;
   body.computeBoundingBox(bbox);
+  bodies::OBB obbox;
+  body.computeBoundingBox(obbox);
 
   EXPECT_NEAR(-1.0, bbox.min().x(), 1e-4);
   EXPECT_NEAR(-1.0, bbox.min().y(), 1e-4);
@@ -330,6 +444,15 @@ TEST(MeshBoundingBox, Mesh1)
   EXPECT_NEAR(1.0, bbox.max().x(), 1e-4);
   EXPECT_NEAR(1.0, bbox.max().y(), 1e-4);
   EXPECT_NEAR(1.0, bbox.max().z(), 1e-4);
+
+  EXPECT_NEAR(2.0, obbox.getExtents().x(), 1e-4);
+  EXPECT_NEAR(2.0, obbox.getExtents().y(), 1e-4);
+  EXPECT_NEAR(2.0, obbox.getExtents().z(), 1e-4);
+  EXPECT_NEAR(0.0, obbox.getPose().translation().x(), 1e-4);
+  EXPECT_NEAR(0.0, obbox.getPose().translation().y(), 1e-4);
+  EXPECT_NEAR(0.0, obbox.getPose().translation().z(), 1e-4);
+
+  EXPECT_TRUE(obbox.getPose().linear().isApprox(Eigen::Matrix3d::Identity(), 1e-4));
   delete m;
 }
 
@@ -344,6 +467,8 @@ TEST(MeshBoundingBox, Mesh2)
   body.setPose(pose);
   bodies::AABB bbox;
   body.computeBoundingBox(bbox);
+  bodies::OBB obbox;
+  body.computeBoundingBox(obbox);
 
   EXPECT_NEAR(0.5, bbox.min().x(), 1e-4);
   EXPECT_NEAR(1.0, bbox.min().y(), 1e-4);
@@ -352,9 +477,19 @@ TEST(MeshBoundingBox, Mesh2)
   EXPECT_NEAR(3.0, bbox.max().y(), 1e-4);
   EXPECT_NEAR(4.5, bbox.max().z(), 1e-4);
 
+  EXPECT_NEAR(1.0, obbox.getExtents().x(), 1e-4);
+  EXPECT_NEAR(2.0, obbox.getExtents().y(), 1e-4);
+  EXPECT_NEAR(3.0, obbox.getExtents().z(), 1e-4);
+  EXPECT_NEAR(1.0, obbox.getPose().translation().x(), 1e-4);
+  EXPECT_NEAR(2.0, obbox.getPose().translation().y(), 1e-4);
+  EXPECT_NEAR(3.0, obbox.getPose().translation().z(), 1e-4);
+
+  EXPECT_TRUE(obbox.getPose().linear().isApprox(Eigen::Matrix3d::Identity(), 1e-4));
+
   pose *= Eigen::AngleAxisd(M_PI_2, Eigen::Vector3d(1, 1, 1).normalized());
   body.setPose(pose);
   body.computeBoundingBox(bbox);
+  body.computeBoundingBox(obbox);
 
   EXPECT_NEAR(-0.7767, bbox.min().x(), 1e-4);
   EXPECT_NEAR(0.8452, bbox.min().y(), 1e-4);
@@ -362,6 +497,15 @@ TEST(MeshBoundingBox, Mesh2)
   EXPECT_NEAR(2.7767, bbox.max().x(), 1e-4);
   EXPECT_NEAR(3.1547, bbox.max().y(), 1e-4);
   EXPECT_NEAR(4.5326, bbox.max().z(), 1e-4);
+
+  EXPECT_NEAR(1.0, obbox.getExtents().x(), 1e-4);
+  EXPECT_NEAR(2.0, obbox.getExtents().y(), 1e-4);
+  EXPECT_NEAR(3.0, obbox.getExtents().z(), 1e-4);
+  EXPECT_NEAR(1.0, obbox.getPose().translation().x(), 1e-4);
+  EXPECT_NEAR(2.0, obbox.getPose().translation().y(), 1e-4);
+  EXPECT_NEAR(3.0, obbox.getPose().translation().z(), 1e-4);
+
+  EXPECT_TRUE(obbox.getPose().linear().isApprox(pose.linear(), 1e-4));
 
   delete m;
 }
@@ -381,6 +525,34 @@ TEST(MergeBoundingBoxes, Merge1)
   EXPECT_NEAR(1.0, bbox.max().x(), 1e-4);
   EXPECT_NEAR(1.0, bbox.max().y(), 1e-4);
   EXPECT_NEAR(1.0, bbox.max().z(), 1e-4);
+}
+
+TEST(MergeBoundingBoxes, OBBApprox1)
+{
+  std::vector<bodies::OBB> boxes;
+  auto pose = Eigen::Isometry3d::Identity();
+
+  pose.translation() = -0.5 * Eigen::Vector3d::Ones();
+  boxes.emplace_back(pose, Eigen::Vector3d(1, 1, 1));
+  pose.translation() = 0.5 * Eigen::Vector3d::Ones();
+  boxes.emplace_back(pose, Eigen::Vector3d(1, 1, 1));
+
+  bodies::OBB bbox;
+  bodies::mergeBoundingBoxesApprox(boxes, bbox);
+
+  // the resulting bounding box is not tight, so we only do some sanity checks
+
+  EXPECT_GE(4.0, bbox.getExtents().x());
+  EXPECT_GE(4.0, bbox.getExtents().y());
+  EXPECT_GE(4.0, bbox.getExtents().z());
+  EXPECT_LE(2.0, bbox.getExtents().x());
+  EXPECT_LE(2.0, bbox.getExtents().y());
+  EXPECT_LE(2.0, bbox.getExtents().z());
+
+  EXPECT_TRUE(bbox.contains(boxes[0].getPose().translation()));
+  EXPECT_TRUE(bbox.contains(boxes[1].getPose().translation()));
+  EXPECT_TRUE(bbox.overlaps(boxes[0]));
+  EXPECT_TRUE(bbox.overlaps(boxes[1]));
 }
 
 int main(int argc, char** argv)
