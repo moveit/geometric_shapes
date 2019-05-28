@@ -147,6 +147,8 @@ std::vector<double> bodies::Sphere::getDimensions() const
 void bodies::Sphere::updateInternalData()
 {
   radiusU_ = radius_ * scale_ + padding_;
+  if (radiusU_ < 0)
+    throw std::runtime_error("Sphere radius must be non-negative.");
   radius2_ = radiusU_ * radiusU_;
   center_ = pose_.translation();
 }
@@ -309,8 +311,12 @@ std::vector<double> bodies::Cylinder::getDimensions() const
 void bodies::Cylinder::updateInternalData()
 {
   radiusU_ = radius_ * scale_ + padding_;
+  if (radiusU_ < 0)
+    throw std::runtime_error("Cylinder radius must be non-negative.");
   radius2_ = radiusU_ * radiusU_;
   length2_ = scale_ * length_ / 2.0 + padding_;
+  if (length2_ < 0)
+    throw std::runtime_error("Cylinder length must be non-negative.");
   center_ = pose_.translation();
   radiusBSqr_ = length2_ * length2_ + radius2_;
   radiusB_ = sqrt(radiusBSqr_);
@@ -540,6 +546,9 @@ void bodies::Box::updateInternalData()
   length2_ = length_ * s2 + padding_;
   width2_ = width_ * s2 + padding_;
   height2_ = height_ * s2 + padding_;
+
+  if (length2_ < 0 || width2_ < 0 || height2_ < 0)
+    throw std::runtime_error("Box dimensions must be non-negative.");
 
   center_ = pose_.translation();
 
