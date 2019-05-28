@@ -378,7 +378,7 @@ void bodies::Cylinder::computeBoundingCylinder(BoundingCylinder& cylinder) const
 {
   cylinder.pose = pose_;
   cylinder.radius = radiusU_;
-  cylinder.length = scale_ * length_ + padding_;
+  cylinder.length = 2 * length2_;
 }
 
 void bodies::Cylinder::computeBoundingBox(bodies::AABB& bbox) const
