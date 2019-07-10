@@ -41,6 +41,7 @@
 #error This header requires at least C++11
 #endif
 
+#include "geometric_shapes/aabb.h"
 #include "geometric_shapes/shapes.h"
 #include <eigen_stl_containers/eigen_stl_containers.h>
 #include <random_numbers/random_numbers.h>
@@ -157,7 +158,7 @@ public:
     return containsPoint(pt, verbose);
   }
 
-  /** \brief Check if a point is inside the body */
+  /** \brief Check if a point is inside the body. Surface points are included. */
   virtual bool containsPoint(const Eigen::Vector3d& p, bool verbose = false) const = 0;
 
   /** \brief Check if a ray intersects the body, and find the
@@ -186,6 +187,10 @@ public:
   /** \brief Compute the bounding cylinder for the body, in its current
       pose. Scaling and padding are accounted for. */
   virtual void computeBoundingCylinder(BoundingCylinder& cylinder) const = 0;
+
+  /** \brief Compute the axis-aligned bounding box for the body, in its current
+      pose. Scaling and padding are accounted for. */
+  virtual void computeBoundingBox(AABB& bbox) const = 0;
 
   /** \brief Get a clone of this body, but one that is located at the pose \e pose */
   BodyPtr cloneAt(const Eigen::Isometry3d& pose) const
@@ -252,6 +257,7 @@ public:
                                  Eigen::Vector3d& result);
   virtual void computeBoundingSphere(BoundingSphere& sphere) const;
   virtual void computeBoundingCylinder(BoundingCylinder& cylinder) const;
+  virtual void computeBoundingBox(AABB& bbox) const;
   virtual bool intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vector3d& dir,
                              EigenSTL::vector_Vector3d* intersections = NULL, unsigned int count = 0) const;
 
@@ -301,6 +307,7 @@ public:
                                  Eigen::Vector3d& result);
   virtual void computeBoundingSphere(BoundingSphere& sphere) const;
   virtual void computeBoundingCylinder(BoundingCylinder& cylinder) const;
+  virtual void computeBoundingBox(AABB& bbox) const;
   virtual bool intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vector3d& dir,
                              EigenSTL::vector_Vector3d* intersections = NULL, unsigned int count = 0) const;
 
@@ -360,6 +367,7 @@ public:
                                  Eigen::Vector3d& result);
   virtual void computeBoundingSphere(BoundingSphere& sphere) const;
   virtual void computeBoundingCylinder(BoundingCylinder& cylinder) const;
+  virtual void computeBoundingBox(AABB& bbox) const;
   virtual bool intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vector3d& dir,
                              EigenSTL::vector_Vector3d* intersections = NULL, unsigned int count = 0) const;
 
@@ -422,6 +430,7 @@ public:
 
   virtual void computeBoundingSphere(BoundingSphere& sphere) const;
   virtual void computeBoundingCylinder(BoundingCylinder& cylinder) const;
+  virtual void computeBoundingBox(AABB& bbox) const;
   virtual bool intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vector3d& dir,
                              EigenSTL::vector_Vector3d* intersections = NULL, unsigned int count = 0) const;
 

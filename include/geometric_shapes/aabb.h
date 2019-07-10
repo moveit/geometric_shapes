@@ -1,7 +1,7 @@
 /*********************************************************************
 * Software License Agreement (BSD License)
 *
-*  Copyright (c) 2008, Willow Garage, Inc.
+*  Copyright (c) 2019, Open Robotics
 *  All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
 *     copyright notice, this list of conditions and the following
 *     disclaimer in the documentation and/or other materials provided
 *     with the distribution.
-*   * Neither the name of the Willow Garage nor the names of its
+*   * Neither the name of Open Robotics nor the names of its
 *     contributors may be used to endorse or promote products derived
 *     from this software without specific prior written permission.
 *
@@ -32,38 +32,27 @@
 *  POSSIBILITY OF SUCH DAMAGE.
 *********************************************************************/
 
-/* Author: Ioan Sucan, E. Gil Jones */
+/* Author: Martin Pecka */
 
-#ifndef GEOMETRIC_SHAPES_BODY_OPERATIONS_
-#define GEOMETRIC_SHAPES_BODY_OPERATIONS_
+#ifndef GEOMETRIC_SHAPES_AABB_H
+#define GEOMETRIC_SHAPES_AABB_H
 
-#include "geometric_shapes/shapes.h"
-#include "geometric_shapes/bodies.h"
-#include "geometric_shapes/shape_messages.h"
-#include <geometry_msgs/msg/pose.hpp>
-#include <vector>
+#include <Eigen/Geometry>
 
 namespace bodies
 {
-/** \brief Create a body from a given shape */
-Body* createBodyFromShape(const shapes::Shape* shape);
+/** \brief Represents an axis-aligned bounding box. */
+class AABB : public Eigen::AlignedBox3d
+{
+  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
-/** \brief Create a body from a given shape */
-Body* constructBodyFromMsg(const shape_msgs::msg::Mesh& shape, const geometry_msgs::msg::Pose& pose);
+  // inherit parent class constructors (since C++11)
+  using Eigen::AlignedBox3d::AlignedBox;
 
-/** \brief Create a body from a given shape */
-Body* constructBodyFromMsg(const shape_msgs::msg::SolidPrimitive& shape, const geometry_msgs::msg::Pose& pose);
-
-/** \brief Create a body from a given shape */
-Body* constructBodyFromMsg(const shapes::ShapeMsg& shape, const geometry_msgs::msg::Pose& pose);
-
-/** \brief Compute a bounding sphere to enclose a set of bounding spheres */
-void mergeBoundingSpheres(const std::vector<BoundingSphere>& spheres, BoundingSphere& mergedSphere);
-
-/** \brief Compute an axis-aligned bounding box to enclose a set of bounding boxes. */
-void mergeBoundingBoxes(const std::vector<AABB>& boxes, AABB& mergedBox);
-
-/** \brief Compute the bounding sphere for a set of \e bodies and store the resulting sphere in \e mergedSphere */
-void computeBoundingSphere(const std::vector<const Body*>& bodies, BoundingSphere& mergedSphere);
+public:
+  /** \brief Extend with a box transformed by the given transform. */
+  void extendWithTransformedBox(const Eigen::Isometry3d& transform, const Eigen::Vector3d& box);
+};
 }
-#endif
+
+#endif  // GEOMETRIC_SHAPES_AABB_H
