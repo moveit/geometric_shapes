@@ -102,8 +102,8 @@ struct ltLocalVertexIndex
     return p1.index < p2.index;
   }
 };
-}
-}
+}  // namespace
+}  // namespace detail
 
 Mesh* createMeshFromVertices(const EigenSTL::vector_Vector3d& vertices, const std::vector<unsigned int>& triangles)
 {
@@ -323,7 +323,7 @@ void extractMeshData(const aiScene* scene, const aiNode* node, const aiMatrix4x4
   for (unsigned int n = 0; n < node->mNumChildren; ++n)
     extractMeshData(scene, node->mChildren[n], transform, scale, vertices, triangles);
 }
-}
+}  // namespace
 
 Mesh* createMeshFromAsset(const aiScene* scene, const std::string& resource_name)
 {
@@ -641,7 +641,7 @@ inline void writeFloatToSTL(char*& ptr, double datad)
   memcpy(ptr, &data, sizeof(float));
   ptr += sizeof(float);
 }
-}
+}  // namespace
 
 void writeSTLBinary(const Mesh* mesh, std::vector<char>& buffer)
 {
@@ -683,4 +683,4 @@ void writeSTLBinary(const Mesh* mesh, std::vector<char>& buffer)
     ptr += 2;
   }
 }
-}
+}  // namespace shapes

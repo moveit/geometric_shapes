@@ -138,7 +138,7 @@ public:
     return constructShapeFromMsg(shape_msg);
   }
 };
-}
+}  // namespace
 
 Shape* constructShapeFromMsg(const ShapeMsg& shape_msg)
 {
@@ -174,7 +174,7 @@ private:
   bool use_mesh_triangle_list_;
   visualization_msgs::Marker* marker_;
 };
-}
+}  // namespace
 
 bool constructMarkerFromShape(const Shape* shape, visualization_msgs::Marker& marker, bool use_mesh_triangle_list)
 {
@@ -224,7 +224,7 @@ public:
     return e;
   }
 };
-}
+}  // namespace
 
 Eigen::Vector3d computeShapeExtents(const ShapeMsg& shape_msg)
 {
@@ -577,4 +577,4 @@ const std::string& shapeStringName(const Shape* shape)
     return empty;
   }
 }
-}
+}  // namespace shapes

@@ -122,7 +122,7 @@ Body* constructBodyFromMsgHelper(const T& shape_msg, const geometry_msgs::Pose& 
   }
   return nullptr;
 }
-}
+}  // namespace bodies
 
 bodies::Body* bodies::constructBodyFromMsg(const shapes::ShapeMsg& shape_msg, const geometry_msgs::Pose& pose)
 {

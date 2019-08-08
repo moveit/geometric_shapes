@@ -67,7 +67,7 @@ shapes::Mesh* loadMesh(const std::string& mesh)
   std::string path = "file://" + std::string(TEST_RESOURCES_DIR) + "/" + mesh;
   return shapes::createMeshFromResource(path);
 }
-}
+}  // namespace
 
 TEST(CreateMesh, stl)
 {

@@ -103,8 +103,8 @@ struct interscOrder
     return a.time < b.time;
   }
 };
-}
-}
+}  // namespace detail
+}  // namespace bodies
 
 void bodies::Body::setDimensions(const shapes::Shape* shape)
 {
