@@ -944,9 +944,9 @@ void bodies::ConvexMesh::computeScaledVerticesFromPlaneProjections()
   {
     Eigen::Vector3d v(mesh_data_->vertices_[i] - mesh_data_->mesh_center_);
     EigenSTL::vector_Vector3d projected_vertices;
-    for (unsigned int t = 0; t < vertex_to_tris[i].size(); ++t)
+    for (unsigned int t : vertex_to_tris[i])
     {
-      const Eigen::Vector4d& plane = mesh_data_->planes_[mesh_data_->plane_for_triangle_[vertex_to_tris[i][t]]];
+      const Eigen::Vector4d& plane = mesh_data_->planes_[mesh_data_->plane_for_triangle_[t]];
       Eigen::Vector3d plane_normal(plane.x(), plane.y(), plane.z());
       double d_scaled_padded =
           scale_ * plane.w() - (1 - scale_) * mesh_data_->mesh_center_.dot(plane_normal) - padding_;
@@ -968,9 +968,9 @@ void bodies::ConvexMesh::computeScaledVerticesFromPlaneProjections()
     else
     {
       Eigen::Vector3d sum(0, 0, 0);
-      for (unsigned int v = 0; v < projected_vertices.size(); ++v)
+      for (const Eigen::Vector3d& vertex : projected_vertices)
       {
-        sum += projected_vertices[v];
+        sum += vertex;
       }
       sum /= projected_vertices.size();
       scaled_vertices_storage_->at(i) = sum;
@@ -1226,8 +1226,8 @@ bodies::BodyVector::~BodyVector()
 
 void bodies::BodyVector::clear()
 {
-  for (unsigned int i = 0; i < bodies_.size(); i++)
-    delete bodies_[i];
+  for (auto& body : bodies_)
+    delete body;
   bodies_.clear();
 }
 
