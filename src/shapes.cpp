@@ -204,27 +204,27 @@ OcTree::OcTree(const std::shared_ptr<const octomap::OcTree>& t) : octree(t)
   type = OCTREE;
 }
 
-Shape* Sphere::clone() const
+Sphere* Sphere::clone() const
 {
   return new Sphere(radius);
 }
 
-Shape* Cylinder::clone() const
+Cylinder* Cylinder::clone() const
 {
   return new Cylinder(radius, length);
 }
 
-Shape* Cone::clone() const
+Cone* Cone::clone() const
 {
   return new Cone(radius, length);
 }
 
-Shape* Box::clone() const
+Box* Box::clone() const
 {
   return new Box(size[0], size[1], size[2]);
 }
 
-Shape* Mesh::clone() const
+Mesh* Mesh::clone() const
 {
   Mesh* dest = new Mesh(vertex_count, triangle_count);
   unsigned int n = 3 * vertex_count;
@@ -252,12 +252,12 @@ Shape* Mesh::clone() const
   return dest;
 }
 
-Shape* Plane::clone() const
+Plane* Plane::clone() const
 {
   return new Plane(a, b, c, d);
 }
 
-Shape* OcTree::clone() const
+OcTree* OcTree::clone() const
 {
   return new OcTree(octree);
 }

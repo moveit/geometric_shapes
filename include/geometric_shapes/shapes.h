@@ -115,7 +115,7 @@ public:
   static const std::string STRING_NAME;
 
   virtual void scaleAndPadd(double scale, double padd);
-  virtual Shape* clone() const;
+  virtual Sphere* clone() const override;
   virtual void print(std::ostream& out = std::cout) const;
 
   /** \brief The radius of the sphere */
@@ -136,7 +136,7 @@ public:
   static const std::string STRING_NAME;
 
   virtual void scaleAndPadd(double scale, double padd);
-  virtual Shape* clone() const;
+  virtual Cylinder* clone() const override;
   virtual void print(std::ostream& out = std::cout) const;
 
   /** \brief The length of the cylinder */
@@ -159,7 +159,7 @@ public:
   static const std::string STRING_NAME;
 
   virtual void scaleAndPadd(double scale, double padd);
-  virtual Shape* clone() const;
+  virtual Cone* clone() const override;
   virtual void print(std::ostream& out = std::cout) const;
 
   /** \brief The length (height) of the cone */
@@ -181,7 +181,7 @@ public:
   static const std::string STRING_NAME;
 
   virtual void scaleAndPadd(double scale, double padd);
-  virtual Shape* clone() const;
+  virtual Box* clone() const override;
   virtual void print(std::ostream& out = std::cout) const;
 
   /** \brief x, y, z dimensions of the box (axis-aligned) */
@@ -204,7 +204,7 @@ public:
   static const std::string STRING_NAME;
 
   virtual void scaleAndPadd(double scale, double padd);
-  virtual Shape* clone() const;
+  virtual Mesh* clone() const override;
   virtual void print(std::ostream& out = std::cout) const;
 
   /** \brief Compute the normals of each triangle from its vertices via cross product. */
@@ -251,7 +251,7 @@ public:
   /** \brief The type of the shape, as a string */
   static const std::string STRING_NAME;
 
-  virtual Shape* clone() const;
+  virtual Plane* clone() const override;
   virtual void print(std::ostream& out = std::cout) const;
   virtual void scaleAndPadd(double scale, double padd);
   virtual bool isFixed() const;
@@ -270,7 +270,7 @@ public:
   /** \brief The type of the shape, as a string */
   static const std::string STRING_NAME;
 
-  virtual Shape* clone() const;
+  virtual OcTree* clone() const override;
   virtual void print(std::ostream& out = std::cout) const;
   virtual void scaleAndPadd(double scale, double padd);
   virtual bool isFixed() const;
