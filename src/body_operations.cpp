@@ -41,7 +41,7 @@
 
 bodies::Body* bodies::createBodyFromShape(const shapes::Shape* shape)
 {
-  Body* body = NULL;
+  Body* body = nullptr;
 
   if (shape)
     switch (shape->type)
@@ -120,7 +120,7 @@ Body* constructBodyFromMsgHelper(const T& shape_msg, const geometry_msgs::Pose& 
       return body;
     }
   }
-  return NULL;
+  return nullptr;
 }
 }
 

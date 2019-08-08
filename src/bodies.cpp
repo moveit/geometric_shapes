@@ -411,7 +411,7 @@ bool bodies::Cylinder::intersectsRay(const Eigen::Vector3d& origin, const Eigen:
       v1 = v1 - normalH_.dot(v1) * normalH_;
       if (v1.squaredNorm() < radius2_ + detail::ZERO)
       {
-        if (intersections == NULL)
+        if (intersections == nullptr)
           return true;
 
         detail::intersc ip(p1, t1);
@@ -427,7 +427,7 @@ bool bodies::Cylinder::intersectsRay(const Eigen::Vector3d& origin, const Eigen:
       v2 = v2 - normalH_.dot(v2) * normalH_;
       if (v2.squaredNorm() < radius2_ + detail::ZERO)
       {
-        if (intersections == NULL)
+        if (intersections == nullptr)
           return true;
 
         detail::intersc ip(p2, t2);
@@ -459,7 +459,7 @@ bool bodies::Cylinder::intersectsRay(const Eigen::Vector3d& origin, const Eigen:
 
         if (fabs(normalH_.dot(v1)) < length2_ + detail::ZERO)
         {
-          if (intersections == NULL)
+          if (intersections == nullptr)
             return true;
 
           detail::intersc ip(p1, t1);
@@ -474,7 +474,7 @@ bool bodies::Cylinder::intersectsRay(const Eigen::Vector3d& origin, const Eigen:
 
         if (fabs(normalH_.dot(v2)) < length2_ + detail::ZERO)
         {
-          if (intersections == NULL)
+          if (intersections == nullptr)
             return true;
           detail::intersc ip(p2, t2);
           ipts.push_back(ip);
@@ -1267,7 +1267,7 @@ const bodies::Body* bodies::BodyVector::getBody(unsigned int i) const
   if (i >= bodies_.size())
   {
     CONSOLE_BRIDGE_logError("There is no body at index %u", i);
-    return NULL;
+    return nullptr;
   }
   else
     return bodies_[i];

@@ -43,7 +43,7 @@ namespace
 {
 void assertMesh(shapes::Mesh* mesh)
 {
-  ASSERT_TRUE(mesh != NULL);
+  ASSERT_TRUE(mesh != nullptr);
   ASSERT_EQ(3, mesh->vertex_count);
   ASSERT_EQ(1, mesh->triangle_count);
 
