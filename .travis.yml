@@ -15,10 +15,16 @@ env:
   global:
     - ROS_DISTRO=melodic
     - ROS_REPO=ros
+    - CXXFLAGS="-Wall -Wextra -Wwrite-strings -Wunreachable-code -Wpointer-arith -Wredundant-decls -Wno-unused-parameter -Wno-unused-but-set-parameter -Wno-unused-function"
   matrix:
     - TEST="clang-format"
     - ROS_DISTRO=kinetic
     - ROS_DISTRO=melodic
+
+matrix:
+  include:
+    - compiler: clang
+      env: CXXFLAGS="-Wall -Wextra -Wwrite-strings -Wunreachable-code -Wpointer-arith -Wredundant-decls -Wno-unused-parameter -Wno-unused-function -Wno-overloaded-virtual"
 
 before_script:
   - git clone -q --depth=1 https://github.com/ros-planning/moveit_ci.git .moveit_ci
