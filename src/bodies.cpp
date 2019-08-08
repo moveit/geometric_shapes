@@ -514,10 +514,7 @@ bool bodies::Box::containsPoint(const Eigen::Vector3d& p, bool verbose) const
     return false;
 
   double pH = v.dot(normalH_);
-  if (fabs(pH) > height2_)
-    return false;
-
-  return true;
+  return fabs(pH) <= height2_;
 }
 
 void bodies::Box::useDimensions(const shapes::Shape* shape)  // (x, y, z) = (length, width, height)

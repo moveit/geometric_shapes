@@ -80,7 +80,7 @@ void geometric_shapes::getShapeExtents(const shape_msgs::Mesh& shape_msg, double
                                        double& z_extent)
 {
   x_extent = y_extent = z_extent = 0.0;
-  if (shape_msg.vertices.size() > 0)
+  if (!shape_msg.vertices.empty())
   {
     double xmin = std::numeric_limits<double>::max(), ymin = std::numeric_limits<double>::max(),
            zmin = std::numeric_limits<double>::max();

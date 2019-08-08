@@ -222,7 +222,7 @@ Mesh* createMeshFromBinary(const char* buffer, std::size_t size, const Eigen::Ve
 
   // try to get a file extension
   std::string hint;
-  std::size_t pos = assimp_hint.find_last_of(".");
+  std::size_t pos = assimp_hint.find_last_of('.');
   if (pos != std::string::npos)
   {
     hint = assimp_hint.substr(pos + 1);
