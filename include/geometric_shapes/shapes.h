@@ -114,9 +114,9 @@ public:
   /** \brief The type of the shape, as a string */
   static const std::string STRING_NAME;
 
-  virtual void scaleAndPadd(double scale, double padd);
-  virtual Sphere* clone() const override;
-  virtual void print(std::ostream& out = std::cout) const;
+  void scaleAndPadd(double scale, double padd) override;
+  Sphere* clone() const override;
+  void print(std::ostream& out = std::cout) const override;
 
   /** \brief The radius of the sphere */
   double radius;
@@ -135,9 +135,9 @@ public:
   /** \brief The type of the shape, as a string */
   static const std::string STRING_NAME;
 
-  virtual void scaleAndPadd(double scale, double padd);
-  virtual Cylinder* clone() const override;
-  virtual void print(std::ostream& out = std::cout) const;
+  void scaleAndPadd(double scale, double padd) override;
+  Cylinder* clone() const override;
+  void print(std::ostream& out = std::cout) const override;
 
   /** \brief The length of the cylinder */
   double length;
@@ -158,9 +158,9 @@ public:
   /** \brief The type of the shape, as a string */
   static const std::string STRING_NAME;
 
-  virtual void scaleAndPadd(double scale, double padd);
-  virtual Cone* clone() const override;
-  virtual void print(std::ostream& out = std::cout) const;
+  void scaleAndPadd(double scale, double padd) override;
+  Cone* clone() const override;
+  void print(std::ostream& out = std::cout) const override;
 
   /** \brief The length (height) of the cone */
   double length;
@@ -180,9 +180,9 @@ public:
   /** \brief The type of the shape, as a string */
   static const std::string STRING_NAME;
 
-  virtual void scaleAndPadd(double scale, double padd);
-  virtual Box* clone() const override;
-  virtual void print(std::ostream& out = std::cout) const;
+  void scaleAndPadd(double scale, double padd) override;
+  Box* clone() const override;
+  void print(std::ostream& out = std::cout) const override;
 
   /** \brief x, y, z dimensions of the box (axis-aligned) */
   double size[3];
@@ -203,9 +203,9 @@ public:
   /** \brief The type of the shape, as a string */
   static const std::string STRING_NAME;
 
-  virtual void scaleAndPadd(double scale, double padd);
-  virtual Mesh* clone() const override;
-  virtual void print(std::ostream& out = std::cout) const;
+  void scaleAndPadd(double scale, double padd) override;
+  Mesh* clone() const override;
+  void print(std::ostream& out = std::cout) const override;
 
   /** \brief Compute the normals of each triangle from its vertices via cross product. */
   void computeTriangleNormals();
@@ -251,10 +251,10 @@ public:
   /** \brief The type of the shape, as a string */
   static const std::string STRING_NAME;
 
-  virtual Plane* clone() const override;
-  virtual void print(std::ostream& out = std::cout) const;
-  virtual void scaleAndPadd(double scale, double padd);
-  virtual bool isFixed() const;
+  Plane* clone() const override;
+  void print(std::ostream& out = std::cout) const override;
+  void scaleAndPadd(double scale, double padd) override;
+  bool isFixed() const override;
 
   /** \brief The plane equation is ax + by + cz + d = 0 */
   double a, b, c, d;
@@ -270,10 +270,10 @@ public:
   /** \brief The type of the shape, as a string */
   static const std::string STRING_NAME;
 
-  virtual OcTree* clone() const override;
-  virtual void print(std::ostream& out = std::cout) const;
-  virtual void scaleAndPadd(double scale, double padd);
-  virtual bool isFixed() const;
+  OcTree* clone() const override;
+  void print(std::ostream& out = std::cout) const override;
+  void scaleAndPadd(double scale, double padd) override;
+  bool isFixed() const override;
 
   std::shared_ptr<const octomap::OcTree> octree;
 };
