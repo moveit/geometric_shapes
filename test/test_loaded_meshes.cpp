@@ -54,7 +54,7 @@ public:
   {
   }
 
-  void SetUp()
+  void SetUp() override
   {
     // BOX
     shapes::Box box(1.0, 1.0, 1.0);
@@ -66,7 +66,7 @@ public:
     loaded_convex_meshes.push_back(new bodies::ConvexMesh(loaded_meshes.back()));
   }
 
-  void TearDown()
+  void TearDown() override
   {
     for (int i = 0; i < shape_meshes.size(); ++i)
     {
@@ -78,7 +78,7 @@ public:
     }
   }
 
-  ~CompareMeshVsPrimitive()
+  ~CompareMeshVsPrimitive() override
   {
   }
 
