@@ -29,3 +29,6 @@ target_link_libraries(test_loaded_meshes ${PROJECT_NAME} ${catkin_LIBRARIES} ${B
 
 catkin_add_gtest(test_shapes test_shapes.cpp)
 target_link_libraries(test_shapes ${PROJECT_NAME} ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+
+catkin_add_gtest(test_ray_intersection test_ray_intersection.cpp)
+target_link_libraries(test_ray_intersection ${PROJECT_NAME} ${catkin_LIBRARIES} ${Boost_LIBRARIES})
