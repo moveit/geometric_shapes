@@ -652,6 +652,9 @@ void bodies::Box::computeBoundingBox(bodies::AABB& bbox) const
   bbox.extendWithTransformedBox(getPose(), 2 * Eigen::Vector3d(length2_, width2_, height2_));
 }
 
+// for some reason, the O2 optimization screws up this function which then gives wrong results
+#pragma GCC push_options
+#pragma GCC optimize("O1")
 bool bodies::Box::intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vector3d& dir,
                                 EigenSTL::vector_Vector3d* intersections, unsigned int count) const
 {
@@ -661,28 +664,32 @@ bool bodies::Box::intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vect
   // Brian Smits. Efficient bounding box intersection. Ray tracing news 15(1), 2002
   float tmin, tmax, tymin, tymax, tzmin, tzmax;
   float divx, divy, divz;
-  divx = 1 / dirNorm.x();
+  const Eigen::Matrix3d invRot(pose_.linear().transpose());
+  const Eigen::Vector3d o(invRot * (origin - center_) + center_);
+  const Eigen::Vector3d d(invRot * dirNorm);
+
+  divx = 1 / d.x();
   if (divx >= 0)
   {
-    tmin = (corner1_.x() - origin.x()) * divx;
-    tmax = (corner2_.x() - origin.x()) * divx;
+    tmin = (corner1_.x() - o.x()) * divx;
+    tmax = (corner2_.x() - o.x()) * divx;
   }
   else
   {
-    tmax = (corner1_.x() - origin.x()) * divx;
-    tmin = (corner2_.x() - origin.x()) * divx;
+    tmax = (corner1_.x() - o.x()) * divx;
+    tmin = (corner2_.x() - o.x()) * divx;
   }
 
-  divy = 1 / dirNorm.y();
-  if (divy >= 0)
+  divy = 1 / d.y();
+  if (d.y() >= 0)
   {
-    tymin = (corner1_.y() - origin.y()) * divy;
-    tymax = (corner2_.y() - origin.y()) * divy;
+    tymin = (corner1_.y() - o.y()) * divy;
+    tymax = (corner2_.y() - o.y()) * divy;
   }
   else
   {
-    tymax = (corner1_.y() - origin.y()) * divy;
-    tymin = (corner2_.y() - origin.y()) * divy;
+    tymax = (corner1_.y() - o.y()) * divy;
+    tymin = (corner2_.y() - o.y()) * divy;
   }
 
   if ((tmin > tymax || tymin > tmax))
@@ -693,16 +700,16 @@ bool bodies::Box::intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vect
   if (tymax < tmax)
     tmax = tymax;
 
-  divz = 1 / dirNorm.z();
-  if (divz >= 0)
+  divz = 1 / d.z();
+  if (d.z() >= 0)
   {
-    tzmin = (corner1_.z() - origin.z()) * divz;
-    tzmax = (corner2_.z() - origin.z()) * divz;
+    tzmin = (corner1_.z() - o.z()) * divz;
+    tzmax = (corner2_.z() - o.z()) * divz;
   }
   else
   {
-    tzmax = (corner1_.z() - origin.z()) * divz;
-    tzmin = (corner2_.z() - origin.z()) * divz;
+    tzmax = (corner1_.z() - o.z()) * divz;
+    tzmin = (corner2_.z() - o.z()) * divz;
   }
 
   if ((tmin > tzmax || tzmin > tmax))
@@ -730,6 +737,7 @@ bool bodies::Box::intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vect
 
   return true;
 }
+#pragma GCC pop_options
 
 bool bodies::ConvexMesh::containsPoint(const Eigen::Vector3d& p, bool /* verbose */) const
 {
