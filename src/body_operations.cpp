@@ -41,7 +41,7 @@
 
 bodies::Body* bodies::createBodyFromShape(const shapes::Shape* shape)
 {
-  Body* body = NULL;
+  Body* body = nullptr;
 
   if (shape)
     switch (shape->type)
@@ -120,9 +120,9 @@ Body* constructBodyFromMsgHelper(const T& shape_msg, const geometry_msgs::Pose& 
       return body;
     }
   }
-  return NULL;
+  return nullptr;
 }
-}
+}  // namespace bodies
 
 bodies::Body* bodies::constructBodyFromMsg(const shapes::ShapeMsg& shape_msg, const geometry_msgs::Pose& pose)
 {
@@ -145,9 +145,9 @@ void bodies::computeBoundingSphere(const std::vector<const bodies::Body*>& bodie
 
   // TODO - expand to all body types
   unsigned int vertex_count = 0;
-  for (unsigned int i = 0; i < bodies.size(); i++)
+  for (auto body : bodies)
   {
-    const bodies::ConvexMesh* conv = dynamic_cast<const bodies::ConvexMesh*>(bodies[i]);
+    const bodies::ConvexMesh* conv = dynamic_cast<const bodies::ConvexMesh*>(body);
     if (!conv)
       continue;
     for (unsigned int j = 0; j < conv->getScaledVertices().size(); j++, vertex_count++)
@@ -159,9 +159,9 @@ void bodies::computeBoundingSphere(const std::vector<const bodies::Body*>& bodie
   sphere.center = sum / (double)vertex_count;
 
   double max_dist_squared = 0.0;
-  for (unsigned int i = 0; i < bodies.size(); i++)
+  for (auto body : bodies)
   {
-    const bodies::ConvexMesh* conv = dynamic_cast<const bodies::ConvexMesh*>(bodies[i]);
+    const bodies::ConvexMesh* conv = dynamic_cast<const bodies::ConvexMesh*>(body);
     if (!conv)
       continue;
     for (unsigned int j = 0; j < conv->getScaledVertices().size(); j++)

@@ -80,26 +80,26 @@ void geometric_shapes::getShapeExtents(const shape_msgs::Mesh& shape_msg, double
                                        double& z_extent)
 {
   x_extent = y_extent = z_extent = 0.0;
-  if (shape_msg.vertices.size() > 0)
+  if (!shape_msg.vertices.empty())
   {
     double xmin = std::numeric_limits<double>::max(), ymin = std::numeric_limits<double>::max(),
            zmin = std::numeric_limits<double>::max();
     double xmax = -std::numeric_limits<double>::max(), ymax = -std::numeric_limits<double>::max(),
            zmax = -std::numeric_limits<double>::max();
-    for (std::size_t i = 0; i < shape_msg.vertices.size(); ++i)
+    for (const geometry_msgs::Point& vertex : shape_msg.vertices)
     {
-      if (shape_msg.vertices[i].x > xmax)
-        xmax = shape_msg.vertices[i].x;
-      if (shape_msg.vertices[i].x < xmin)
-        xmin = shape_msg.vertices[i].x;
-      if (shape_msg.vertices[i].y > ymax)
-        ymax = shape_msg.vertices[i].y;
-      if (shape_msg.vertices[i].y < ymin)
-        ymin = shape_msg.vertices[i].y;
-      if (shape_msg.vertices[i].z > zmax)
-        zmax = shape_msg.vertices[i].z;
-      if (shape_msg.vertices[i].z < zmin)
-        zmin = shape_msg.vertices[i].z;
+      if (vertex.x > xmax)
+        xmax = vertex.x;
+      if (vertex.x < xmin)
+        xmin = vertex.x;
+      if (vertex.y > ymax)
+        ymax = vertex.y;
+      if (vertex.y < ymin)
+        ymin = vertex.y;
+      if (vertex.z > zmax)
+        zmax = vertex.z;
+      if (vertex.z < zmin)
+        zmin = vertex.z;
     }
     x_extent = xmax - xmin;
     y_extent = ymax - ymin;

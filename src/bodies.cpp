@@ -103,8 +103,8 @@ struct interscOrder
     return a.time < b.time;
   }
 };
-}
-}
+}  // namespace detail
+}  // namespace bodies
 
 void bodies::Body::setDimensions(const shapes::Shape* shape)
 {
@@ -411,7 +411,7 @@ bool bodies::Cylinder::intersectsRay(const Eigen::Vector3d& origin, const Eigen:
       v1 = v1 - normalH_.dot(v1) * normalH_;
       if (v1.squaredNorm() < radius2_ + detail::ZERO)
       {
-        if (intersections == NULL)
+        if (intersections == nullptr)
           return true;
 
         detail::intersc ip(p1, t1);
@@ -427,7 +427,7 @@ bool bodies::Cylinder::intersectsRay(const Eigen::Vector3d& origin, const Eigen:
       v2 = v2 - normalH_.dot(v2) * normalH_;
       if (v2.squaredNorm() < radius2_ + detail::ZERO)
       {
-        if (intersections == NULL)
+        if (intersections == nullptr)
           return true;
 
         detail::intersc ip(p2, t2);
@@ -459,7 +459,7 @@ bool bodies::Cylinder::intersectsRay(const Eigen::Vector3d& origin, const Eigen:
 
         if (fabs(normalH_.dot(v1)) < length2_ + detail::ZERO)
         {
-          if (intersections == NULL)
+          if (intersections == nullptr)
             return true;
 
           detail::intersc ip(p1, t1);
@@ -474,7 +474,7 @@ bool bodies::Cylinder::intersectsRay(const Eigen::Vector3d& origin, const Eigen:
 
         if (fabs(normalH_.dot(v2)) < length2_ + detail::ZERO)
         {
-          if (intersections == NULL)
+          if (intersections == nullptr)
             return true;
           detail::intersc ip(p2, t2);
           ipts.push_back(ip);
@@ -514,10 +514,7 @@ bool bodies::Box::containsPoint(const Eigen::Vector3d& p, bool verbose) const
     return false;
 
   double pH = v.dot(normalH_);
-  if (fabs(pH) > height2_)
-    return false;
-
-  return true;
+  return fabs(pH) <= height2_;
 }
 
 void bodies::Box::useDimensions(const shapes::Shape* shape)  // (x, y, z) = (length, width, height)
@@ -944,9 +941,9 @@ void bodies::ConvexMesh::computeScaledVerticesFromPlaneProjections()
   {
     Eigen::Vector3d v(mesh_data_->vertices_[i] - mesh_data_->mesh_center_);
     EigenSTL::vector_Vector3d projected_vertices;
-    for (unsigned int t = 0; t < vertex_to_tris[i].size(); ++t)
+    for (unsigned int t : vertex_to_tris[i])
     {
-      const Eigen::Vector4d& plane = mesh_data_->planes_[mesh_data_->plane_for_triangle_[vertex_to_tris[i][t]]];
+      const Eigen::Vector4d& plane = mesh_data_->planes_[mesh_data_->plane_for_triangle_[t]];
       Eigen::Vector3d plane_normal(plane.x(), plane.y(), plane.z());
       double d_scaled_padded =
           scale_ * plane.w() - (1 - scale_) * mesh_data_->mesh_center_.dot(plane_normal) - padding_;
@@ -968,9 +965,9 @@ void bodies::ConvexMesh::computeScaledVerticesFromPlaneProjections()
     else
     {
       Eigen::Vector3d sum(0, 0, 0);
-      for (unsigned int v = 0; v < projected_vertices.size(); ++v)
+      for (const Eigen::Vector3d& vertex : projected_vertices)
       {
-        sum += projected_vertices[v];
+        sum += vertex;
       }
       sum /= projected_vertices.size();
       scaled_vertices_storage_->at(i) = sum;
@@ -1226,8 +1223,8 @@ bodies::BodyVector::~BodyVector()
 
 void bodies::BodyVector::clear()
 {
-  for (unsigned int i = 0; i < bodies_.size(); i++)
-    delete bodies_[i];
+  for (auto& body : bodies_)
+    delete body;
   bodies_.clear();
 }
 
@@ -1267,7 +1264,7 @@ const bodies::Body* bodies::BodyVector::getBody(unsigned int i) const
   if (i >= bodies_.size())
   {
     CONSOLE_BRIDGE_logError("There is no body at index %u", i);
-    return NULL;
+    return nullptr;
   }
   else
     return bodies_[i];

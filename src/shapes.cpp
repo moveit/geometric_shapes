@@ -149,11 +149,11 @@ Mesh::Mesh() : Shape()
 {
   type = MESH;
   vertex_count = 0;
-  vertices = NULL;
+  vertices = nullptr;
   triangle_count = 0;
-  triangles = NULL;
-  triangle_normals = NULL;
-  vertex_normals = NULL;
+  triangles = nullptr;
+  triangle_normals = nullptr;
+  vertex_normals = nullptr;
 }
 
 Mesh::Mesh(unsigned int v_count, unsigned int t_count) : Shape()
@@ -236,7 +236,7 @@ Mesh* Mesh::clone() const
   else
   {
     delete[] dest->vertex_normals;
-    dest->vertex_normals = NULL;
+    dest->vertex_normals = nullptr;
   }
   n = 3 * triangle_count;
   for (unsigned int i = 0; i < n; ++i)
@@ -247,7 +247,7 @@ Mesh* Mesh::clone() const
   else
   {
     delete[] dest->triangle_normals;
-    dest->triangle_normals = NULL;
+    dest->triangle_normals = nullptr;
   }
   return dest;
 }

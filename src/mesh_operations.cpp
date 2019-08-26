@@ -102,8 +102,8 @@ struct ltLocalVertexIndex
     return p1.index < p2.index;
   }
 };
-}
-}
+}  // namespace
+}  // namespace detail
 
 Mesh* createMeshFromVertices(const EigenSTL::vector_Vector3d& vertices, const std::vector<unsigned int>& triangles)
 {
@@ -126,7 +126,7 @@ Mesh* createMeshFromVertices(const EigenSTL::vector_Vector3d& vertices, const st
 Mesh* createMeshFromVertices(const EigenSTL::vector_Vector3d& source)
 {
   if (source.size() < 3)
-    return NULL;
+    return nullptr;
 
   if (source.size() % 3 != 0)
     CONSOLE_BRIDGE_logError("The number of vertices to construct a mesh from is not divisible by 3. Probably "
@@ -217,12 +217,12 @@ Mesh* createMeshFromBinary(const char* buffer, std::size_t size, const Eigen::Ve
   if (!buffer || size < 1)
   {
     CONSOLE_BRIDGE_logWarn("Cannot construct mesh from empty binary buffer");
-    return NULL;
+    return nullptr;
   }
 
   // try to get a file extension
   std::string hint;
-  std::size_t pos = assimp_hint.find_last_of(".");
+  std::size_t pos = assimp_hint.find_last_of('.');
   if (pos != std::string::npos)
   {
     hint = assimp_hint.substr(pos + 1);
@@ -248,7 +248,7 @@ Mesh* createMeshFromBinary(const char* buffer, std::size_t size, const Eigen::Ve
                                                          aiProcess_SortByPType | aiProcess_RemoveComponent,
                                                      hint.c_str());
   if (!scene)
-    return NULL;
+    return nullptr;
 
   // Assimp enforces Y_UP convention by rotating models with different conventions.
   // However, that behaviour is confusing and doesn't match the ROS convention
@@ -275,13 +275,13 @@ Mesh* createMeshFromResource(const std::string& resource, const Eigen::Vector3d&
   catch (resource_retriever::Exception& e)
   {
     CONSOLE_BRIDGE_logError("%s", e.what());
-    return NULL;
+    return nullptr;
   }
 
   if (res.size == 0)
   {
     CONSOLE_BRIDGE_logWarn("Retrieved empty mesh for resource '%s'", resource.c_str());
-    return NULL;
+    return nullptr;
   }
 
   Mesh* m = createMeshFromBinary(reinterpret_cast<const char*>(res.data.get()), res.size, scale, resource);
@@ -323,7 +323,7 @@ void extractMeshData(const aiScene* scene, const aiNode* node, const aiMatrix4x4
   for (unsigned int n = 0; n < node->mNumChildren; ++n)
     extractMeshData(scene, node->mChildren[n], transform, scale, vertices, triangles);
 }
-}
+}  // namespace
 
 Mesh* createMeshFromAsset(const aiScene* scene, const std::string& resource_name)
 {
@@ -336,7 +336,7 @@ Mesh* createMeshFromAsset(const aiScene* scene, const Eigen::Vector3d& scale, co
   if (!scene->HasMeshes())
   {
     CONSOLE_BRIDGE_logWarn("Assimp reports scene in %s has no meshes", resource_name.c_str());
-    return NULL;
+    return nullptr;
   }
   EigenSTL::vector_Vector3d vertices;
   std::vector<unsigned int> triangles;
@@ -344,12 +344,12 @@ Mesh* createMeshFromAsset(const aiScene* scene, const Eigen::Vector3d& scale, co
   if (vertices.empty())
   {
     CONSOLE_BRIDGE_logWarn("There are no vertices in the scene %s", resource_name.c_str());
-    return NULL;
+    return nullptr;
   }
   if (triangles.empty())
   {
     CONSOLE_BRIDGE_logWarn("There are no triangles in the scene %s", resource_name.c_str());
-    return NULL;
+    return nullptr;
   }
 
   return createMeshFromVertices(vertices, triangles);
@@ -367,7 +367,7 @@ Mesh* createMeshFromShape(const Shape* shape)
     return shapes::createMeshFromShape(static_cast<const shapes::Cone&>(*shape));
   else
     CONSOLE_BRIDGE_logError("Conversion of shape of type '%s' to a mesh is not known", shapeStringName(shape).c_str());
-  return NULL;
+  return nullptr;
 }
 
 Mesh* createMeshFromShape(const Box& box)
@@ -641,7 +641,7 @@ inline void writeFloatToSTL(char*& ptr, double datad)
   memcpy(ptr, &data, sizeof(float));
   ptr += sizeof(float);
 }
-}
+}  // namespace
 
 void writeSTLBinary(const Mesh* mesh, std::vector<char>& buffer)
 {
@@ -683,4 +683,4 @@ void writeSTLBinary(const Mesh* mesh, std::vector<char>& buffer)
     ptr += 2;
   }
 }
-}
+}  // namespace shapes

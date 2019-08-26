@@ -510,7 +510,7 @@ TEST(MeshPointContainment, Basic)
   // clang-format off
   shapes::Mesh *ms = shapes::createMeshFromResource("file://" +
     (boost::filesystem::path(TEST_RESOURCES_DIR) / "/box.dae").string());
-  ASSERT_TRUE(ms != NULL);
+  ASSERT_TRUE(ms != nullptr);
   bodies::ConvexMesh cubeMesh(ms);
 
   // zero
@@ -576,9 +576,9 @@ TEST(MeshPointContainment, Pr2Forearm)
 {
   shapes::Mesh* ms = shapes::createMeshFromResource(
       "file://" + (boost::filesystem::path(TEST_RESOURCES_DIR) / "/forearm_roll.stl").string());
-  ASSERT_TRUE(ms != NULL);
+  ASSERT_TRUE(ms != nullptr);
   bodies::Body* m = new bodies::ConvexMesh(ms);
-  ASSERT_TRUE(m != NULL);
+  ASSERT_TRUE(m != nullptr);
   Eigen::Isometry3d t(Eigen::Isometry3d::Identity());
   t.translation().x() = 1.0;
   EXPECT_FALSE(m->cloneAt(t)->containsPoint(-1.0, 0.0, 0.0));

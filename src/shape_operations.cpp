@@ -62,7 +62,7 @@ Shape* constructShapeFromMsg(const shape_msgs::Mesh& shape_msg)
   if (shape_msg.triangles.empty() || shape_msg.vertices.empty())
   {
     CONSOLE_BRIDGE_logWarn("Mesh definition is empty");
-    return NULL;
+    return nullptr;
   }
   else
   {
@@ -83,7 +83,7 @@ Shape* constructShapeFromMsg(const shape_msgs::Mesh& shape_msg)
 
 Shape* constructShapeFromMsg(const shape_msgs::SolidPrimitive& shape_msg)
 {
-  Shape* shape = NULL;
+  Shape* shape = nullptr;
   if (shape_msg.type == shape_msgs::SolidPrimitive::SPHERE)
   {
     if (shape_msg.dimensions.size() > shape_msgs::SolidPrimitive::SPHERE_RADIUS)
@@ -112,7 +112,7 @@ Shape* constructShapeFromMsg(const shape_msgs::SolidPrimitive& shape_msg)
       shape = new Cone(shape_msg.dimensions[shape_msgs::SolidPrimitive::CONE_RADIUS],
                        shape_msg.dimensions[shape_msgs::SolidPrimitive::CONE_HEIGHT]);
   }
-  if (shape == NULL)
+  if (shape == nullptr)
     CONSOLE_BRIDGE_logError("Unable to construct shape corresponding to shape_msg of type %d", (int)shape_msg.type);
 
   return shape;
@@ -138,7 +138,7 @@ public:
     return constructShapeFromMsg(shape_msg);
   }
 };
-}
+}  // namespace
 
 Shape* constructShapeFromMsg(const ShapeMsg& shape_msg)
 {
@@ -174,7 +174,7 @@ private:
   bool use_mesh_triangle_list_;
   visualization_msgs::Marker* marker_;
 };
-}
+}  // namespace
 
 bool constructMarkerFromShape(const Shape* shape, visualization_msgs::Marker& marker, bool use_mesh_triangle_list)
 {
@@ -224,7 +224,7 @@ public:
     return e;
   }
 };
-}
+}  // namespace
 
 Eigen::Vector3d computeShapeExtents(const ShapeMsg& shape_msg)
 {
@@ -485,7 +485,7 @@ void saveAsText(const Shape* shape, std::ostream& out)
 
 Shape* constructShapeFromText(std::istream& in)
 {
-  Shape* result = NULL;
+  Shape* result = nullptr;
   if (in.good() && !in.eof())
   {
     std::string type;
@@ -577,4 +577,4 @@ const std::string& shapeStringName(const Shape* shape)
     return empty;
   }
 }
-}
+}  // namespace shapes

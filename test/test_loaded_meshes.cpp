@@ -146,7 +146,7 @@ TEST_F(CompareMeshVsPrimitive, IntersectsRay)
       //    }
 
       EXPECT_EQ(vi1.size(), vi2.size());
-      if (vi1.size() > 0 && vi2.size() > 0)
+      if (!vi1.empty() && !vi2.empty())
       {
         EXPECT_NEAR(vi1[0].x(), vi2[0].x(), 0.01);
         EXPECT_NEAR(vi1[0].y(), vi2[0].y(), 0.01);

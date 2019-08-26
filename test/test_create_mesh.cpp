@@ -43,7 +43,7 @@ namespace
 {
 void assertMesh(shapes::Mesh* mesh)
 {
-  ASSERT_TRUE(mesh != NULL);
+  ASSERT_TRUE(mesh != nullptr);
   ASSERT_EQ(3, mesh->vertex_count);
   ASSERT_EQ(1, mesh->triangle_count);
 
@@ -67,7 +67,7 @@ shapes::Mesh* loadMesh(const std::string& mesh)
   std::string path = "file://" + std::string(TEST_RESOURCES_DIR) + "/" + mesh;
   return shapes::createMeshFromResource(path);
 }
-}
+}  // namespace
 
 TEST(CreateMesh, stl)
 {
