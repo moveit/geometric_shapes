@@ -153,13 +153,13 @@ void bodies::Sphere::updateInternalData()
 
 std::shared_ptr<bodies::Body> bodies::Sphere::cloneAt(const Eigen::Isometry3d& pose, double padding, double scale) const
 {
-  Sphere* s = new Sphere();
+  auto s = std::make_shared<Sphere>();
   s->radius_ = radius_;
   s->padding_ = padding;
   s->scale_ = scale;
   s->pose_ = pose;
   s->updateInternalData();
-  return std::shared_ptr<Body>(s);
+  return s;
 }
 
 double bodies::Sphere::computeVolume() const
@@ -344,14 +344,14 @@ bool bodies::Cylinder::samplePointInside(random_numbers::RandomNumberGenerator& 
 std::shared_ptr<bodies::Body> bodies::Cylinder::cloneAt(const Eigen::Isometry3d& pose, double padding,
                                                         double scale) const
 {
-  Cylinder* c = new Cylinder();
+  auto c =std::make_shared<Cylinder>();
   c->length_ = length_;
   c->radius_ = radius_;
   c->padding_ = padding;
   c->scale_ = scale;
   c->pose_ = pose;
   c->updateInternalData();
-  return std::shared_ptr<Body>(c);
+  return c;
 }
 
 double bodies::Cylinder::computeVolume() const
@@ -558,7 +558,7 @@ void bodies::Box::updateInternalData()
 
 std::shared_ptr<bodies::Body> bodies::Box::cloneAt(const Eigen::Isometry3d& pose, double padding, double scale) const
 {
-  Box* b = new Box();
+  auto b = std::make_shared<Box>();
   b->length_ = length_;
   b->width_ = width_;
   b->height_ = height_;
@@ -566,7 +566,7 @@ std::shared_ptr<bodies::Body> bodies::Box::cloneAt(const Eigen::Isometry3d& pose
   b->scale_ = scale;
   b->pose_ = pose;
   b->updateInternalData();
-  return std::shared_ptr<Body>(b);
+  return b;
 }
 
 double bodies::Box::computeVolume() const
@@ -733,7 +733,7 @@ void bodies::ConvexMesh::correctVertexOrderFromPlanes()
 
 void bodies::ConvexMesh::useDimensions(const shapes::Shape* shape)
 {
-  mesh_data_.reset(new MeshData());
+  mesh_data_ = std::make_shared<MeshData>();
   const shapes::Mesh* mesh = static_cast<const shapes::Mesh*>(shape);
 
   double maxX = -std::numeric_limits<double>::infinity(), maxY = -std::numeric_limits<double>::infinity(),
@@ -1038,13 +1038,13 @@ const EigenSTL::vector_Vector4d& bodies::ConvexMesh::getPlanes() const
 std::shared_ptr<bodies::Body> bodies::ConvexMesh::cloneAt(const Eigen::Isometry3d& pose, double padding,
                                                           double scale) const
 {
-  ConvexMesh* m = new ConvexMesh();
+  auto m = std::make_shared<ConvexMesh>();
   m->mesh_data_ = mesh_data_;
   m->padding_ = padding;
   m->scale_ = scale;
   m->pose_ = pose;
   m->updateInternalData();
-  return std::shared_ptr<Body>(m);
+  return m;
 }
 
 void bodies::ConvexMesh::computeBoundingSphere(BoundingSphere& sphere) const
