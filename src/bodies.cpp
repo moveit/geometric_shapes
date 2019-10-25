@@ -344,7 +344,7 @@ bool bodies::Cylinder::samplePointInside(random_numbers::RandomNumberGenerator& 
 std::shared_ptr<bodies::Body> bodies::Cylinder::cloneAt(const Eigen::Isometry3d& pose, double padding,
                                                         double scale) const
 {
-  auto c =std::make_shared<Cylinder>();
+  auto c = std::make_shared<Cylinder>();
   c->length_ = length_;
   c->radius_ = radius_;
   c->padding_ = padding;
