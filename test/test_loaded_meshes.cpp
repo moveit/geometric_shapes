@@ -97,9 +97,6 @@ TEST_F(CompareMeshVsPrimitive, ContainsPoint)
   // Any point inside a mesh must be inside the other too
   for (size_t i = 0; i < shape_meshes.size(); ++i)
   {
-    shapes::Mesh* shape_ms = shape_meshes[i];
-    shapes::Mesh* loaded_ms = loaded_meshes[i];
-
     bodies::Body* shape_cms = shape_convex_meshes[i];
     bodies::Body* loaded_cms = loaded_convex_meshes[i];
 
@@ -122,9 +119,6 @@ TEST_F(CompareMeshVsPrimitive, IntersectsRay)
   // Random rays must intersect both meshes nearly at the same points
   for (size_t i = 0; i < shape_meshes.size(); ++i)
   {
-    shapes::Mesh* shape_ms = shape_meshes[i];
-    shapes::Mesh* loaded_ms = loaded_meshes[i];
-
     bodies::Body* shape_cms = shape_convex_meshes[i];
     bodies::Body* loaded_cms = loaded_convex_meshes[i];
 
@@ -167,9 +161,6 @@ TEST_F(CompareMeshVsPrimitive, BoundingSphere)
   {
     shapes::Mesh* shape_ms = shape_meshes[i];
     shapes::Mesh* loaded_ms = loaded_meshes[i];
-
-    bodies::Body* shape_cms = shape_convex_meshes[i];
-    bodies::Body* loaded_cms = loaded_convex_meshes[i];
 
     shapes::Sphere shape(1.0);
     Eigen::Vector3d center1, center2;

@@ -241,7 +241,6 @@ TEST(BoxPointContainment, Basic)
   EXPECT_FALSE(box.containsPoint(Eigen::Vector3d(0.00, 1.01, 1.01)));
 
   // near three-axis maximum
-  const double sq3 = sqrt(3) / 3;
   EXPECT_TRUE( box.containsPoint(Eigen::Vector3d(0.99, 0.99, 0.99)));
   EXPECT_SURF( box.containsPoint(Eigen::Vector3d(1.00, 1.00, 1.00)));
   EXPECT_FALSE(box.containsPoint(Eigen::Vector3d(1.01, 1.01, 1.01)));
@@ -541,7 +540,6 @@ TEST(MeshPointContainment, Basic)
   EXPECT_FALSE(cubeMesh.containsPoint(Eigen::Vector3d(0.00, 1.01, 1.01)));
 
   // near three-axis maximum
-  const double sq3 = sqrt(3) / 3;
   EXPECT_TRUE( cubeMesh.containsPoint(Eigen::Vector3d(0.99, 0.99, 0.99)));
   EXPECT_SURF( cubeMesh.containsPoint(Eigen::Vector3d(1.00, 1.00, 1.00)));
   EXPECT_FALSE(cubeMesh.containsPoint(Eigen::Vector3d(1.01, 1.01, 1.01)));
