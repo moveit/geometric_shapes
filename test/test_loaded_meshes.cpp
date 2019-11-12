@@ -68,7 +68,7 @@ public:
 
   void TearDown() override
   {
-    for (int i = 0; i < shape_meshes.size(); ++i)
+    for (size_t i = 0; i < shape_meshes.size(); ++i)
     {
       delete shape_meshes[i];
       delete loaded_meshes[i];
@@ -95,7 +95,7 @@ protected:
 TEST_F(CompareMeshVsPrimitive, ContainsPoint)
 {
   // Any point inside a mesh must be inside the other too
-  for (int i = 0; i < shape_meshes.size(); ++i)
+  for (size_t i = 0; i < shape_meshes.size(); ++i)
   {
     shapes::Mesh* shape_ms = shape_meshes[i];
     shapes::Mesh* loaded_ms = loaded_meshes[i];
@@ -120,7 +120,7 @@ TEST_F(CompareMeshVsPrimitive, ContainsPoint)
 TEST_F(CompareMeshVsPrimitive, IntersectsRay)
 {
   // Random rays must intersect both meshes nearly at the same points
-  for (int i = 0; i < shape_meshes.size(); ++i)
+  for (size_t i = 0; i < shape_meshes.size(); ++i)
   {
     shapes::Mesh* shape_ms = shape_meshes[i];
     shapes::Mesh* loaded_ms = loaded_meshes[i];
@@ -163,7 +163,7 @@ TEST_F(CompareMeshVsPrimitive, IntersectsRay)
 TEST_F(CompareMeshVsPrimitive, BoundingSphere)
 {
   // Bounding spheres must be nearly identical
-  for (int i = 0; i < shape_meshes.size(); ++i)
+  for (size_t i = 0; i < shape_meshes.size(); ++i)
   {
     shapes::Mesh* shape_ms = shape_meshes[i];
     shapes::Mesh* loaded_ms = loaded_meshes[i];
