@@ -18,7 +18,7 @@ env:
     - CXXFLAGS="-Wall -Wextra -Wwrite-strings -Wunreachable-code -Wpointer-arith -Wredundant-decls -Wno-unused-parameter"
     - WARNINGS_OK=false
   matrix:
-    - TEST="clang-format"
+    - TEST="clang-format, catkin_lint"
     - ROS_DISTRO=kinetic
     - ROS_DISTRO=melodic
 
