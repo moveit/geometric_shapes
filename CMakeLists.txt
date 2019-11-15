@@ -8,13 +8,13 @@ endif()
 
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/")
 
-if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
+if(NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
   message("${PROJECT_NAME}: You did not request a specific build type: Choosing 'Release' for maximum performance")
   set(CMAKE_BUILD_TYPE Release)
 endif()
 
 find_package(ASSIMP QUIET)
-if (NOT ASSIMP_FOUND)
+if(NOT ASSIMP_FOUND)
   find_package(PkgConfig REQUIRED)
   # assimp is required, so REQUIRE the second attempt
   pkg_check_modules(ASSIMP_PC REQUIRED assimp)
@@ -40,8 +40,8 @@ find_package(resource_retriever REQUIRED)
 find_package(shape_msgs REQUIRED)
 find_package(visualization_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
-find_package(Qhull REQUIRED)
-if (HAVE_QHULL_2011)
+find_package(QHULL REQUIRED)
+if(HAVE_QHULL_2011)
   add_definitions(-DGEOMETRIC_SHAPES_HAVE_QHULL_2011)
 endif()
 
@@ -58,35 +58,35 @@ add_library(${PROJECT_NAME} SHARED
   src/shapes.cpp
 )
 ament_target_dependencies(${PROJECT_NAME}
-    Boost
-    Eigen3
-    rclcpp
-    shape_msgs
-    visualization_msgs
-    random_numbers
-    eigen_stl_containers
-    geometry_msgs
-    resource_retriever
-    console_bridge
-    ASSIMP
-    QHULL
+  Boost
+  Eigen3
+  rclcpp
+  shape_msgs
+  visualization_msgs
+  random_numbers
+  eigen_stl_containers
+  geometry_msgs
+  resource_retriever
+  console_bridge
+  ASSIMP
+  QHULL
 )
 
 ament_export_libraries(${PROJECT_NAME})
 ament_export_include_directories(include)
 ament_export_dependencies(
-	Eigen3
-	eigen3_cmake_module  # export Eigen3 headers
-	Boost
-	ASSIMP
-	random_numbers
-	eigen_stl_containers
-	shape_msgs
-	visualization_msgs
+  Eigen3
+  eigen3_cmake_module  # export Eigen3 headers
+  Boost
+  ASSIMP
+  random_numbers
+  eigen_stl_containers
+  shape_msgs
+  visualization_msgs
 )
 target_link_libraries(${PROJECT_NAME}
 # resource_retriever doesn't support ament export hook (fixed in 2.1.1)
-   resource_retriever::resource_retriever
+  resource_retriever::resource_retriever
 )
 
 if(BUILD_TESTING)
