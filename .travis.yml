@@ -13,23 +13,21 @@ notifications:
       - 130s@2000.jukuin.keio.ac.jp
 env:
   global:
-    - ROS_DISTRO=melodic
+    - ROS_DISTRO=dashing
     - ROS_REPO=ros
     - CXXFLAGS="-Wall -Wextra -Wwrite-strings -Wunreachable-code -Wpointer-arith -Wredundant-decls -Wno-unused-parameter"
     - WARNINGS_OK=false
   matrix:
-    - TEST="clang-format, catkin_lint"
-    - ROS_DISTRO=kinetic
-    - ROS_DISTRO=melodic
+    - TEST="clang-format, ament_lint"
+    - ROS_DISTRO=dashing
 
 matrix:
   include:
     - compiler: clang
       env: TEST=clang-tidy-fix
-           CXXFLAGS="-Wall -Wextra -Wwrite-strings -Wunreachable-code -Wpointer-arith -Wredundant-decls -Wno-unused-parameter"
 
 before_script:
-  - git clone -q --depth=1 https://github.com/ros-planning/moveit_ci.git .moveit_ci
+  - git clone -q -b ros2 --depth=1 https://github.com/ros-planning/moveit_ci.git .moveit_ci
 
 script:
   - .moveit_ci/travis.sh
