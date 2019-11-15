@@ -44,12 +44,12 @@ namespace
 void assertMesh(shapes::Mesh* mesh)
 {
   ASSERT_TRUE(mesh != nullptr);
-  ASSERT_EQ((size_t)3, mesh->vertex_count);
-  ASSERT_EQ((size_t)1, mesh->triangle_count);
+  ASSERT_EQ(3u, mesh->vertex_count);
+  ASSERT_EQ(1u, mesh->triangle_count);
 
-  ASSERT_EQ((size_t)0, mesh->triangles[0]);
-  ASSERT_EQ((size_t)1, mesh->triangles[1]);
-  ASSERT_EQ((size_t)2, mesh->triangles[2]);
+  ASSERT_EQ(0u, mesh->triangles[0]);
+  ASSERT_EQ(1u, mesh->triangles[1]);
+  ASSERT_EQ(2u, mesh->triangles[2]);
 
   ASSERT_FLOAT_EQ(0, mesh->vertices[0 + 0]);
   ASSERT_FLOAT_EQ(0, mesh->vertices[0 + 1]);
