@@ -630,14 +630,8 @@ Mesh* createMeshFromShape(const Cone& cone)
 
 namespace
 {
-inline void writeFloatToSTL(char*& ptr, float data)
+inline void writeFloatToSTL(char*& ptr, const float data)
 {
-  memcpy(ptr, &data, sizeof(float));
-  ptr += sizeof(float);
-}
-inline void writeFloatToSTL(char*& ptr, double datad)
-{
-  float data = datad;
   memcpy(ptr, &data, sizeof(float));
   ptr += sizeof(float);
 }
