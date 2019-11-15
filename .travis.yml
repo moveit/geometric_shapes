@@ -17,7 +17,7 @@ env:
     - ROS_REPO=ros
     - CXXFLAGS="-Wall -Wextra -Wwrite-strings -Wunreachable-code -Wpointer-arith -Wredundant-decls -Wno-unused-parameter -Wno-unused-but-set-parameter -Wno-unused-function"
   matrix:
-    - TEST="clang-format"
+    - TEST="clang-format, catkin_lint"
     - ROS_DISTRO=kinetic
     - ROS_DISTRO=melodic
 
