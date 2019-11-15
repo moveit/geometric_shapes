@@ -155,7 +155,7 @@ public:
   {
   }
 
-  void operator()(const shape_msgs::Plane& shape_msg) const
+  void operator()(const shape_msgs::Plane& /* shape_msg */) const
   {
     throw std::runtime_error("No visual markers can be constructed for planes");
   }
@@ -202,7 +202,7 @@ namespace
 class ShapeVisitorComputeExtents : public boost::static_visitor<Eigen::Vector3d>
 {
 public:
-  Eigen::Vector3d operator()(const shape_msgs::Plane& shape_msg) const
+  Eigen::Vector3d operator()(const shape_msgs::Plane& /* shape_msg */) const
   {
     Eigen::Vector3d e(0.0, 0.0, 0.0);
     return e;

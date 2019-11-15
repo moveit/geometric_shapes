@@ -128,7 +128,7 @@ bool bodies::Body::samplePointInside(random_numbers::RandomNumberGenerator& rng,
   return false;
 }
 
-bool bodies::Sphere::containsPoint(const Eigen::Vector3d& p, bool verbose) const
+bool bodies::Sphere::containsPoint(const Eigen::Vector3d& p, bool /* verbose */) const
 {
   return (center_ - p).squaredNorm() <= radius2_;
 }
@@ -272,7 +272,7 @@ bool bodies::Sphere::intersectsRay(const Eigen::Vector3d& origin, const Eigen::V
   return result;
 }
 
-bool bodies::Cylinder::containsPoint(const Eigen::Vector3d& p, bool verbose) const
+bool bodies::Cylinder::containsPoint(const Eigen::Vector3d& p, bool /* verbose */) const
 {
   Eigen::Vector3d v = p - center_;
   double pH = v.dot(normalH_);
@@ -325,7 +325,7 @@ void bodies::Cylinder::updateInternalData()
   d2_ = tmp - length2_;
 }
 
-bool bodies::Cylinder::samplePointInside(random_numbers::RandomNumberGenerator& rng, unsigned int max_attempts,
+bool bodies::Cylinder::samplePointInside(random_numbers::RandomNumberGenerator& rng, unsigned int /* max_attempts */,
                                          Eigen::Vector3d& result)
 {
   // sample a point on the base disc of the cylinder
@@ -502,7 +502,7 @@ bool bodies::Box::samplePointInside(random_numbers::RandomNumberGenerator& rng, 
   return true;
 }
 
-bool bodies::Box::containsPoint(const Eigen::Vector3d& p, bool verbose) const
+bool bodies::Box::containsPoint(const Eigen::Vector3d& p, bool /* verbose */) const
 {
   Eigen::Vector3d v = p - center_;
   double pL = v.dot(normalL_);
@@ -694,7 +694,7 @@ bool bodies::Box::intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vect
   return true;
 }
 
-bool bodies::ConvexMesh::containsPoint(const Eigen::Vector3d& p, bool verbose) const
+bool bodies::ConvexMesh::containsPoint(const Eigen::Vector3d& p, bool /* verbose */) const
 {
   if (!mesh_data_)
     return false;

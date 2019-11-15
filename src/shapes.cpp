@@ -262,12 +262,12 @@ OcTree* OcTree::clone() const
   return new OcTree(octree);
 }
 
-void OcTree::scaleAndPadd(double scale, double padd)
+void OcTree::scaleAndPadd(double /* scale */, double /* padd */)
 {
   CONSOLE_BRIDGE_logWarn("OcTrees cannot be scaled or padded");
 }
 
-void Plane::scaleAndPadd(double scale, double padding)
+void Plane::scaleAndPadd(double /* scale */, double /* padd */)
 {
   CONSOLE_BRIDGE_logWarn("Planes cannot be scaled or padded");
 }
