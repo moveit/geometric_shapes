@@ -1,0 +1,15 @@
+repositories:
+  geometric_shapes:
+    type: git
+    url: https://github.com/ros-planning/geometric_shapes
+    version: dashing-devel
+# TODO(henningkayser): use upstream package once https://github.com/ros-planning/random_numbers/pull/18 is merged
+  random_numbers:
+    type: git
+    url: https://github.com/PickNikRobotics/random_numbers
+    version: ros2-devel
+# TODO(henningkayser): merge dependencies below into upstream packages
+  octomap:
+    type: git
+    url: https://github.com/PickNikRobotics/octomap
+    version: ros2
