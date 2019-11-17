@@ -43,8 +43,7 @@ void geometric_shapes::constructMarkerFromShape(const shape_msgs::SolidPrimitive
   switch (shape_msg.type)
   {
     case shape_msgs::SolidPrimitive::SPHERE:
-      if (shape_msg.dimensions.size() <
-          geometric_shapes::SolidPrimitiveDimCount<shape_msgs::SolidPrimitive::SPHERE>::value)
+      if (shape_msg.dimensions.size() < geometric_shapes::solidPrimitiveDimCount<shape_msgs::SolidPrimitive::SPHERE>())
         throw std::runtime_error("Insufficient dimensions in sphere definition");
       else
       {
@@ -53,8 +52,7 @@ void geometric_shapes::constructMarkerFromShape(const shape_msgs::SolidPrimitive
       }
       break;
     case shape_msgs::SolidPrimitive::BOX:
-      if (shape_msg.dimensions.size() <
-          geometric_shapes::SolidPrimitiveDimCount<shape_msgs::SolidPrimitive::BOX>::value)
+      if (shape_msg.dimensions.size() < geometric_shapes::solidPrimitiveDimCount<shape_msgs::SolidPrimitive::BOX>())
         throw std::runtime_error("Insufficient dimensions in box definition");
       else
       {
@@ -65,8 +63,7 @@ void geometric_shapes::constructMarkerFromShape(const shape_msgs::SolidPrimitive
       }
       break;
     case shape_msgs::SolidPrimitive::CONE:
-      if (shape_msg.dimensions.size() <
-          geometric_shapes::SolidPrimitiveDimCount<shape_msgs::SolidPrimitive::CONE>::value)
+      if (shape_msg.dimensions.size() < geometric_shapes::solidPrimitiveDimCount<shape_msgs::SolidPrimitive::CONE>())
         throw std::runtime_error("Insufficient dimensions in cone definition");
       else
       {
@@ -79,7 +76,7 @@ void geometric_shapes::constructMarkerFromShape(const shape_msgs::SolidPrimitive
       break;
     case shape_msgs::SolidPrimitive::CYLINDER:
       if (shape_msg.dimensions.size() <
-          geometric_shapes::SolidPrimitiveDimCount<shape_msgs::SolidPrimitive::CYLINDER>::value)
+          geometric_shapes::solidPrimitiveDimCount<shape_msgs::SolidPrimitive::CYLINDER>())
         throw std::runtime_error("Insufficient dimensions in cylinder definition");
       else
       {
