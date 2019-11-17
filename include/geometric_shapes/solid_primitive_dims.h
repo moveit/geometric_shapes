@@ -38,49 +38,31 @@
 
 namespace geometric_shapes
 {
-/** \brief The number of dimensions of a particular shape */
+/** Get the number of dimensions of a particular shape */
 template <int>
-struct SolidPrimitiveDimCount
-{
-  enum
-  {
-    value = 0u
-  };
-};
+constexpr unsigned int solidPrimitiveDimCount();
 
 template <>
-struct SolidPrimitiveDimCount<shape_msgs::SolidPrimitive::SPHERE>
+constexpr unsigned int solidPrimitiveDimCount<shape_msgs::SolidPrimitive::SPHERE>()
 {
-  enum
-  {
-    value = 1u
-  };
-};
+  return 1u;
+}
 
 template <>
-struct SolidPrimitiveDimCount<shape_msgs::SolidPrimitive::BOX>
+constexpr unsigned int solidPrimitiveDimCount<shape_msgs::SolidPrimitive::BOX>()
 {
-  enum
-  {
-    value = 3u
-  };
-};
+  return 3u;
+}
 
 template <>
-struct SolidPrimitiveDimCount<shape_msgs::SolidPrimitive::CONE>
+constexpr unsigned int solidPrimitiveDimCount<shape_msgs::SolidPrimitive::CYLINDER>()
 {
-  enum
-  {
-    value = 2u
-  };
-};
+  return 2u;
+}
 
 template <>
-struct SolidPrimitiveDimCount<shape_msgs::SolidPrimitive::CYLINDER>
+constexpr unsigned int solidPrimitiveDimCount<shape_msgs::SolidPrimitive::CONE>()
 {
-  enum
-  {
-    value = 2u
-  };
-};
+  return 2u;
+}
 }
