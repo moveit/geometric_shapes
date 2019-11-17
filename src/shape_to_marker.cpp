@@ -33,6 +33,7 @@
  *********************************************************************/
 
 #include <geometric_shapes/shape_to_marker.h>
+#include <geometric_shapes/solid_primitive_dims.h>
 #include <sstream>
 #include <stdexcept>
 
@@ -42,7 +43,8 @@ void geometric_shapes::constructMarkerFromShape(const shape_msgs::SolidPrimitive
   switch (shape_msg.type)
   {
     case shape_msgs::SolidPrimitive::SPHERE:
-      if (shape_msg.dimensions.size() <= shape_msgs::SolidPrimitive::SPHERE_RADIUS)
+      if (shape_msg.dimensions.size() <
+          geometric_shapes::SolidPrimitiveDimCount<shape_msgs::SolidPrimitive::SPHERE>::value)
         throw std::runtime_error("Insufficient dimensions in sphere definition");
       else
       {
@@ -51,9 +53,8 @@ void geometric_shapes::constructMarkerFromShape(const shape_msgs::SolidPrimitive
       }
       break;
     case shape_msgs::SolidPrimitive::BOX:
-      if (shape_msg.dimensions.size() <= shape_msgs::SolidPrimitive::BOX_X ||
-          shape_msg.dimensions.size() <= shape_msgs::SolidPrimitive::BOX_Y ||
-          shape_msg.dimensions.size() <= shape_msgs::SolidPrimitive::BOX_Z)
+      if (shape_msg.dimensions.size() <
+          geometric_shapes::SolidPrimitiveDimCount<shape_msgs::SolidPrimitive::BOX>::value)
         throw std::runtime_error("Insufficient dimensions in box definition");
       else
       {
@@ -64,8 +65,8 @@ void geometric_shapes::constructMarkerFromShape(const shape_msgs::SolidPrimitive
       }
       break;
     case shape_msgs::SolidPrimitive::CONE:
-      if (shape_msg.dimensions.size() <= shape_msgs::SolidPrimitive::CONE_RADIUS ||
-          shape_msg.dimensions.size() <= shape_msgs::SolidPrimitive::CONE_HEIGHT)
+      if (shape_msg.dimensions.size() <
+          geometric_shapes::SolidPrimitiveDimCount<shape_msgs::SolidPrimitive::CONE>::value)
         throw std::runtime_error("Insufficient dimensions in cone definition");
       else
       {
@@ -77,8 +78,8 @@ void geometric_shapes::constructMarkerFromShape(const shape_msgs::SolidPrimitive
       }
       break;
     case shape_msgs::SolidPrimitive::CYLINDER:
-      if (shape_msg.dimensions.size() <= shape_msgs::SolidPrimitive::CYLINDER_RADIUS ||
-          shape_msg.dimensions.size() <= shape_msgs::SolidPrimitive::CYLINDER_HEIGHT)
+      if (shape_msg.dimensions.size() <
+          geometric_shapes::SolidPrimitiveDimCount<shape_msgs::SolidPrimitive::CYLINDER>::value)
         throw std::runtime_error("Insufficient dimensions in cylinder definition");
       else
       {
