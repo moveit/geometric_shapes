@@ -33,6 +33,7 @@
  *********************************************************************/
 
 #include <geometric_shapes/shape_extents.h>
+#include <geometric_shapes/solid_primitive_dims.h>
 #include <limits>
 
 void geometric_shapes::getShapeExtents(const shape_msgs::SolidPrimitive& shape_msg, double& x_extent, double& y_extent,

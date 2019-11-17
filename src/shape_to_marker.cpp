@@ -33,6 +33,7 @@
  *********************************************************************/
 
 #include <geometric_shapes/shape_to_marker.h>
+#include <geometric_shapes/solid_primitive_dims.h>
 #include <sstream>
 #include <stdexcept>
 
