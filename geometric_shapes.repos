@@ -1,0 +1,13 @@
+repositories:
+  geometric_shapes:
+    type: git
+    url: https://github.com/ros-planning/geometric_shapes
+    version: dashing-devel
+  random_numbers:
+    type: git
+    url: https://github.com/ros-planning/random_numbers
+    version: ros2
+  octomap:
+    type: git
+    url: https://github.com/ros-gbp/octomap-release.git
+    version: debian/ros-melodic-octomap_1.9.0-1_bionic
