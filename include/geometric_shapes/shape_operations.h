@@ -37,22 +37,22 @@
 #ifndef GEOMETRIC_SHAPES_SHAPE_OPERATIONS_
 #define GEOMETRIC_SHAPES_SHAPE_OPERATIONS_
 
-#include "geometric_shapes/shapes.h"
-#include "geometric_shapes/shape_messages.h"
-#include "geometric_shapes/mesh_operations.h"
-#include <visualization_msgs/Marker.h>
+#include <geometric_shapes/shapes.h>
+#include <geometric_shapes/shape_messages.h>
+#include <geometric_shapes/mesh_operations.h>
+#include <visualization_msgs/msg/marker.hpp>
 #include <iostream>
 
 namespace shapes
 {
 /** \brief Construct the shape that corresponds to the message. Return NULL on failure. */
-Shape* constructShapeFromMsg(const shape_msgs::SolidPrimitive& shape_msg);
+Shape* constructShapeFromMsg(const shape_msgs::msg::SolidPrimitive& shape_msg);
 
 /** \brief Construct the shape that corresponds to the message. Return NULL on failure. */
-Shape* constructShapeFromMsg(const shape_msgs::Plane& shape_msg);
+Shape* constructShapeFromMsg(const shape_msgs::msg::Plane& shape_msg);
 
 /** \brief Construct the shape that corresponds to the message. Return NULL on failure. */
-Shape* constructShapeFromMsg(const shape_msgs::Mesh& shape_msg);
+Shape* constructShapeFromMsg(const shape_msgs::msg::Mesh& shape_msg);
 
 /** \brief Construct the shape that corresponds to the message. Return NULL on failure. */
 Shape* constructShapeFromMsg(const ShapeMsg& shape_msg);
@@ -61,7 +61,8 @@ Shape* constructShapeFromMsg(const ShapeMsg& shape_msg);
 bool constructMsgFromShape(const Shape* shape, ShapeMsg& shape_msg);
 
 /** \brief Construct the marker that corresponds to the shape. Return false on failure. */
-bool constructMarkerFromShape(const Shape* shape, visualization_msgs::Marker& mk, bool use_mesh_triangle_list = false);
+bool constructMarkerFromShape(const Shape* shape, visualization_msgs::msg::Marker& mk,
+                              bool use_mesh_triangle_list = false);
 
 /** \brief Compute the extents of a shape */
 Eigen::Vector3d computeShapeExtents(const ShapeMsg& shape_msg);
