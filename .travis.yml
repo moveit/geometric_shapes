@@ -18,7 +18,6 @@ env:
     - UPSTREAM_WORKSPACE=geometric_shapes.repos
     - CXXFLAGS="-Wall -Wextra -Wwrite-strings -Wunreachable-code -Wpointer-arith -Wredundant-decls -Wno-unused-parameter"
     - WARNINGS_OK=false
-    - BEFORE_DOCKER_SCRIPT="sed -i 's/travis_run --retry rosdep install/#rosdep install/g' .moveit_ci/travis.sh"
   matrix:
     - TEST="clang-format, ament_lint"
     - ROS_DISTRO=dashing
