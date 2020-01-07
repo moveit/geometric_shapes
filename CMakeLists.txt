@@ -68,7 +68,7 @@ ament_target_dependencies(${PROJECT_NAME}
   geometry_msgs
   resource_retriever
   console_bridge
-  OCTOMAP
+  octomap
   ASSIMP
   QHULL
 )
