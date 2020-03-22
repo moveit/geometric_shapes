@@ -101,6 +101,8 @@ Sphere::Sphere() : Shape()
 
 Sphere::Sphere(double r) : Shape()
 {
+  if (r < 0)
+    throw std::runtime_error("Sphere radius must be non-negative.");
   type = SPHERE;
   radius = r;
 }
@@ -113,6 +115,8 @@ Cylinder::Cylinder() : Shape()
 
 Cylinder::Cylinder(double r, double l) : Shape()
 {
+  if (r < 0 || l < 0)
+    throw std::runtime_error("Cylinder dimensions must be non-negative.");
   type = CYLINDER;
   length = l;
   radius = r;
@@ -126,6 +130,8 @@ Cone::Cone() : Shape()
 
 Cone::Cone(double r, double l) : Shape()
 {
+  if (r < 0 || l < 0)
+    throw std::runtime_error("Cone dimensions must be non-negative.");
   type = CONE;
   length = l;
   radius = r;
@@ -139,6 +145,8 @@ Box::Box() : Shape()
 
 Box::Box(double x, double y, double z) : Shape()
 {
+  if (x < 0 || y < 0 || z < 0)
+    throw std::runtime_error("Box dimensions must be non-negative.");
   type = BOX;
   size[0] = x;
   size[1] = y;
@@ -284,27 +292,43 @@ void Shape::padd(double padding)
 
 void Sphere::scaleAndPadd(double scale, double padding)
 {
-  radius = radius * scale + padding;
+  const auto tmpRadius = radius * scale + padding;
+  if (tmpRadius < 0)
+    throw std::runtime_error("Sphere radius must be non-negative.");
+  radius = tmpRadius;
 }
 
 void Cylinder::scaleAndPadd(double scale, double padding)
 {
-  radius = radius * scale + padding;
-  length = length * scale + 2.0 * padding;
+  const auto tmpRadius = radius * scale + padding;
+  const auto tmpLength = length * scale + 2.0 * padding;
+  if (tmpRadius < 0 || tmpLength < 0)
+    throw std::runtime_error("Cylinder dimensions must be non-negative.");
+  radius = tmpRadius;
+  length = tmpLength;
 }
 
 void Cone::scaleAndPadd(double scale, double padding)
 {
-  radius = radius * scale + padding;
-  length = length * scale + 2.0 * padding;
+  const auto tmpRadius = radius * scale + padding;
+  const auto tmpLength = length * scale + 2.0 * padding;
+  if (tmpRadius < 0 || tmpLength < 0)
+    throw std::runtime_error("Cone dimensions must be non-negative.");
+  radius = tmpRadius;
+  length = tmpLength;
 }
 
 void Box::scaleAndPadd(double scale, double padding)
 {
   double p2 = padding * 2.0;
-  size[0] = size[0] * scale + p2;
-  size[1] = size[1] * scale + p2;
-  size[2] = size[2] * scale + p2;
+  const auto tmpSize0 = size[0] * scale + p2;
+  const auto tmpSize1 = size[1] * scale + p2;
+  const auto tmpSize2 = size[2] * scale + p2;
+  if (tmpSize0 < 0 || tmpSize1 < 0 || tmpSize2 < 0)
+    throw std::runtime_error("Box dimensions must be non-negative.");
+  size[0] = tmpSize0;
+  size[1] = tmpSize1;
+  size[2] = tmpSize2;
 }
 
 void Mesh::scaleAndPadd(double scale, double padding)
