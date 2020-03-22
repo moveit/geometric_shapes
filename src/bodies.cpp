@@ -337,7 +337,7 @@ void bodies::Cylinder::updateInternalData()
   radiusBSqr_ = length2_ * length2_ + radius2_;
   radiusB_ = sqrt(radiusBSqr_);
 
-  Eigen::Matrix3d basis = pose_.rotation();
+  Eigen::Matrix3d basis = pose_.linear();
   normalB1_ = basis.col(0);
   normalB2_ = basis.col(1);
   normalH_ = basis.col(2);
@@ -578,7 +578,7 @@ void bodies::Box::updateInternalData()
   radius2_ = length2_ * length2_ + width2_ * width2_ + height2_ * height2_;
   radiusB_ = sqrt(radius2_);
 
-  Eigen::Matrix3d basis = pose_.rotation();
+  Eigen::Matrix3d basis = pose_.linear();
   normalL_ = basis.col(0);
   normalW_ = basis.col(1);
   normalH_ = basis.col(2);
