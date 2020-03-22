@@ -164,7 +164,8 @@ public:
   /** \brief Check if a ray intersects the body, and find the
       set of intersections, in order, along the ray. A maximum
       number of intersections can be specified as well. If that
-      number is 0, all intersections are returned */
+      number is 0, all intersections are returned.
+      Passing dir as a unit vector will result in faster computation. */
   virtual bool intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vector3d& dir,
                              EigenSTL::vector_Vector3d* intersections = NULL, unsigned int count = 0) const = 0;
 
