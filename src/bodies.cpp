@@ -180,7 +180,7 @@ void bodies::Sphere::computeBoundingCylinder(BoundingCylinder& cylinder) const
 {
   cylinder.pose = pose_;
   cylinder.radius = radiusU_;
-  cylinder.length = radiusU_;
+  cylinder.length = 2.0 * radiusU_;
 }
 
 void bodies::Sphere::computeBoundingBox(bodies::AABB& bbox) const
