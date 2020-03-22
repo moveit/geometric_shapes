@@ -1017,9 +1017,8 @@ void bodies::ConvexMesh::updateInternalData()
   Eigen::Isometry3d pose = pose_;
   pose.translation() = Eigen::Vector3d(pose_ * mesh_data_->box_offset_);
 
-  std::unique_ptr<shapes::Box> box_shape(
-      new shapes::Box(mesh_data_->box_size_.x(), mesh_data_->box_size_.y(), mesh_data_->box_size_.z()));
-  bounding_box_.setDimensions(box_shape.get());
+  shapes::Box box_shape(mesh_data_->box_size_.x(), mesh_data_->box_size_.y(), mesh_data_->box_size_.z());
+  bounding_box_.setDimensions(&box_shape);
   bounding_box_.setPose(pose);
   bounding_box_.setPadding(padding_);
   bounding_box_.setScale(scale_);
