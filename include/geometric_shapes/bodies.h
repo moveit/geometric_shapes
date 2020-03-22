@@ -104,11 +104,24 @@ public:
     return type_;
   }
 
+  /**
+   * \brief If the dimension of the body should be scaled, this method sets the scale.
+   * \note This is the dirty version of the function which does not update internal data that depend on the scale.
+   *       In the general case, you should call setScale() instead. Only call this function if you have a series of
+   *       calls like setScale/setPadding/setPose/setDimensions and you want to avoid the overhead of updating the
+   *       internal structures after each call. When you are finished with the batch, call updateInternalData().
+   * \param scale The scale to set. 1.0 means no scaling.
+   */
+  void setScaleDirty(double scale)
+  {
+    scale_ = scale;
+  }
+
   /** \brief If the dimension of the body should be scaled, this
       method sets the scale. Default is 1.0 */
   void setScale(double scale)
   {
-    scale_ = scale;
+    setScaleDirty(scale);
     updateInternalData();
   }
 
@@ -118,11 +131,24 @@ public:
     return scale_;
   }
 
+  /**
+   * \brief If the dimension of the body should be padded, this method sets the pading.
+   * \note This is the dirty version of the function which does not update internal data that depend on the scale.
+   *       In the general case, you should call setPadding() instead. Only call this function if you have a series of
+   *       calls like setScale/setPadding/setPose/setDimensions and you want to avoid the overhead of updating the
+   *       internal structures after each call. When you are finished with the batch, call updateInternalData().
+   * \param padd The padding to set (in meters). 0.0 means no padding.
+   */
+  void setPaddingDirty(double padd)
+  {
+    padding_ = padd;
+  }
+
   /** \brief If constant padding should be added to the body, this
       method sets the padding. Default is 0.0 */
   void setPadding(double padd)
   {
-    padding_ = padd;
+    setPaddingDirty(padd);
     updateInternalData();
   }
 
@@ -132,10 +158,23 @@ public:
     return padding_;
   }
 
+  /**
+   * \brief Set the pose of the body.
+   * \note This is the dirty version of the function which does not update internal data that depend on the pose.
+   *       In the general case, you should call setPose() instead. Only call this function if you have a series of
+   *       calls like setScale/setPadding/setPose/setDimensions and you want to avoid the overhead of updating the
+   *       internal structures after each call. When you are finished with the batch, call updateInternalData().
+   * \param pose The pose to set. Default is identity.
+   */
+  void setPoseDirty(const Eigen::Isometry3d& pose)
+  {
+    pose_ = pose;
+  }
+
   /** \brief Set the pose of the body. Default is identity */
   void setPose(const Eigen::Isometry3d& pose)
   {
-    pose_ = pose;
+    setPoseDirty(pose);
     updateInternalData();
   }
 
@@ -143,6 +182,19 @@ public:
   const Eigen::Isometry3d& getPose() const
   {
     return pose_;
+  }
+
+  /**
+   * \brief Set the dimensions of the body (from corresponding shape).
+   * \note This is the dirty version of the function which does not update internal data that depend on the dimensions.
+   *       In the general case, you should call setDimensions() instead. Only call this function if you have a series of
+   *       calls like setScale/setPadding/setPose/setDimensions and you want to avoid the overhead of updating the
+   *       internal structures after each call. When you are finished with the batch, call updateInternalData().
+   * \param shape The shape whose dimensions should be assumed. After the function finishes, the pointer can be deleted.
+   */
+  inline void setDimensionsDirty(const shapes::Shape* shape)
+  {
+    useDimensions(shape);
   }
 
   /** \brief Get the dimensions associated to this body (as read from corresponding shape) */
@@ -205,12 +257,12 @@ public:
       thread safety, when bodies need to be moved around. */
   virtual BodyPtr cloneAt(const Eigen::Isometry3d& pose, double padding, double scaling) const = 0;
 
-protected:
   /** \brief This function is called every time a change to the body
       is made, so that intermediate values stored for efficiency
       reasons are kept up to date. */
   virtual void updateInternalData() = 0;
 
+protected:
   /** \brief Depending on the shape, this function copies the relevant data to the body. */
   virtual void useDimensions(const shapes::Shape* shape) = 0;
 
@@ -264,9 +316,10 @@ public:
 
   virtual BodyPtr cloneAt(const Eigen::Isometry3d& pose, double padding, double scale) const;
 
+  virtual void updateInternalData();
+
 protected:
   virtual void useDimensions(const shapes::Shape* shape);
-  virtual void updateInternalData();
 
   // shape-dependent data
   double radius_;
@@ -314,9 +367,10 @@ public:
 
   virtual BodyPtr cloneAt(const Eigen::Isometry3d& pose, double padding, double scale) const;
 
+  virtual void updateInternalData();
+
 protected:
   virtual void useDimensions(const shapes::Shape* shape);
-  virtual void updateInternalData();
 
   // shape-dependent data
   double length_;
@@ -374,9 +428,10 @@ public:
 
   virtual BodyPtr cloneAt(const Eigen::Isometry3d& pose, double padding, double scale) const;
 
+  virtual void updateInternalData();
+
 protected:
   virtual void useDimensions(const shapes::Shape* shape);  // (x, y, z) = (length, width, height)
-  virtual void updateInternalData();
 
   // shape-dependent data
   double length_;
@@ -452,9 +507,10 @@ public:
 
   void correctVertexOrderFromPlanes();
 
+  virtual void updateInternalData();
+
 protected:
   virtual void useDimensions(const shapes::Shape* shape);
-  virtual void updateInternalData();
 
   /** \brief (Used mainly for debugging) Count the number of vertices behind a plane*/
   unsigned int countVerticesBehindPlane(const Eigen::Vector4f& planeNormal) const;
