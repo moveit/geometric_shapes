@@ -496,12 +496,10 @@ protected:
 
   // pose/padding/scaling-dependent values & values computed for convenience and fast upcoming computations
   Eigen::Vector3d center_;
-  Eigen::Vector3d normalL_;
-  Eigen::Vector3d normalW_;
-  Eigen::Vector3d normalH_;
+  Eigen::Matrix3d invRot_;
 
-  Eigen::Vector3d corner1_;
-  Eigen::Vector3d corner2_;
+  Eigen::Vector3d corner1_;  //!< The translated, but not rotated min corner
+  Eigen::Vector3d corner2_;  //!< The translated, but not rotated max corner
 
   double length2_;
   double width2_;

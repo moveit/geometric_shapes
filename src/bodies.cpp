@@ -530,17 +530,8 @@ bool bodies::Box::samplePointInside(random_numbers::RandomNumberGenerator& rng, 
 
 bool bodies::Box::containsPoint(const Eigen::Vector3d& p, bool /* verbose */) const
 {
-  Eigen::Vector3d v = p - center_;
-  double pL = v.dot(normalL_);
-  if (fabs(pL) > length2_)
-    return false;
-
-  double pW = v.dot(normalW_);
-  if (fabs(pW) > width2_)
-    return false;
-
-  double pH = v.dot(normalH_);
-  return fabs(pH) <= height2_;
+  const Eigen::Vector3d aligned = (invRot_ * (p - center_)).cwiseAbs();
+  return aligned[0] <= length2_ && aligned[1] <= width2_ && aligned[2] <= height2_;
 }
 
 void bodies::Box::useDimensions(const shapes::Shape* shape)  // (x, y, z) = (length, width, height)
@@ -580,12 +571,10 @@ void bodies::Box::updateInternalData()
   radiusB_ = sqrt(radius2_);
 
   ASSERT_ISOMETRY(pose_);
-  Eigen::Matrix3d basis = pose_.linear();
-  normalL_ = basis.col(0);
-  normalW_ = basis.col(1);
-  normalH_ = basis.col(2);
+  invRot_ = pose_.linear().transpose();
 
-  const Eigen::Vector3d tmp(normalL_ * length2_ + normalW_ * width2_ + normalH_ * height2_);
+  // rotation is intentionally not applied, the corners are used in intersectsRay()
+  const Eigen::Vector3d tmp(length2_, width2_, height2_);
   corner1_ = center_ - tmp;
   corner2_ = center_ + tmp;
 }
