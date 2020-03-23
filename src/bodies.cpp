@@ -727,9 +727,16 @@ bool bodies::Box::intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vect
   {
     if (tmax - tmin > detail::ZERO)
     {
-      intersections->push_back(tmin * dirNorm + origin);
-      if (count == 0 || count > 1)
+      if (tmin > detail::ZERO)
+      {
+        intersections->push_back(tmin * dirNorm + origin);
+        if (count == 0 || count > 1)
+          intersections->push_back(tmax * dirNorm + origin);
+      }
+      else
+      {
         intersections->push_back(tmax * dirNorm + origin);
+      }
     }
     else
       intersections->push_back(tmax * dirNorm + origin);
