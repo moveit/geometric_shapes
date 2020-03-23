@@ -653,9 +653,11 @@ bool bodies::Box::intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vect
   // Brian Smits. Efficient bounding box intersection. Ray tracing news 15(1), 2002
   float tmin, tmax, tymin, tymax, tzmin, tzmax;
   float divx, divy, divz;
-  const Eigen::Matrix3d invRot(pose_.linear().transpose());
-  const Eigen::Vector3d o(invRot * (origin - center_) + center_);
-  const Eigen::Vector3d d(invRot * dirNorm);
+
+  // The implemented method only works for axis-aligned boxes. So we treat ours as such, cancel its rotation, and
+  // rotate the origin and dir instead. corner1_ and corner2_ are corners with canceled rotation.
+  const Eigen::Vector3d o(invRot_ * (origin - center_) + center_);
+  const Eigen::Vector3d d(invRot_ * dirNorm);
 
   divx = 1 / d.x();
   if (divx >= 0)
