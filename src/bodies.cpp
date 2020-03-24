@@ -1268,8 +1268,17 @@ bool bodies::ConvexMesh::intersectsRay(const Eigen::Vector3d& origin, const Eige
   {
     std::sort(ipts.begin(), ipts.end(), detail::interscOrder());
     const unsigned int n = count > 0 ? std::min<unsigned int>(count, ipts.size()) : ipts.size();
-    for (unsigned int i = 0; i < n; ++i)
-      intersections->push_back(ipts[i].pt);
+    // If a ray hits exactly the boundary between two triangles, it is reported twice;
+    // We only want return the intersection once; the loop makes use of the fact that ipts is
+    // already sorted by distance, so if some points are duplicate, they are examined successively.
+    for (const auto& p : ipts)
+    {
+      if (intersections->size() == n)
+        break;
+      if (!intersections->empty() && (p.pt - intersections->back()).squaredNorm() < pow(detail::ZERO, 2))
+        continue;
+      intersections->push_back(p.pt);
+    }
   }
 
   return result;
