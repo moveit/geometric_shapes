@@ -569,7 +569,12 @@ protected:
   /** \brief (Used mainly for debugging) Count the number of vertices behind a plane*/
   unsigned int countVerticesBehindPlane(const Eigen::Vector4f& planeNormal) const;
 
-  /** \brief Check if a point is inside a set of planes that make up a convex mesh*/
+  /** \brief Check if the point is inside all halfspaces this mesh consists of (mesh_data_->planes_).
+   *
+   * \note The point is expected to have pose_ "cancelled" (have inverse pose of this mesh applied to it).
+   * \note Scale and padding of the mesh are taken into account.
+   * \note There is a 1e-9 margin "outside" the planes where points are still considered to be inside.
+   */
   bool isPointInsidePlanes(const Eigen::Vector3d& point) const;
 
   struct MeshData
@@ -578,6 +583,7 @@ protected:
     EigenSTL::vector_Vector3d vertices_;
     std::vector<unsigned int> triangles_;
     std::map<unsigned int, unsigned int> plane_for_triangle_;
+    std::map<unsigned int, unsigned int> triangle_for_plane_;
     Eigen::Vector3d mesh_center_;
     double mesh_radiusB_;
     Eigen::Vector3d box_offset_;

@@ -743,8 +743,8 @@ bool bodies::ConvexMesh::containsPoint(const Eigen::Vector3d& p, bool /* verbose
     return false;
   if (bounding_box_.containsPoint(p))
   {
+    // Transform the point to the "base space" of this mesh
     Eigen::Vector3d ip(i_pose_ * p);
-    ip = mesh_data_->mesh_center_ + (ip - mesh_data_->mesh_center_) / scale_;
     return isPointInsidePlanes(ip);
   }
   else
@@ -943,6 +943,7 @@ void bodies::ConvexMesh::useDimensions(const shapes::Shape* shape)
     }
 
     mesh_data_->plane_for_triangle_[(mesh_data_->triangles_.size() - 1) / 3] = mesh_data_->planes_.size() - 1;
+    mesh_data_->triangle_for_plane_[mesh_data_->planes_.size() - 1] = (mesh_data_->triangles_.size() - 1) / 3;
   }
   qh_freeqhull(!qh_ALL);
   int curlong, totlong;
@@ -1027,6 +1028,8 @@ void bodies::ConvexMesh::updateInternalData()
 
   shapes::Box box_shape(mesh_data_->box_size_.x(), mesh_data_->box_size_.y(), mesh_data_->box_size_.z());
   bounding_box_.setPoseDirty(pose);
+  // The real effect of padding will most likely be smaller due to the mesh padding algorithm, but in "worst case" it
+  // can inflate the primitive bounding box by the padding_ value.
   bounding_box_.setPaddingDirty(padding_);
   bounding_box_.setScaleDirty(scale_);
   bounding_box_.setDimensionsDirty(&box_shape);
@@ -1121,7 +1124,13 @@ bool bodies::ConvexMesh::isPointInsidePlanes(const Eigen::Vector3d& point) const
   {
     const Eigen::Vector4d& plane = mesh_data_->planes_[i];
     Eigen::Vector3d plane_vec(plane.x(), plane.y(), plane.z());
-    double dist = plane_vec.dot(point) + plane.w() - padding_ - 1e-6;
+    // w() needs to be recomputed from a scaled vertex as normally it refers to the unscaled plane
+    // we also cannot simply subtract padding_ from it, because padding of the points on the plane causes a different
+    // effect than adding padding along this plane's normal (padding effect is direction-dependent)
+    const auto scaled_point_on_plane =
+        scaled_vertices_->at(mesh_data_->triangles_[3 * mesh_data_->triangle_for_plane_[i]]);
+    const double w_scaled_padded = -plane_vec.dot(scaled_point_on_plane);
+    const double dist = plane_vec.dot(point) + w_scaled_padded - detail::ZERO;
     if (dist > 0.0)
       return false;
   }
