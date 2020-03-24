@@ -680,6 +680,12 @@ bool bodies::Box::intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vect
     tmax = (corner1_.x() - o.x()) * divx;
     tmin = (corner2_.x() - o.x()) * divx;
   }
+  // this prevents nans spreading in the computation; the other dimensions do not need this check because all the
+  // comparisons guarding change of tmin/tmax will come false in case a nan enters them
+  if (std::isnan(tmin))
+    tmin = -std::numeric_limits<float>::infinity();
+  if (std::isnan(tmax))
+    tmax = std::numeric_limits<float>::infinity();
 
   divy = 1 / d.y();
   if (d.y() >= 0)
