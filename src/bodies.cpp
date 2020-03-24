@@ -651,9 +651,6 @@ void bodies::Box::computeBoundingBox(bodies::AABB& bbox) const
   bbox.extendWithTransformedBox(getPose(), 2 * Eigen::Vector3d(length2_, width2_, height2_));
 }
 
-// for some reason, the O2 optimization screws up this function which then gives wrong results
-#pragma GCC push_options
-#pragma GCC optimize("O1")
 bool bodies::Box::intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vector3d& dir,
                                 EigenSTL::vector_Vector3d* intersections, unsigned int count) const
 {
@@ -751,7 +748,6 @@ bool bodies::Box::intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vect
 
   return true;
 }
-#pragma GCC pop_options
 
 bool bodies::ConvexMesh::containsPoint(const Eigen::Vector3d& p, bool /* verbose */) const
 {
