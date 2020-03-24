@@ -360,7 +360,7 @@ bool bodies::Cylinder::samplePointInside(random_numbers::RandomNumberGenerator& 
   // sample e height
   double z = rng.uniformReal(-length2_, length2_);
 
-  result = Eigen::Vector3d(x, y, z);
+  result = pose_ * Eigen::Vector3d(x, y, z);
   return true;
 }
 
