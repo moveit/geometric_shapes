@@ -471,7 +471,7 @@ bool bodies::Cylinder::intersectsRay(const Eigen::Vector3d& origin, const Eigen:
     double b = 2.0 * ROD.dot(VD);
     double c = ROD.squaredNorm() - radius2_;
     double d = b * b - 4.0 * a * c;
-    if (d > 0.0 && fabs(a) > detail::ZERO)
+    if (d >= 0.0 && fabs(a) > detail::ZERO)
     {
       d = sqrt(d);
       double e = -a * 2.0;
@@ -514,8 +514,18 @@ bool bodies::Cylinder::intersectsRay(const Eigen::Vector3d& origin, const Eigen:
 
   std::sort(ipts.begin(), ipts.end(), detail::interscOrder());
   const unsigned int n = count > 0 ? std::min<unsigned int>(count, ipts.size()) : ipts.size();
-  for (unsigned int i = 0; i < n; ++i)
-    intersections->push_back(ipts[i].pt);
+
+  // If a ray hits exactly the boundary between a side and a base, it is reported twice.
+  // We want to only return the intersection once; the loop makes use of the fact that ipts is
+  // already sorted by distance, so if some points are duplicate, they are examined successively.
+  for (const auto& p : ipts)
+  {
+    if (intersections->size() == n)
+      break;
+    if (!intersections->empty() && p.pt.isApprox(intersections->back(), detail::ZERO))
+      continue;
+    intersections->push_back(p.pt);
+  }
 
   return true;
 }
