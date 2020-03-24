@@ -1193,30 +1193,32 @@ bool bodies::ConvexMesh::intersectsRay(const Eigen::Vector3d& origin, const Eige
 
   // transform the ray into the coordinate frame of the mesh
   Eigen::Vector3d orig(i_pose_ * origin);
-  Eigen::Vector3d dr(i_pose_ * dirNorm);
+  Eigen::Vector3d dr(i_pose_.linear() * dirNorm);
 
   std::vector<detail::intersc> ipts;
 
   bool result = false;
 
   // for each triangle
-  const unsigned int nt = mesh_data_->triangles_.size() / 3;
-  for (unsigned int i = 0; i < nt; ++i)
+  const auto nt = mesh_data_->triangles_.size() / 3;
+  for (size_t i = 0; i < nt; ++i)
   {
     Eigen::Vector3d vec(mesh_data_->planes_[mesh_data_->plane_for_triangle_[i]].x(),
                         mesh_data_->planes_[mesh_data_->plane_for_triangle_[i]].y(),
                         mesh_data_->planes_[mesh_data_->plane_for_triangle_[i]].z());
 
-    double tmp = vec.dot(dr);
+    const double tmp = vec.dot(dr);
     if (fabs(tmp) > detail::ZERO)
     {
-      double t = -(vec.dot(orig) + mesh_data_->planes_[mesh_data_->plane_for_triangle_[i]].w()) / tmp;
+      // planes_[...].w() corresponds to the unscaled mesh, so we need to compute it ourselves
+      const double w_scaled_padded = vec.dot(scaled_vertices_->at(mesh_data_->triangles_[3 * i]));
+      const double t = -(vec.dot(orig) + w_scaled_padded) / tmp;
       if (t > 0.0)
       {
-        const int i3 = 3 * i;
-        const int v1 = mesh_data_->triangles_[i3 + 0];
-        const int v2 = mesh_data_->triangles_[i3 + 1];
-        const int v3 = mesh_data_->triangles_[i3 + 2];
+        const auto i3 = 3 * i;
+        const auto v1 = mesh_data_->triangles_[i3 + 0];
+        const auto v2 = mesh_data_->triangles_[i3 + 1];
+        const auto v3 = mesh_data_->triangles_[i3 + 2];
 
         const Eigen::Vector3d& a = scaled_vertices_->at(v1);
         const Eigen::Vector3d& b = scaled_vertices_->at(v2);
