@@ -57,6 +57,17 @@ double largestComponentForLength2D(const double length)
   return sq2;
 }
 
+Eigen::Isometry3d getRandomPose(random_numbers::RandomNumberGenerator& g)
+{
+  const Eigen::Vector3d t(g.uniformReal(-100, 100), g.uniformReal(-100, 100), g.uniformReal(-100, 100));
+
+  double quat[4];
+  g.quaternion(quat);
+  const Eigen::Quaterniond r({ quat[3], quat[0], quat[1], quat[2] });
+
+  return Eigen::Isometry3d::TranslationType(t) * r;
+}
+
 TEST(SpherePointContainment, Basic)
 {
   shapes::Sphere shape(1.0);
@@ -132,10 +143,7 @@ TEST(SpherePointContainment, SimpleInside)
   Eigen::Vector3d p;
   for (int i = 0; i < 1000; ++i)
   {
-    std::srand(static_cast<unsigned int>(r.uniformInteger(0, std::numeric_limits<int>::max())));
-    const Eigen::Isometry3d pos(
-        Eigen::Isometry3d::TranslationType(Eigen::Vector3d::Random() * r.uniformReal(-100, 100)) *
-        Eigen::Quaterniond::UnitRandom());
+    const Eigen::Isometry3d pos = getRandomPose(r);
     sphere->setPose(pos);
     sphere->setScale(r.uniformReal(0.1, 100.0));
     sphere->setPadding(r.uniformReal(-0.001, 10.0));
@@ -296,10 +304,7 @@ TEST(BoxPointContainment, Sampled)
   Eigen::Vector3d p;
   for (int i = 0; i < 1000; ++i)
   {
-    std::srand(static_cast<unsigned int>(r.uniformInteger(0, std::numeric_limits<int>::max())));
-    const Eigen::Isometry3d pos(
-        Eigen::Isometry3d::TranslationType(Eigen::Vector3d::Random() * r.uniformReal(-100, 100)) *
-        Eigen::Quaterniond::UnitRandom());
+    const Eigen::Isometry3d pos = getRandomPose(r);
     box.setPose(pos);
     box.setScale(r.uniformReal(0.1, 100.0));
     box.setPadding(r.uniformReal(-0.001, 10.0));
@@ -434,10 +439,7 @@ TEST(CylinderPointContainment, Sampled)
   Eigen::Vector3d p;
   for (int i = 0; i < 1000; ++i)
   {
-    std::srand(static_cast<unsigned int>(r.uniformInteger(0, std::numeric_limits<int>::max())));
-    const Eigen::Isometry3d pos(
-        Eigen::Isometry3d::TranslationType(Eigen::Vector3d::Random() * r.uniformReal(-100, 100)) *
-        Eigen::Quaterniond::UnitRandom());
+    const Eigen::Isometry3d pos = getRandomPose(r);
     cylinder.setPose(pos);
     cylinder.setScale(r.uniformReal(0.1, 100.0));
     cylinder.setPadding(r.uniformReal(-0.001, 10.0));

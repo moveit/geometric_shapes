@@ -43,6 +43,17 @@
 #include <gtest/gtest.h>
 #include "resources/config.h"
 
+Eigen::Isometry3d getRandomPose(random_numbers::RandomNumberGenerator& g)
+{
+  const Eigen::Vector3d t(g.uniformReal(-100, 100), g.uniformReal(-100, 100), g.uniformReal(-100, 100));
+
+  double quat[4];
+  g.quaternion(quat);
+  const Eigen::Quaterniond r({ quat[3], quat[0], quat[1], quat[2] });
+
+  return Eigen::Isometry3d::TranslationType(t) * r;
+}
+
 #define EXPECT_VECTORS_EQUAL(v1, v2, error)                                                                            \
   EXPECT_NEAR((v1)[0], (v2)[0], (error));                                                                              \
   EXPECT_NEAR((v1)[1], (v2)[1], (error));                                                                              \
@@ -55,7 +66,7 @@
     Eigen::Vector3d d direction;                                                                                       \
     const auto result = (body).intersectsRay(o, d, &intersections, 2);                                                 \
     EXPECT_FALSE(result);                                                                                              \
-    EXPECT_EQ(0u, intersections.size());                                                                                \
+    EXPECT_EQ(0u, intersections.size());                                                                               \
   }
 
 #define CHECK_INTERSECTS(body, origin, direction, numIntersections)                                                    \
@@ -216,10 +227,7 @@ TEST(SphereRayIntersection, OriginInside)
   random_numbers::RandomNumberGenerator g(0u);
   for (size_t i = 0; i < 1000; ++i)
   {
-    std::srand(static_cast<unsigned int>(g.uniformInteger(0, std::numeric_limits<int>::max())));
-    const Eigen::Isometry3d pos(
-        Eigen::Isometry3d::TranslationType(Eigen::Vector3d::Random() * g.uniformReal(-100, 100)) *
-        Eigen::Quaterniond::UnitRandom());
+    const Eigen::Isometry3d pos = getRandomPose(g);
     sphere.setPose(pos);
     sphere.setScale(g.uniformReal(0.5, 100.0));
     sphere.setPadding(g.uniformReal(-0.1, 100.0));
@@ -302,10 +310,7 @@ TEST(SphereRayIntersection, OriginOutside)
   random_numbers::RandomNumberGenerator g(0u);
   for (size_t i = 0; i < 1000; ++i)
   {
-    std::srand(static_cast<unsigned int>(g.uniformInteger(0, std::numeric_limits<int>::max())));
-    const Eigen::Isometry3d pos(
-        Eigen::Isometry3d::TranslationType(Eigen::Vector3d::Random() * g.uniformReal(-100, 100)) *
-        Eigen::Quaterniond::UnitRandom());
+    const Eigen::Isometry3d pos = getRandomPose(g);
     sphere.setPose(pos);
     sphere.setScale(g.uniformReal(0.5, 100.0));
     sphere.setPadding(g.uniformReal(-0.1, 100.0));
@@ -507,10 +512,7 @@ TEST(CylinderRayIntersection, OriginInside)
   random_numbers::RandomNumberGenerator g(0u);
   for (size_t i = 0; i < 1000; ++i)
   {
-    std::srand(static_cast<unsigned int>(g.uniformInteger(0, std::numeric_limits<int>::max())));
-    const Eigen::Isometry3d pos(
-        Eigen::Isometry3d::TranslationType(Eigen::Vector3d::Random() * g.uniformReal(-100, 100)) *
-        Eigen::Quaterniond::UnitRandom());
+    const Eigen::Isometry3d pos = getRandomPose(g);
     cylinder.setPose(pos);
     cylinder.setScale(g.uniformReal(0.5, 100.0));
     cylinder.setPadding(g.uniformReal(-0.1, 100.0));
@@ -599,10 +601,7 @@ TEST(CylinderRayIntersection, OriginOutside)
   random_numbers::RandomNumberGenerator g(0u);
   for (size_t i = 0; i < 1000; ++i)
   {
-    std::srand(static_cast<unsigned int>(g.uniformInteger(0, std::numeric_limits<int>::max())));
-    const Eigen::Isometry3d pos(
-        Eigen::Isometry3d::TranslationType(Eigen::Vector3d::Random() * g.uniformReal(-100, 100)) *
-        Eigen::Quaterniond::UnitRandom());
+    const Eigen::Isometry3d pos = getRandomPose(g);
     cylinder.setPose(pos);
     cylinder.setScale(g.uniformReal(0.5, 100.0));
     cylinder.setPadding(g.uniformReal(-0.1, 100.0));
@@ -857,10 +856,7 @@ TEST(BoxRayIntersection, OriginInside)
   random_numbers::RandomNumberGenerator g(0u);
   for (size_t i = 0; i < 1000; ++i)
   {
-    std::srand(static_cast<unsigned int>(g.uniformInteger(0, std::numeric_limits<int>::max())));
-    const Eigen::Isometry3d pos(
-        Eigen::Isometry3d::TranslationType(Eigen::Vector3d::Random() * g.uniformReal(-100, 100)) *
-        Eigen::Quaterniond::UnitRandom());
+    const Eigen::Isometry3d pos = getRandomPose(g);
     box.setPose(pos);
     box.setScale(g.uniformReal(0.5, 100.0));
     box.setPadding(g.uniformReal(-0.1, 100.0));
@@ -952,10 +948,7 @@ TEST(BoxRayIntersection, OriginOutsideIntersects)
   random_numbers::RandomNumberGenerator g(0u);
   for (size_t i = 0; i < 1000; ++i)
   {
-    std::srand(static_cast<unsigned int>(g.uniformInteger(0, std::numeric_limits<int>::max())));
-    const Eigen::Isometry3d pos(
-        Eigen::Isometry3d::TranslationType(Eigen::Vector3d::Random() * g.uniformReal(-100, 100)) *
-        Eigen::Quaterniond::UnitRandom());
+    const Eigen::Isometry3d pos = getRandomPose(g);
     box.setPose(pos);
     box.setScale(g.uniformReal(0.5, 100.0));
     box.setPadding(g.uniformReal(-0.1, 100.0));
@@ -1196,10 +1189,7 @@ TEST(ConvexMeshRayIntersection, OriginInside)
   random_numbers::RandomNumberGenerator g(0u);
   for (size_t i = 0; i < 1000; ++i)
   {
-    std::srand(static_cast<unsigned int>(g.uniformInteger(0, std::numeric_limits<int>::max())));
-    const Eigen::Isometry3d pos(
-        Eigen::Isometry3d::TranslationType(Eigen::Vector3d::Random() * g.uniformReal(-100, 100)) *
-        Eigen::Quaterniond::UnitRandom());
+    const Eigen::Isometry3d pos = getRandomPose(g);
     mesh.setPose(pos);
     mesh.setScale(g.uniformReal(0.5, 100.0));
     mesh.setPadding(g.uniformReal(-0.1, 100.0));
@@ -1293,10 +1283,7 @@ TEST(ConvexMeshRayIntersection, OriginOutsideIntersects)
   random_numbers::RandomNumberGenerator g(0u);
   for (size_t i = 0; i < 1000; ++i)
   {
-    std::srand(static_cast<unsigned int>(g.uniformInteger(0, std::numeric_limits<int>::max())));
-    const Eigen::Isometry3d pos(
-        Eigen::Isometry3d::TranslationType(Eigen::Vector3d::Random() * g.uniformReal(-100, 100)) *
-        Eigen::Quaterniond::UnitRandom());
+    const Eigen::Isometry3d pos = getRandomPose(g);
     mesh.setPose(pos);
     mesh.setScale(g.uniformReal(0.5, 100.0));
     mesh.setPadding(g.uniformReal(-0.1, 100.0));
