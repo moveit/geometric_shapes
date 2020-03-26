@@ -244,6 +244,17 @@ public:
     setDimensions(shape);
   }
 
+  explicit Sphere(const BoundingSphere& sphere) : Body()
+  {
+    type_ = shapes::SPHERE;
+    shapes::Sphere shape(sphere.radius);
+    setDimensions(&shape);
+
+    Eigen::Isometry3d pose = Eigen::Isometry3d::Identity();
+    pose.translation() = sphere.center;
+    setPose(pose);
+  }
+
   virtual ~Sphere()
   {
   }
@@ -292,6 +303,14 @@ public:
   {
     type_ = shapes::CYLINDER;
     setDimensions(shape);
+  }
+
+  explicit Cylinder(const BoundingCylinder& cylinder) : Body()
+  {
+    type_ = shapes::CYLINDER;
+    shapes::Cylinder shape(cylinder.radius, cylinder.length);
+    setDimensions(&shape);
+    setPose(cylinder.pose);
   }
 
   virtual ~Cylinder()
@@ -352,6 +371,17 @@ public:
   {
     type_ = shapes::BOX;
     setDimensions(shape);
+  }
+
+  explicit Box(const AABB& aabb) : Body()
+  {
+    type_ = shapes::BOX;
+    shapes::Box shape(aabb.sizes()[0], aabb.sizes()[1], aabb.sizes()[2]);
+    setDimensions(&shape);
+
+    Eigen::Isometry3d pose = Eigen::Isometry3d::Identity();
+    pose.translation() = aabb.center();
+    setPose(pose);
   }
 
   virtual ~Box()
