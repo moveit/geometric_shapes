@@ -6,6 +6,9 @@ endif()
 configure_file(resources/config.h.in "${CMAKE_CURRENT_BINARY_DIR}/resources/config.h")
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
+catkin_add_gtest(test_basics test_basics.cpp)
+target_link_libraries(test_basics ${PROJECT_NAME} ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+
 catkin_add_gtest(test_point_inclusion test_point_inclusion.cpp)
 target_link_libraries(test_point_inclusion ${PROJECT_NAME} ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 

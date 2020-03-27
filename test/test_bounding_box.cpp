@@ -203,7 +203,7 @@ TEST(CylinderBoundingBox, Cylinder2)
 
   // verify the bounding box is yaw-invariant
 
-  random_numbers::RandomNumberGenerator gen;
+  random_numbers::RandomNumberGenerator gen(0);
   const auto rollPitch =
       Eigen::AngleAxisd(1.0, Eigen::Vector3d::UnitX()) * Eigen::AngleAxisd(1.0, Eigen::Vector3d::UnitY());
 
