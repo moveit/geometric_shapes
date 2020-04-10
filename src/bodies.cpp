@@ -67,6 +67,17 @@ extern "C" {
 #include <algorithm>
 #include <Eigen/Geometry>
 
+namespace
+{
+// aligned version of std::make_shared
+template <class T, class... Args>
+std::shared_ptr<T> aligned_make_shared(Args... args)
+{
+  return std::allocate_shared<T>(Eigen::aligned_allocator<T>(), std::forward<Args>(args)...);
+}
+
+}  // namespace
+
 namespace bodies
 {
 namespace detail
@@ -156,7 +167,7 @@ void bodies::Sphere::updateInternalData()
 
 std::shared_ptr<bodies::Body> bodies::Sphere::cloneAt(const Eigen::Isometry3d& pose, double padding, double scale) const
 {
-  auto s = std::make_shared<Sphere>();
+  auto s = aligned_make_shared<Sphere>();
   s->radius_ = radius_;
   s->padding_ = padding;
   s->scale_ = scale;
@@ -353,7 +364,7 @@ bool bodies::Cylinder::samplePointInside(random_numbers::RandomNumberGenerator& 
 std::shared_ptr<bodies::Body> bodies::Cylinder::cloneAt(const Eigen::Isometry3d& pose, double padding,
                                                         double scale) const
 {
-  auto c = std::make_shared<Cylinder>();
+  auto c = aligned_make_shared<Cylinder>();
   c->length_ = length_;
   c->radius_ = radius_;
   c->padding_ = padding;
@@ -574,7 +585,7 @@ void bodies::Box::updateInternalData()
 
 std::shared_ptr<bodies::Body> bodies::Box::cloneAt(const Eigen::Isometry3d& pose, double padding, double scale) const
 {
-  auto b = std::make_shared<Box>();
+  auto b = aligned_make_shared<Box>();
   b->length_ = length_;
   b->width_ = width_;
   b->height_ = height_;
@@ -749,7 +760,7 @@ void bodies::ConvexMesh::correctVertexOrderFromPlanes()
 
 void bodies::ConvexMesh::useDimensions(const shapes::Shape* shape)
 {
-  mesh_data_ = std::make_shared<MeshData>();
+  mesh_data_ = aligned_make_shared<MeshData>();
   const shapes::Mesh* mesh = static_cast<const shapes::Mesh*>(shape);
 
   double maxX = -std::numeric_limits<double>::infinity(), maxY = -std::numeric_limits<double>::infinity(),
@@ -1054,7 +1065,7 @@ const EigenSTL::vector_Vector4d& bodies::ConvexMesh::getPlanes() const
 std::shared_ptr<bodies::Body> bodies::ConvexMesh::cloneAt(const Eigen::Isometry3d& pose, double padding,
                                                           double scale) const
 {
-  auto m = std::make_shared<ConvexMesh>();
+  auto m = aligned_make_shared<ConvexMesh>();
   m->mesh_data_ = mesh_data_;
   m->padding_ = padding;
   m->scale_ = scale;
