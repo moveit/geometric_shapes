@@ -71,7 +71,7 @@ namespace
 {
 // aligned version of std::make_shared
 template <class T, class... Args>
-std::shared_ptr<T> aligned_make_shared(Args... args)
+std::shared_ptr<T> aligned_make_shared(Args&&... args)
 {
   return std::allocate_shared<T>(Eigen::aligned_allocator<T>(), std::forward<Args>(args)...);
 }
