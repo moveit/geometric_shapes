@@ -315,7 +315,7 @@ void Cylinder::scale(double scaleRadius, double scaleLength)
 
 void Cylinder::padd(double paddRadius, double paddLength)
 {
-  scaleAndPadd(0.0, 0.0, paddRadius, paddLength);
+  scaleAndPadd(1.0, 1.0, paddRadius, paddLength);
 }
 
 void Cylinder::scaleAndPadd(double scale, double padd)
@@ -340,7 +340,7 @@ void Cone::scale(double scaleRadius, double scaleLength)
 
 void Cone::padd(double paddRadius, double paddLength)
 {
-  scaleAndPadd(0.0, 0.0, paddRadius, paddLength);
+  scaleAndPadd(1.0, 1.0, paddRadius, paddLength);
 }
 
 void Cone::scaleAndPadd(double scale, double padd)
@@ -367,7 +367,7 @@ void Box::scale(double scaleX, double scaleY, double scaleZ)
 
 void Box::padd(double paddX, double paddY, double paddZ)
 {
-  scaleAndPadd(0.0, 0.0, 0.0, paddX, paddY, paddZ);
+  scaleAndPadd(1.0, 1.0, 1.0, paddX, paddY, paddZ);
 }
 
 void Box::scaleAndPadd(double scale, double padd)
@@ -427,7 +427,7 @@ void Mesh::scale(double scaleX, double scaleY, double scaleZ)
 
 void Mesh::padd(double paddX, double paddY, double paddZ)
 {
-  scaleAndPadd(0.0, 0.0, 0.0, paddX, paddY, paddZ);
+  scaleAndPadd(1.0, 1.0, 1.0, paddX, paddY, paddZ);
 }
 
 void Mesh::scaleAndPadd(double scale, double padd)

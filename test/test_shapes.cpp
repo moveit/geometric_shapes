@@ -119,6 +119,14 @@ TEST(Cylinder, ScaleAndPadd)
   cylinder2.scaleAndPadd(1.0, 3.0, 1.0, 3.0);
   EXPECT_DOUBLE_EQ(cylinder2.radius, 8.0);
   EXPECT_DOUBLE_EQ(cylinder2.length, 48.0);
+
+  cylinder2.scale(2.0, 1.5);
+  EXPECT_DOUBLE_EQ(cylinder2.radius, 16.0);
+  EXPECT_DOUBLE_EQ(cylinder2.length, 72.0);
+
+  cylinder2.padd(2.0, 3.0);
+  EXPECT_DOUBLE_EQ(cylinder2.radius, 18.0);
+  EXPECT_DOUBLE_EQ(cylinder2.length, 78.0);
 }
 
 TEST(Cone, ScaleAndPadd)
@@ -144,6 +152,14 @@ TEST(Cone, ScaleAndPadd)
   cone2.scaleAndPadd(1.0, 3.0, 1.0, 3.0);
   EXPECT_DOUBLE_EQ(cone2.radius, 8.0);
   EXPECT_DOUBLE_EQ(cone2.length, 48.0);
+
+  cone2.scale(2.0, 1.5);
+  EXPECT_DOUBLE_EQ(cone2.radius, 16.0);
+  EXPECT_DOUBLE_EQ(cone2.length, 72.0);
+
+  cone2.padd(2.0, 3.0);
+  EXPECT_DOUBLE_EQ(cone2.radius, 18.0);
+  EXPECT_DOUBLE_EQ(cone2.length, 78.0);
 }
 
 TEST(Box, ScaleAndPadd)
@@ -174,6 +190,16 @@ TEST(Box, ScaleAndPadd)
   EXPECT_DOUBLE_EQ(box2.size[0], 12.0);
   EXPECT_DOUBLE_EQ(box2.size[1], 32.0);
   EXPECT_DOUBLE_EQ(box2.size[2], 60.0);
+
+  box2.scale(1.0, 2.0, 3.0);
+  EXPECT_DOUBLE_EQ(box2.size[0], 12.0);
+  EXPECT_DOUBLE_EQ(box2.size[1], 64.0);
+  EXPECT_DOUBLE_EQ(box2.size[2], 180.0);
+
+  box2.padd(1.0, 2.0, 3.0);
+  EXPECT_DOUBLE_EQ(box2.size[0], 14.0);
+  EXPECT_DOUBLE_EQ(box2.size[1], 68.0);
+  EXPECT_DOUBLE_EQ(box2.size[2], 186.0);
 }
 
 TEST(Mesh, ScaleAndPadd)
@@ -358,6 +384,81 @@ TEST(Mesh, ScaleAndPadd)
   EXPECT_DOUBLE_EQ(mesh2->vertices[21], pos3x);
   EXPECT_DOUBLE_EQ(mesh2->vertices[22], -pos3y);
   EXPECT_DOUBLE_EQ(mesh2->vertices[23], pos3z);
+
+  mesh2->scale(1.0, 2.0, 3.0);
+  const double pos4x = pos3x;
+  const double pos4y = 2 * pos3y;
+  const double pos4z = 3 * pos3z;
+
+  EXPECT_DOUBLE_EQ(mesh2->vertices[0], pos4x);
+  EXPECT_DOUBLE_EQ(mesh2->vertices[1], pos4y);
+  EXPECT_DOUBLE_EQ(mesh2->vertices[2], -pos4z);
+
+  EXPECT_DOUBLE_EQ(mesh2->vertices[3], pos4x);
+  EXPECT_DOUBLE_EQ(mesh2->vertices[4], -pos4y);
+  EXPECT_DOUBLE_EQ(mesh2->vertices[5], -pos4z);
+
+  EXPECT_DOUBLE_EQ(mesh2->vertices[6], -pos4x);
+  EXPECT_DOUBLE_EQ(mesh2->vertices[7], -pos4y);
+  EXPECT_DOUBLE_EQ(mesh2->vertices[8], -pos4z);
+
+  EXPECT_DOUBLE_EQ(mesh2->vertices[9], -pos4x);
+  EXPECT_DOUBLE_EQ(mesh2->vertices[10], pos4y);
+  EXPECT_DOUBLE_EQ(mesh2->vertices[11], -pos4z);
+
+  EXPECT_DOUBLE_EQ(mesh2->vertices[12], pos4x);
+  EXPECT_DOUBLE_EQ(mesh2->vertices[13], pos4y);
+  EXPECT_DOUBLE_EQ(mesh2->vertices[14], pos4z);
+
+  EXPECT_DOUBLE_EQ(mesh2->vertices[15], -pos4x);
+  EXPECT_DOUBLE_EQ(mesh2->vertices[16], pos4y);
+  EXPECT_DOUBLE_EQ(mesh2->vertices[17], pos4z);
+
+  EXPECT_DOUBLE_EQ(mesh2->vertices[18], -pos4x);
+  EXPECT_DOUBLE_EQ(mesh2->vertices[19], -pos4y);
+  EXPECT_DOUBLE_EQ(mesh2->vertices[20], pos4z);
+
+  EXPECT_DOUBLE_EQ(mesh2->vertices[21], pos4x);
+  EXPECT_DOUBLE_EQ(mesh2->vertices[22], -pos4y);
+  EXPECT_DOUBLE_EQ(mesh2->vertices[23], pos4z);
+
+  mesh2->padd(1.0, 2.0, 3.0);
+  const double norm5 = sqrt(pos4x * pos4x + pos4y * pos4y + pos4z * pos4z);
+  const double pos5x = pos4x * (1.0 + 1.0 / norm5);
+  const double pos5y = pos4y * (1.0 + 2.0 / norm5);
+  const double pos5z = pos4z * (1.0 + 3.0 / norm5);
+
+  EXPECT_DOUBLE_EQ(mesh2->vertices[0], pos5x);
+  EXPECT_DOUBLE_EQ(mesh2->vertices[1], pos5y);
+  EXPECT_DOUBLE_EQ(mesh2->vertices[2], -pos5z);
+
+  EXPECT_DOUBLE_EQ(mesh2->vertices[3], pos5x);
+  EXPECT_DOUBLE_EQ(mesh2->vertices[4], -pos5y);
+  EXPECT_DOUBLE_EQ(mesh2->vertices[5], -pos5z);
+
+  EXPECT_DOUBLE_EQ(mesh2->vertices[6], -pos5x);
+  EXPECT_DOUBLE_EQ(mesh2->vertices[7], -pos5y);
+  EXPECT_DOUBLE_EQ(mesh2->vertices[8], -pos5z);
+
+  EXPECT_DOUBLE_EQ(mesh2->vertices[9], -pos5x);
+  EXPECT_DOUBLE_EQ(mesh2->vertices[10], pos5y);
+  EXPECT_DOUBLE_EQ(mesh2->vertices[11], -pos5z);
+
+  EXPECT_DOUBLE_EQ(mesh2->vertices[12], pos5x);
+  EXPECT_DOUBLE_EQ(mesh2->vertices[13], pos5y);
+  EXPECT_DOUBLE_EQ(mesh2->vertices[14], pos5z);
+
+  EXPECT_DOUBLE_EQ(mesh2->vertices[15], -pos5x);
+  EXPECT_DOUBLE_EQ(mesh2->vertices[16], pos5y);
+  EXPECT_DOUBLE_EQ(mesh2->vertices[17], pos5z);
+
+  EXPECT_DOUBLE_EQ(mesh2->vertices[18], -pos5x);
+  EXPECT_DOUBLE_EQ(mesh2->vertices[19], -pos5y);
+  EXPECT_DOUBLE_EQ(mesh2->vertices[20], pos5z);
+
+  EXPECT_DOUBLE_EQ(mesh2->vertices[21], pos5x);
+  EXPECT_DOUBLE_EQ(mesh2->vertices[22], -pos5y);
+  EXPECT_DOUBLE_EQ(mesh2->vertices[23], pos5z);
 }
 
 int main(int argc, char** argv)
