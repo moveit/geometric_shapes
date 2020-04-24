@@ -113,7 +113,7 @@ void bodies::Body::setDimensions(const shapes::Shape* shape)
 }
 
 bool bodies::Body::samplePointInside(random_numbers::RandomNumberGenerator& rng, unsigned int max_attempts,
-                                     Eigen::Vector3d& result)
+                                     Eigen::Vector3d& result) const
 {
   BoundingSphere bs;
   computeBoundingSphere(bs);
@@ -195,7 +195,7 @@ void bodies::Sphere::computeBoundingBox(bodies::AABB& bbox) const
 }
 
 bool bodies::Sphere::samplePointInside(random_numbers::RandomNumberGenerator& rng, unsigned int max_attempts,
-                                       Eigen::Vector3d& result)
+                                       Eigen::Vector3d& result) const
 {
   for (unsigned int i = 0; i < max_attempts; ++i)
   {
@@ -335,7 +335,7 @@ void bodies::Cylinder::updateInternalData()
 }
 
 bool bodies::Cylinder::samplePointInside(random_numbers::RandomNumberGenerator& rng, unsigned int /* max_attempts */,
-                                         Eigen::Vector3d& result)
+                                         Eigen::Vector3d& result) const
 {
   // sample a point on the base disc of the cylinder
   double a = rng.uniformReal(-boost::math::constants::pi<double>(), boost::math::constants::pi<double>());
@@ -504,7 +504,7 @@ bool bodies::Cylinder::intersectsRay(const Eigen::Vector3d& origin, const Eigen:
 }
 
 bool bodies::Box::samplePointInside(random_numbers::RandomNumberGenerator& rng, unsigned int /* max_attempts */,
-                                    Eigen::Vector3d& result)
+                                    Eigen::Vector3d& result) const
 {
   result = pose_ * Eigen::Vector3d(rng.uniformReal(-length2_, length2_), rng.uniformReal(-width2_, width2_),
                                    rng.uniformReal(-height2_, height2_));

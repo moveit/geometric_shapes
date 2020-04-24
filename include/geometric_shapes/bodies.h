@@ -178,7 +178,7 @@ public:
      The function terminates with failure (returns false) after \e max_attempts attempts.
      If the call is successful (returns true) the point is written to \e result */
   virtual bool samplePointInside(random_numbers::RandomNumberGenerator& rng, unsigned int max_attempts,
-                                 Eigen::Vector3d& result);
+                                 Eigen::Vector3d& result) const;
 
   /** \brief Compute the bounding radius for the body, in its current
       pose. Scaling and padding are accounted for. */
@@ -254,7 +254,7 @@ public:
   virtual bool containsPoint(const Eigen::Vector3d& p, bool verbose = false) const;
   virtual double computeVolume() const;
   virtual bool samplePointInside(random_numbers::RandomNumberGenerator& rng, unsigned int max_attempts,
-                                 Eigen::Vector3d& result);
+                                 Eigen::Vector3d& result) const;
   virtual void computeBoundingSphere(BoundingSphere& sphere) const;
   virtual void computeBoundingCylinder(BoundingCylinder& cylinder) const;
   virtual void computeBoundingBox(AABB& bbox) const;
@@ -304,7 +304,7 @@ public:
   virtual bool containsPoint(const Eigen::Vector3d& p, bool verbose = false) const;
   virtual double computeVolume() const;
   virtual bool samplePointInside(random_numbers::RandomNumberGenerator& rng, unsigned int max_attempts,
-                                 Eigen::Vector3d& result);
+                                 Eigen::Vector3d& result) const;
   virtual void computeBoundingSphere(BoundingSphere& sphere) const;
   virtual void computeBoundingCylinder(BoundingCylinder& cylinder) const;
   virtual void computeBoundingBox(AABB& bbox) const;
@@ -364,7 +364,7 @@ public:
   virtual bool containsPoint(const Eigen::Vector3d& p, bool verbose = false) const;
   virtual double computeVolume() const;
   virtual bool samplePointInside(random_numbers::RandomNumberGenerator& rng, unsigned int max_attempts,
-                                 Eigen::Vector3d& result);
+                                 Eigen::Vector3d& result) const;
   virtual void computeBoundingSphere(BoundingSphere& sphere) const;
   virtual void computeBoundingCylinder(BoundingCylinder& cylinder) const;
   virtual void computeBoundingBox(AABB& bbox) const;
