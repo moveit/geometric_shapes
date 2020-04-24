@@ -20,7 +20,7 @@ env:
   matrix:
     - TEST="clang-format, catkin_lint"
     - ROS_DISTRO=kinetic
-    - ROS_DISTRO=melodic
+    - ROS_DISTRO=melodic  TEST=code-coverage
 
 matrix:
   include:
