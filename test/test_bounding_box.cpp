@@ -157,7 +157,7 @@ TEST(BoxBoundingBox, Box2)
   EXPECT_NEAR(4.5326, bbox.max().z(), 1e-4);
 }
 
-TEST(CylinderBoundingCylinder, Cylinder1)
+TEST(CylinderBoundingBox, Cylinder1)
 {
   shapes::Cylinder shape(1.0, 2.0);
   bodies::Cylinder body(&shape);
@@ -172,7 +172,7 @@ TEST(CylinderBoundingCylinder, Cylinder1)
   EXPECT_NEAR(1.0, bbox.max().z(), 1e-4);
 }
 
-TEST(CylinderBoundingCylinder, Cylinder2)
+TEST(CylinderBoundingBox, Cylinder2)
 {
   shapes::Cylinder shape(1.0, 2.0);
   bodies::Cylinder body(&shape);
