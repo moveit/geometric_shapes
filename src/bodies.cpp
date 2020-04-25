@@ -104,6 +104,16 @@ struct interscOrder
   }
 };
 }  // namespace detail
+
+inline Eigen::Vector3d normalize(const Eigen::Vector3d& dir)
+{
+  const double norm = dir.squaredNorm();
+#if EIGEN_VERSION_AT_LEAST(3, 3, 0)
+  return ((norm - 1) > 1e-9) ? (dir / Eigen::numext::sqrt(norm)) : dir;
+#else  // used in kinetic
+  return ((norm - 1) > 1e-9) ? (dir / sqrt(norm)) : dir;
+#endif
+}
 }  // namespace bodies
 
 void bodies::Body::setDimensions(const shapes::Shape* shape)
@@ -220,22 +230,25 @@ bool bodies::Sphere::samplePointInside(random_numbers::RandomNumberGenerator& rn
 bool bodies::Sphere::intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vector3d& dir,
                                    EigenSTL::vector_Vector3d* intersections, unsigned int count) const
 {
-  if (detail::distanceSQR(center_, origin, dir) > radius2_)
+  // this is faster than always calling dir.normalized() in case the vector is already unit
+  const Eigen::Vector3d dirNorm = normalize(dir);
+
+  if (detail::distanceSQR(center_, origin, dirNorm) > radius2_)
     return false;
 
   bool result = false;
 
   Eigen::Vector3d cp = origin - center_;
-  double dpcpv = cp.dot(dir);
+  double dpcpv = cp.dot(dirNorm);
 
-  Eigen::Vector3d w = cp - dpcpv * dir;
+  Eigen::Vector3d w = cp - dpcpv * dirNorm;
   Eigen::Vector3d Q = center_ + w;
   double x = radius2_ - w.squaredNorm();
 
   if (fabs(x) < detail::ZERO)
   {
     w = Q - origin;
-    double dpQv = w.dot(dir);
+    double dpQv = w.dot(dirNorm);
     if (dpQv > detail::ZERO)
     {
       if (intersections)
@@ -246,13 +259,13 @@ bool bodies::Sphere::intersectsRay(const Eigen::Vector3d& origin, const Eigen::V
   else if (x > 0.0)
   {
     x = sqrt(x);
-    w = dir * x;
+    w = dirNorm * x;
     Eigen::Vector3d A = Q - w;
     Eigen::Vector3d B = Q + w;
     w = A - origin;
-    double dpAv = w.dot(dir);
+    double dpAv = w.dot(dirNorm);
     w = B - origin;
-    double dpBv = w.dot(dir);
+    double dpBv = w.dot(dirNorm);
 
     if (dpAv > detail::ZERO)
     {
@@ -401,13 +414,16 @@ void bodies::Cylinder::computeBoundingBox(bodies::AABB& bbox) const
 bool bodies::Cylinder::intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vector3d& dir,
                                      EigenSTL::vector_Vector3d* intersections, unsigned int count) const
 {
-  if (detail::distanceSQR(center_, origin, dir) > radiusBSqr_)
+  // this is faster than always calling dir.normalized() in case the vector is already unit
+  const Eigen::Vector3d dirNorm = normalize(dir);
+
+  if (detail::distanceSQR(center_, origin, dirNorm) > radiusBSqr_)
     return false;
 
   std::vector<detail::intersc> ipts;
 
   // intersect bases
-  double tmp = normalH_.dot(dir);
+  double tmp = normalH_.dot(dirNorm);
   if (fabs(tmp) > detail::ZERO)
   {
     double tmp2 = -normalH_.dot(origin);
@@ -415,7 +431,7 @@ bool bodies::Cylinder::intersectsRay(const Eigen::Vector3d& origin, const Eigen:
 
     if (t1 > 0.0)
     {
-      Eigen::Vector3d p1(origin + dir * t1);
+      Eigen::Vector3d p1(origin + dirNorm * t1);
       Eigen::Vector3d v1(p1 - center_);
       v1 = v1 - normalH_.dot(v1) * normalH_;
       if (v1.squaredNorm() < radius2_ + detail::ZERO)
@@ -431,7 +447,7 @@ bool bodies::Cylinder::intersectsRay(const Eigen::Vector3d& origin, const Eigen:
     double t2 = (tmp2 - d2_) / tmp;
     if (t2 > 0.0)
     {
-      Eigen::Vector3d p2(origin + dir * t2);
+      Eigen::Vector3d p2(origin + dirNorm * t2);
       Eigen::Vector3d v2(p2 - center_);
       v2 = v2 - normalH_.dot(v2) * normalH_;
       if (v2.squaredNorm() < radius2_ + detail::ZERO)
@@ -448,7 +464,7 @@ bool bodies::Cylinder::intersectsRay(const Eigen::Vector3d& origin, const Eigen:
   if (ipts.size() < 2)
   {
     // intersect with infinite cylinder
-    Eigen::Vector3d VD(normalH_.cross(dir));
+    Eigen::Vector3d VD(normalH_.cross(dirNorm));
     Eigen::Vector3d ROD(normalH_.cross(origin - center_));
     double a = VD.squaredNorm();
     double b = 2.0 * ROD.dot(VD);
@@ -463,7 +479,7 @@ bool bodies::Cylinder::intersectsRay(const Eigen::Vector3d& origin, const Eigen:
 
       if (t1 > 0.0)
       {
-        Eigen::Vector3d p1(origin + dir * t1);
+        Eigen::Vector3d p1(origin + dirNorm * t1);
         Eigen::Vector3d v1(center_ - p1);
 
         if (fabs(normalH_.dot(v1)) < length2_ + detail::ZERO)
@@ -478,7 +494,7 @@ bool bodies::Cylinder::intersectsRay(const Eigen::Vector3d& origin, const Eigen:
 
       if (t2 > 0.0)
       {
-        Eigen::Vector3d p2(origin + dir * t2);
+        Eigen::Vector3d p2(origin + dirNorm * t2);
         Eigen::Vector3d v2(center_ - p2);
 
         if (fabs(normalH_.dot(v2)) < length2_ + detail::ZERO)
@@ -637,10 +653,13 @@ void bodies::Box::computeBoundingBox(bodies::AABB& bbox) const
 bool bodies::Box::intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vector3d& dir,
                                 EigenSTL::vector_Vector3d* intersections, unsigned int count) const
 {
+  // this is faster than always calling dir.normalized() in case the vector is already unit
+  const Eigen::Vector3d dirNorm = normalize(dir);
+
   // Brian Smits. Efficient bounding box intersection. Ray tracing news 15(1), 2002
   float tmin, tmax, tymin, tymax, tzmin, tzmax;
   float divx, divy, divz;
-  divx = 1 / dir.x();
+  divx = 1 / dirNorm.x();
   if (divx >= 0)
   {
     tmin = (corner1_.x() - origin.x()) * divx;
@@ -652,8 +671,8 @@ bool bodies::Box::intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vect
     tmin = (corner2_.x() - origin.x()) * divx;
   }
 
-  divy = 1 / dir.y();
-  if (dir.y() >= 0)
+  divy = 1 / dirNorm.y();
+  if (divy >= 0)
   {
     tymin = (corner1_.y() - origin.y()) * divy;
     tymax = (corner2_.y() - origin.y()) * divy;
@@ -672,8 +691,8 @@ bool bodies::Box::intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vect
   if (tymax < tmax)
     tmax = tymax;
 
-  divz = 1 / dir.z();
-  if (dir.z() >= 0)
+  divz = 1 / dirNorm.z();
+  if (divz >= 0)
   {
     tzmin = (corner1_.z() - origin.z()) * divz;
     tzmax = (corner2_.z() - origin.z()) * divz;
@@ -699,12 +718,12 @@ bool bodies::Box::intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vect
   {
     if (tmax - tmin > detail::ZERO)
     {
-      intersections->push_back(tmin * dir + origin);
+      intersections->push_back(tmin * dirNorm + origin);
       if (count == 0 || count > 1)
-        intersections->push_back(tmax * dir + origin);
+        intersections->push_back(tmax * dirNorm + origin);
     }
     else
-      intersections->push_back(tmax * dir + origin);
+      intersections->push_back(tmax * dirNorm + origin);
   }
 
   return true;
@@ -1133,16 +1152,19 @@ double bodies::ConvexMesh::computeVolume() const
 bool bodies::ConvexMesh::intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vector3d& dir,
                                        EigenSTL::vector_Vector3d* intersections, unsigned int count) const
 {
+  // this is faster than always calling dir.normalized() in case the vector is already unit
+  const Eigen::Vector3d dirNorm = normalize(dir);
+
   if (!mesh_data_)
     return false;
-  if (detail::distanceSQR(center_, origin, dir) > radiusBSqr_)
+  if (detail::distanceSQR(center_, origin, dirNorm) > radiusBSqr_)
     return false;
-  if (!bounding_box_.intersectsRay(origin, dir))
+  if (!bounding_box_.intersectsRay(origin, dirNorm))
     return false;
 
   // transform the ray into the coordinate frame of the mesh
   Eigen::Vector3d orig(i_pose_ * origin);
-  Eigen::Vector3d dr(i_pose_ * dir);
+  Eigen::Vector3d dr(i_pose_ * dirNorm);
 
   std::vector<detail::intersc> ipts;
 
@@ -1202,7 +1224,7 @@ bool bodies::ConvexMesh::intersectsRay(const Eigen::Vector3d& origin, const Eige
         result = true;
         if (intersections)
         {
-          detail::intersc ip(origin + dir * t, t);
+          detail::intersc ip(origin + dirNorm * t, t);
           ipts.push_back(ip);
         }
         else
