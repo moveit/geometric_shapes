@@ -666,6 +666,11 @@ bool bodies::Box::intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vect
   const Eigen::Vector3d o(invRot_ * (origin - center_) + center_);
   const Eigen::Vector3d d(invRot_ * dirNorm);
 
+  // tmin and tmax are such values of t in "p = o + t * d" in which the line intersects the box faces.
+  // The box is viewed projected from all three directions, values of t are computed for each of the projections,
+  // and a final constraint on tmin and tmax is updated by each of these projections. If tmin > tmax, there is no
+  // intersection between the line and the box.
+
   divx = 1 / d.x();
   if (divx >= 0)
   {
@@ -724,6 +729,8 @@ bool bodies::Box::intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vect
   if (tzmax < tmax)
     tmax = tzmax;
 
+  // As we're doing intersections with a ray and not a line, cases where tmax is negative mean that the intersection is
+  // with the opposite ray and not the one we are working with.
   if (tmax < 0)
     return false;
 
@@ -731,19 +738,26 @@ bool bodies::Box::intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vect
   {
     if (tmax - tmin > detail::ZERO)
     {
+      // tmax > tmin, we have two distinct intersection points
       if (tmin > detail::ZERO)
       {
+        // tmin > 0, both intersections lie on the ray
         intersections->push_back(tmin * dirNorm + origin);
         if (count == 0 || count > 1)
           intersections->push_back(tmax * dirNorm + origin);
       }
       else
       {
+        // tmin <= 0 && tmax >= 0, the first intersection point is on the opposite ray and the second one on the correct
+        // ray - this means origin of the ray lies inside the box and we should only report one intersection.
         intersections->push_back(tmax * dirNorm + origin);
       }
     }
     else
+    {
+      // tmax == tmin, there is exactly one intersection at a corner or edge
       intersections->push_back(tmax * dirNorm + origin);
+    }
   }
 
   return true;
