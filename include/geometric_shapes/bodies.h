@@ -327,7 +327,7 @@ public:
   {
     type_ = shapes::SPHERE;
     shapes::Sphere shape(sphere.radius);
-    setDimensions(&shape);
+    setDimensionsDirty(&shape);
 
     Eigen::Isometry3d pose = Eigen::Isometry3d::Identity();
     pose.translation() = sphere.center;
@@ -389,7 +389,7 @@ public:
   {
     type_ = shapes::CYLINDER;
     shapes::Cylinder shape(cylinder.radius, cylinder.length);
-    setDimensions(&shape);
+    setDimensionsDirty(&shape);
     setPose(cylinder.pose);
   }
 
@@ -458,7 +458,7 @@ public:
   {
     type_ = shapes::BOX;
     shapes::Box shape(aabb.sizes()[0], aabb.sizes()[1], aabb.sizes()[2]);
-    setDimensions(&shape);
+    setDimensionsDirty(&shape);
 
     Eigen::Isometry3d pose = Eigen::Isometry3d::Identity();
     pose.translation() = aabb.center();
