@@ -104,6 +104,16 @@ struct interscOrder
   }
 };
 }  // namespace detail
+
+inline Eigen::Vector3d normalize(const Eigen::Vector3d& dir)
+{
+  const double norm = dir.squaredNorm();
+#if EIGEN_VERSION_AT_LEAST(3, 3, 0)
+  return ((norm - 1) > 1e-9) ? (dir / Eigen::numext::sqrt(norm)) : dir;
+#else  // used in kinetic
+  return ((norm - 1) > 1e-9) ? (dir / sqrt(norm)) : dir;
+#endif
+}
 }  // namespace bodies
 
 void bodies::Body::setDimensions(const shapes::Shape* shape)
@@ -221,12 +231,7 @@ bool bodies::Sphere::intersectsRay(const Eigen::Vector3d& origin, const Eigen::V
                                    EigenSTL::vector_Vector3d* intersections, unsigned int count) const
 {
   // this is faster than always calling dir.normalized() in case the vector is already unit
-  const double norm = dir.squaredNorm();
-#if EIGEN_VERSION_AT_LEAST(3, 3, 0)
-  const Eigen::Vector3d dirNorm = ((norm - 1) > 1e-9) ? (dir / Eigen::numext::sqrt(norm)) : dir;
-#else
-  const Eigen::Vector3d dirNorm = ((norm - 1) > 1e-9) ? (dir / sqrt(norm)) : dir;  // used in kinetic
-#endif
+  const Eigen::Vector3d dirNorm = normalize(dir);
 
   if (detail::distanceSQR(center_, origin, dirNorm) > radius2_)
     return false;
@@ -410,12 +415,7 @@ bool bodies::Cylinder::intersectsRay(const Eigen::Vector3d& origin, const Eigen:
                                      EigenSTL::vector_Vector3d* intersections, unsigned int count) const
 {
   // this is faster than always calling dir.normalized() in case the vector is already unit
-  const double norm = dir.squaredNorm();
-#if EIGEN_VERSION_AT_LEAST(3, 3, 0)
-  const Eigen::Vector3d dirNorm = ((norm - 1) > 1e-9) ? (dir / Eigen::numext::sqrt(norm)) : dir;
-#else
-  const Eigen::Vector3d dirNorm = ((norm - 1) > 1e-9) ? (dir / sqrt(norm)) : dir;  // used in kinetic
-#endif
+  const Eigen::Vector3d dirNorm = normalize(dir);
 
   if (detail::distanceSQR(center_, origin, dirNorm) > radiusBSqr_)
     return false;
@@ -654,12 +654,7 @@ bool bodies::Box::intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vect
                                 EigenSTL::vector_Vector3d* intersections, unsigned int count) const
 {
   // this is faster than always calling dir.normalized() in case the vector is already unit
-  const double norm = dir.squaredNorm();
-#if EIGEN_VERSION_AT_LEAST(3, 3, 0)
-  const Eigen::Vector3d dirNorm = ((norm - 1) > 1e-9) ? (dir / Eigen::numext::sqrt(norm)) : dir;
-#else
-  const Eigen::Vector3d dirNorm = ((norm - 1) > 1e-9) ? (dir / sqrt(norm)) : dir;  // used in kinetic
-#endif
+  const Eigen::Vector3d dirNorm = normalize(dir);
 
   // Brian Smits. Efficient bounding box intersection. Ray tracing news 15(1), 2002
   float tmin, tmax, tymin, tymax, tzmin, tzmax;
@@ -1158,12 +1153,7 @@ bool bodies::ConvexMesh::intersectsRay(const Eigen::Vector3d& origin, const Eige
                                        EigenSTL::vector_Vector3d* intersections, unsigned int count) const
 {
   // this is faster than always calling dir.normalized() in case the vector is already unit
-  const double norm = dir.squaredNorm();
-#if EIGEN_VERSION_AT_LEAST(3, 3, 0)
-  const Eigen::Vector3d dirNorm = ((norm - 1) > 1e-9) ? (dir / Eigen::numext::sqrt(norm)) : dir;
-#else
-  const Eigen::Vector3d dirNorm = ((norm - 1) > 1e-9) ? (dir / sqrt(norm)) : dir;  // used in kinetic
-#endif
+  const Eigen::Vector3d dirNorm = normalize(dir);
 
   if (!mesh_data_)
     return false;
