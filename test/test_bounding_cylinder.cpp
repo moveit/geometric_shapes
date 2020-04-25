@@ -301,7 +301,7 @@ TEST(CylinderBoundingCylinder, Cylinder2)
   EXPECT_NEAR(1.0, bcyl.radius, 1e-4);
   EXPECT_NEAR(2.0, bcyl.length, 1e-4);
 
-  pose.linear() = Eigen::AngleAxisd(M_PI_2, Eigen::Vector3d(1, 1, 1)).toRotationMatrix();
+  pose.linear() = Eigen::AngleAxisd(M_PI_2, Eigen::Vector3d(1, 1, 1).normalized()).toRotationMatrix();
   body.setPose(pose);
   body.computeBoundingCylinder(bcyl);
 
