@@ -64,6 +64,7 @@ extern "C" {
 #include <boost/math/constants/constants.hpp>
 #include <limits>
 #include <cstdio>
+#include <cmath>  // std::fmin, std::fmax
 #include <algorithm>
 #include <Eigen/Geometry>
 
@@ -658,76 +659,37 @@ bool bodies::Box::intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vect
   const Eigen::Vector3d dirNorm = normalize(dir);
 
   // Brian Smits. Efficient bounding box intersection. Ray tracing news 15(1), 2002
-  float tmin, tmax, tymin, tymax, tzmin, tzmax;
-  float divx, divy, divz;
 
   // The implemented method only works for axis-aligned boxes. So we treat ours as such, cancel its rotation, and
   // rotate the origin and dir instead. corner1_ and corner2_ are corners with canceled rotation.
   const Eigen::Vector3d o(invRot_ * (origin - center_) + center_);
   const Eigen::Vector3d d(invRot_ * dirNorm);
 
+  Eigen::Vector3d tmpTmin, tmpTmax;
+  tmpTmin = (corner1_ - o).cwiseQuotient(d);
+  tmpTmax = (corner2_ - o).cwiseQuotient(d);
+
+  // In projection to each axis, if the ray has positive direction, it goes from min corner (corner1_) to max corner
+  // (corner2_). If its direction is negative, the first intersection is at max corner and then at min corner.
+  for (size_t i = 0; i < 3; ++i)
+  {
+    if (d[i] < 0)
+      std::swap(tmpTmin[i], tmpTmax[i]);
+  }
+
   // tmin and tmax are such values of t in "p = o + t * d" in which the line intersects the box faces.
   // The box is viewed projected from all three directions, values of t are computed for each of the projections,
   // and a final constraint on tmin and tmax is updated by each of these projections. If tmin > tmax, there is no
   // intersection between the line and the box.
 
-  divx = 1 / d.x();
-  if (divx >= 0)
-  {
-    tmin = (corner1_.x() - o.x()) * divx;
-    tmax = (corner2_.x() - o.x()) * divx;
-  }
-  else
-  {
-    tmax = (corner1_.x() - o.x()) * divx;
-    tmin = (corner2_.x() - o.x()) * divx;
-  }
-  // this prevents nans spreading in the computation; the other dimensions do not need this check because all the
-  // comparisons guarding change of tmin/tmax will come false in case a nan enters them
-  if (std::isnan(tmin))
-    tmin = -std::numeric_limits<float>::infinity();
-  if (std::isnan(tmax))
-    tmax = std::numeric_limits<float>::infinity();
+  double tmin, tmax;
+  // use fmax/fmin to handle NaNs which can sneak in when dividing by d in tmpTmin and tmpTmax
+  tmin = std::fmax(tmpTmin.x(), std::fmax(tmpTmin.y(), tmpTmin.z()));
+  tmax = std::fmin(tmpTmax.x(), std::fmin(tmpTmax.y(), tmpTmax.z()));
 
-  divy = 1 / d.y();
-  if (d.y() >= 0)
-  {
-    tymin = (corner1_.y() - o.y()) * divy;
-    tymax = (corner2_.y() - o.y()) * divy;
-  }
-  else
-  {
-    tymax = (corner1_.y() - o.y()) * divy;
-    tymin = (corner2_.y() - o.y()) * divy;
-  }
-
-  if ((tmin > tymax || tymin > tmax))
+  // tmin > tmax, there is no intersection between the line and the box
+  if (tmax - tmin < -detail::ZERO)
     return false;
-
-  if (tymin > tmin)
-    tmin = tymin;
-  if (tymax < tmax)
-    tmax = tymax;
-
-  divz = 1 / d.z();
-  if (d.z() >= 0)
-  {
-    tzmin = (corner1_.z() - o.z()) * divz;
-    tzmax = (corner2_.z() - o.z()) * divz;
-  }
-  else
-  {
-    tzmax = (corner1_.z() - o.z()) * divz;
-    tzmin = (corner2_.z() - o.z()) * divz;
-  }
-
-  if ((tmin > tzmax || tzmin > tmax))
-    return false;
-
-  if (tzmin > tmin)
-    tmin = tzmin;
-  if (tzmax < tmax)
-    tmax = tzmax;
 
   // As we're doing intersections with a ray and not a line, cases where tmax is negative mean that the intersection is
   // with the opposite ray and not the one we are working with.
