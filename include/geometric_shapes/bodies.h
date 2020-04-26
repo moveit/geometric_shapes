@@ -327,7 +327,7 @@ public:
   {
     type_ = shapes::SPHERE;
     shapes::Sphere shape(sphere.radius);
-    setDimensions(&shape);
+    setDimensionsDirty(&shape);
 
     Eigen::Isometry3d pose = Eigen::Isometry3d::Identity();
     pose.translation() = sphere.center;
@@ -389,7 +389,7 @@ public:
   {
     type_ = shapes::CYLINDER;
     shapes::Cylinder shape(cylinder.radius, cylinder.length);
-    setDimensions(&shape);
+    setDimensionsDirty(&shape);
     setPose(cylinder.pose);
   }
 
@@ -458,7 +458,7 @@ public:
   {
     type_ = shapes::BOX;
     shapes::Box shape(aabb.sizes()[0], aabb.sizes()[1], aabb.sizes()[2]);
-    setDimensions(&shape);
+    setDimensionsDirty(&shape);
 
     Eigen::Isometry3d pose = Eigen::Isometry3d::Identity();
     pose.translation() = aabb.center();
@@ -500,8 +500,8 @@ protected:
   Eigen::Vector3d normalW_;
   Eigen::Vector3d normalH_;
 
-  Eigen::Vector3d corner1_;
-  Eigen::Vector3d corner2_;
+  Eigen::Vector3d corner1_;  //!< The translated, but not rotated min corner
+  Eigen::Vector3d corner2_;  //!< The translated, but not rotated max corner
 
   double length2_;
   double width2_;
@@ -530,9 +530,7 @@ public:
     setDimensions(shape);
   }
 
-  virtual ~ConvexMesh()
-  {
-  }
+  virtual ~ConvexMesh();
 
   /** \brief Returns an empty vector */
   virtual std::vector<double> getDimensions() const;
@@ -571,7 +569,12 @@ protected:
   /** \brief (Used mainly for debugging) Count the number of vertices behind a plane*/
   unsigned int countVerticesBehindPlane(const Eigen::Vector4f& planeNormal) const;
 
-  /** \brief Check if a point is inside a set of planes that make up a convex mesh*/
+  /** \brief Check if the point is inside all halfspaces this mesh consists of (mesh_data_->planes_).
+   *
+   * \note The point is expected to have pose_ "cancelled" (have inverse pose of this mesh applied to it).
+   * \note Scale and padding of the mesh are taken into account.
+   * \note There is a 1e-9 margin "outside" the planes where points are still considered to be inside.
+   */
   bool isPointInsidePlanes(const Eigen::Vector3d& point) const;
 
   struct MeshData
