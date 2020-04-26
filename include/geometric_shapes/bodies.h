@@ -496,7 +496,9 @@ protected:
 
   // pose/padding/scaling-dependent values & values computed for convenience and fast upcoming computations
   Eigen::Vector3d center_;
-  Eigen::Matrix3d invRot_;
+  Eigen::Vector3d normalL_;
+  Eigen::Vector3d normalW_;
+  Eigen::Vector3d normalH_;
 
   Eigen::Vector3d corner1_;  //!< The translated, but not rotated min corner
   Eigen::Vector3d corner2_;  //!< The translated, but not rotated max corner
@@ -528,9 +530,7 @@ public:
     setDimensions(shape);
   }
 
-  virtual ~ConvexMesh()
-  {
-  }
+  virtual ~ConvexMesh();
 
   /** \brief Returns an empty vector */
   virtual std::vector<double> getDimensions() const;
@@ -583,7 +583,6 @@ protected:
     EigenSTL::vector_Vector3d vertices_;
     std::vector<unsigned int> triangles_;
     std::map<unsigned int, unsigned int> plane_for_triangle_;
-    std::map<unsigned int, unsigned int> triangle_for_plane_;
     Eigen::Vector3d mesh_center_;
     double mesh_radiusB_;
     Eigen::Vector3d box_offset_;
