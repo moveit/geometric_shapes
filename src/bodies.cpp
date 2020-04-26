@@ -67,6 +67,7 @@ extern "C" {
 #include <cmath>  // std::fmin, std::fmax
 #include <algorithm>
 #include <Eigen/Geometry>
+#include <unordered_map>
 
 namespace bodies
 {
@@ -104,6 +105,31 @@ struct interscOrder
     return a.time < b.time;
   }
 };
+
+/**
+ * \brief Take intersections points in ipts and add them to intersections, filtering duplicates.
+ * \param ipts The source list of intersections (will be modified (sorted)).
+ * \param intersections The output list of intersection points.
+ * \param count The maximum count of returned intersection points. 0 = return all points.
+ */
+void filterIntersections(std::vector<detail::intersc>& ipts, EigenSTL::vector_Vector3d* intersections,
+                         const size_t count)
+{
+  if (intersections == nullptr || ipts.empty())
+    return;
+
+  std::sort(ipts.begin(), ipts.end(), interscOrder());
+  const auto n = count > 0 ? std::min<size_t>(count, ipts.size()) : ipts.size();
+
+  for (const auto& p : ipts)
+  {
+    if (intersections->size() == n)
+      break;
+    if (!intersections->empty() && p.pt.isApprox(intersections->back(), ZERO))
+      continue;
+    intersections->push_back(p.pt);
+  }
+}
 }  // namespace detail
 
 inline Eigen::Vector3d normalize(const Eigen::Vector3d& dir)
@@ -513,21 +539,9 @@ bool bodies::Cylinder::intersectsRay(const Eigen::Vector3d& origin, const Eigen:
   if (ipts.empty())
     return false;
 
-  std::sort(ipts.begin(), ipts.end(), detail::interscOrder());
-  const unsigned int n = count > 0 ? std::min<unsigned int>(count, ipts.size()) : ipts.size();
-
   // If a ray hits exactly the boundary between a side and a base, it is reported twice.
-  // We want to only return the intersection once; the loop makes use of the fact that ipts is
-  // already sorted by distance, so if some points are duplicate, they are examined successively.
-  for (const auto& p : ipts)
-  {
-    if (intersections->size() == n)
-      break;
-    if (!intersections->empty() && p.pt.isApprox(intersections->back(), detail::ZERO))
-      continue;
-    intersections->push_back(p.pt);
-  }
-
+  // We want to only return the intersection once, thus we need to filter them.
+  detail::filterIntersections(ipts, intersections, count);
   return true;
 }
 
@@ -961,7 +975,7 @@ void bodies::ConvexMesh::computeScaledVerticesFromPlaneProjections()
   // is not unique
 
   // First figure out, which tris are connected to each vertex
-  std::map<unsigned int, std::vector<unsigned int> > vertex_to_tris;
+  std::map<unsigned int, std::vector<unsigned int>> vertex_to_tris;
   for (unsigned int i = 0; i < mesh_data_->triangles_.size() / 3; ++i)
   {
     vertex_to_tris[mesh_data_->triangles_[3 * i + 0]].push_back(i);
@@ -1240,21 +1254,11 @@ bool bodies::ConvexMesh::intersectsRay(const Eigen::Vector3d& origin, const Eige
     }
   }
 
-  if (intersections)
+  if (result && intersections)
   {
-    std::sort(ipts.begin(), ipts.end(), detail::interscOrder());
-    const unsigned int n = count > 0 ? std::min<unsigned int>(count, ipts.size()) : ipts.size();
     // If a ray hits exactly the boundary between two triangles, it is reported twice;
-    // We only want return the intersection once; the loop makes use of the fact that ipts is
-    // already sorted by distance, so if some points are duplicate, they are examined successively.
-    for (const auto& p : ipts)
-    {
-      if (intersections->size() == n)
-        break;
-      if (!intersections->empty() && (p.pt - intersections->back()).squaredNorm() < pow(detail::ZERO, 2))
-        continue;
-      intersections->push_back(p.pt);
-    }
+    // We only want return the intersection once; thus we need to filter them.
+    detail::filterIntersections(ipts, intersections, count);
   }
 
   return result;
