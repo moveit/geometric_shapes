@@ -15,6 +15,10 @@ Note: Bodies for meshes compute the convex hull of those meshes in order to prov
 
 Note: [shape_tools](https://github.com/ros-planning/shape_tools) package was recently merged into this package
 
+Note: `bodies::Box::corner1_` was renamed to `minCorner_` and `bodies::Box::corner2_` to `maxCorner_` in Noetic.
+
+Note: `bodies::ConvexMesh::MeshData` was made implementation-private in Noetic and is no longer accessible from the `.h` file.
+
 ## Build Status
 
 Travis CI: [![Build Status](https://travis-ci.org/ros-planning/geometric_shapes.svg?branch=melodic-devel)](https://travis-ci.org/ros-planning/geometric_shapes)

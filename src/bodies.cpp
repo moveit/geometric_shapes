@@ -143,12 +143,6 @@ inline Eigen::Vector3d normalize(const Eigen::Vector3d& dir)
 }
 }  // namespace bodies
 
-void bodies::Body::setDimensions(const shapes::Shape* shape)
-{
-  setDimensionsDirty(shape);
-  updateInternalData();
-}
-
 bool bodies::Body::samplePointInside(random_numbers::RandomNumberGenerator& rng, unsigned int max_attempts,
                                      Eigen::Vector3d& result) const
 {
@@ -313,6 +307,17 @@ bool bodies::Sphere::intersectsRay(const Eigen::Vector3d& origin, const Eigen::V
     }
   }
   return result;
+}
+
+bodies::Sphere::Sphere(const bodies::BoundingSphere& sphere) : Body()
+{
+  type_ = shapes::SPHERE;
+  shapes::Sphere shape(sphere.radius);
+  setDimensionsDirty(&shape);
+
+  Eigen::Isometry3d pose = Eigen::Isometry3d::Identity();
+  pose.translation() = sphere.center;
+  setPose(pose);
 }
 
 bool bodies::Cylinder::containsPoint(const Eigen::Vector3d& p, bool /* verbose */) const
@@ -545,6 +550,14 @@ bool bodies::Cylinder::intersectsRay(const Eigen::Vector3d& origin, const Eigen:
   return true;
 }
 
+bodies::Cylinder::Cylinder(const bodies::BoundingCylinder& cylinder) : Body()
+{
+  type_ = shapes::CYLINDER;
+  shapes::Cylinder shape(cylinder.radius, cylinder.length);
+  setDimensionsDirty(&shape);
+  setPose(cylinder.pose);
+}
+
 bool bodies::Box::samplePointInside(random_numbers::RandomNumberGenerator& rng, unsigned int /* max_attempts */,
                                     Eigen::Vector3d& result) const
 {
@@ -600,8 +613,8 @@ void bodies::Box::updateInternalData()
 
   // rotation is intentionally not applied, the corners are used in intersectsRay()
   const Eigen::Vector3d tmp(length2_, width2_, height2_);
-  corner1_ = center_ - tmp;
-  corner2_ = center_ + tmp;
+  minCorner_ = center_ - tmp;
+  maxCorner_ = center_ + tmp;
 }
 
 std::shared_ptr<bodies::Body> bodies::Box::cloneAt(const Eigen::Isometry3d& pose, double padding, double scale) const
@@ -675,16 +688,16 @@ bool bodies::Box::intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vect
   // Brian Smits. Efficient bounding box intersection. Ray tracing news 15(1), 2002
 
   // The implemented method only works for axis-aligned boxes. So we treat ours as such, cancel its rotation, and
-  // rotate the origin and dir instead. corner1_ and corner2_ are corners with canceled rotation.
+  // rotate the origin and dir instead. minCorner_ and maxCorner_ are corners with canceled rotation.
   const Eigen::Vector3d o(invRot_ * (origin - center_) + center_);
   const Eigen::Vector3d d(invRot_ * dirNorm);
 
   Eigen::Vector3d tmpTmin, tmpTmax;
-  tmpTmin = (corner1_ - o).cwiseQuotient(d);
-  tmpTmax = (corner2_ - o).cwiseQuotient(d);
+  tmpTmin = (minCorner_ - o).cwiseQuotient(d);
+  tmpTmax = (maxCorner_ - o).cwiseQuotient(d);
 
-  // In projection to each axis, if the ray has positive direction, it goes from min corner (corner1_) to max corner
-  // (corner2_). If its direction is negative, the first intersection is at max corner and then at min corner.
+  // In projection to each axis, if the ray has positive direction, it goes from min corner (minCorner_) to max corner
+  // (maxCorner_). If its direction is negative, the first intersection is at max corner and then at min corner.
   for (size_t i = 0; i < 3; ++i)
   {
     if (d[i] < 0)
@@ -738,6 +751,36 @@ bool bodies::Box::intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vect
 
   return true;
 }
+
+bodies::Box::Box(const bodies::AABB& aabb) : Body()
+{
+  type_ = shapes::BOX;
+  shapes::Box shape(aabb.sizes()[0], aabb.sizes()[1], aabb.sizes()[2]);
+  setDimensionsDirty(&shape);
+
+  Eigen::Isometry3d pose = Eigen::Isometry3d::Identity();
+  pose.translation() = aabb.center();
+  setPose(pose);
+}
+
+namespace bodies
+{
+struct ConvexMesh::MeshData
+{
+  EigenSTL::vector_Vector4d planes_;
+  EigenSTL::vector_Vector3d vertices_;
+  std::vector<unsigned int> triangles_;
+  std::map<unsigned int, unsigned int> plane_for_triangle_;
+  std::map<unsigned int, unsigned int> triangle_for_plane_;
+  Eigen::Vector3d mesh_center_;
+  double mesh_radiusB_;
+  Eigen::Vector3d box_offset_;
+  Eigen::Vector3d box_size_;
+  BoundingCylinder bounding_cylinder_;
+
+  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+};
+}  // namespace bodies
 
 bool bodies::ConvexMesh::containsPoint(const Eigen::Vector3d& p, bool /* verbose */) const
 {
