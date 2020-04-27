@@ -130,10 +130,6 @@ void filterIntersections(std::vector<detail::intersc>& ipts, EigenSTL::vector_Ve
     intersections->push_back(p.pt);
   }
 }
-
-// HACK: The global map g_triangle_for_plane_ is needed for ABI compatibility with the melodic version of
-// geometric_shapes; in newer releases, it should instead be added as a member to ConvexMesh::MeshData.
-std::unordered_map<const ConvexMesh*, std::map<unsigned int, unsigned int>> g_triangle_for_plane_;
 }  // namespace detail
 
 inline Eigen::Vector3d normalize(const Eigen::Vector3d& dir)
@@ -146,12 +142,6 @@ inline Eigen::Vector3d normalize(const Eigen::Vector3d& dir)
 #endif
 }
 }  // namespace bodies
-
-void bodies::Body::setDimensions(const shapes::Shape* shape)
-{
-  setDimensionsDirty(shape);
-  updateInternalData();
-}
 
 bool bodies::Body::samplePointInside(random_numbers::RandomNumberGenerator& rng, unsigned int max_attempts,
                                      Eigen::Vector3d& result) const
@@ -317,6 +307,17 @@ bool bodies::Sphere::intersectsRay(const Eigen::Vector3d& origin, const Eigen::V
     }
   }
   return result;
+}
+
+bodies::Sphere::Sphere(const bodies::BoundingSphere& sphere) : Body()
+{
+  type_ = shapes::SPHERE;
+  shapes::Sphere shape(sphere.radius);
+  setDimensionsDirty(&shape);
+
+  Eigen::Isometry3d pose = Eigen::Isometry3d::Identity();
+  pose.translation() = sphere.center;
+  setPose(pose);
 }
 
 bool bodies::Cylinder::containsPoint(const Eigen::Vector3d& p, bool /* verbose */) const
@@ -549,6 +550,14 @@ bool bodies::Cylinder::intersectsRay(const Eigen::Vector3d& origin, const Eigen:
   return true;
 }
 
+bodies::Cylinder::Cylinder(const bodies::BoundingCylinder& cylinder) : Body()
+{
+  type_ = shapes::CYLINDER;
+  shapes::Cylinder shape(cylinder.radius, cylinder.length);
+  setDimensionsDirty(&shape);
+  setPose(cylinder.pose);
+}
+
 bool bodies::Box::samplePointInside(random_numbers::RandomNumberGenerator& rng, unsigned int /* max_attempts */,
                                     Eigen::Vector3d& result) const
 {
@@ -559,7 +568,7 @@ bool bodies::Box::samplePointInside(random_numbers::RandomNumberGenerator& rng, 
 
 bool bodies::Box::containsPoint(const Eigen::Vector3d& p, bool /* verbose */) const
 {
-  const Eigen::Vector3d aligned = (pose_.linear().transpose() * (p - center_)).cwiseAbs();
+  const Eigen::Vector3d aligned = (invRot_ * (p - center_)).cwiseAbs();
   return aligned[0] <= length2_ && aligned[1] <= width2_ && aligned[2] <= height2_;
 }
 
@@ -600,15 +609,12 @@ void bodies::Box::updateInternalData()
   radiusB_ = sqrt(radius2_);
 
   ASSERT_ISOMETRY(pose_);
-  Eigen::Matrix3d basis = pose_.linear();
-  normalL_ = basis.col(0);
-  normalW_ = basis.col(1);
-  normalH_ = basis.col(2);
+  invRot_ = pose_.linear().transpose();
 
   // rotation is intentionally not applied, the corners are used in intersectsRay()
   const Eigen::Vector3d tmp(length2_, width2_, height2_);
-  corner1_ = center_ - tmp;
-  corner2_ = center_ + tmp;
+  minCorner_ = center_ - tmp;
+  maxCorner_ = center_ + tmp;
 }
 
 std::shared_ptr<bodies::Body> bodies::Box::cloneAt(const Eigen::Isometry3d& pose, double padding, double scale) const
@@ -682,17 +688,16 @@ bool bodies::Box::intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vect
   // Brian Smits. Efficient bounding box intersection. Ray tracing news 15(1), 2002
 
   // The implemented method only works for axis-aligned boxes. So we treat ours as such, cancel its rotation, and
-  // rotate the origin and dir instead. corner1_ and corner2_ are corners with canceled rotation.
-  const Eigen::Matrix3d invRot = pose_.linear().transpose();
-  const Eigen::Vector3d o(invRot * (origin - center_) + center_);
-  const Eigen::Vector3d d(invRot * dirNorm);
+  // rotate the origin and dir instead. minCorner_ and maxCorner_ are corners with canceled rotation.
+  const Eigen::Vector3d o(invRot_ * (origin - center_) + center_);
+  const Eigen::Vector3d d(invRot_ * dirNorm);
 
   Eigen::Vector3d tmpTmin, tmpTmax;
-  tmpTmin = (corner1_ - o).cwiseQuotient(d);
-  tmpTmax = (corner2_ - o).cwiseQuotient(d);
+  tmpTmin = (minCorner_ - o).cwiseQuotient(d);
+  tmpTmax = (maxCorner_ - o).cwiseQuotient(d);
 
-  // In projection to each axis, if the ray has positive direction, it goes from min corner (corner1_) to max corner
-  // (corner2_). If its direction is negative, the first intersection is at max corner and then at min corner.
+  // In projection to each axis, if the ray has positive direction, it goes from min corner (minCorner_) to max corner
+  // (maxCorner_). If its direction is negative, the first intersection is at max corner and then at min corner.
   for (size_t i = 0; i < 3; ++i)
   {
     if (d[i] < 0)
@@ -746,6 +751,36 @@ bool bodies::Box::intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vect
 
   return true;
 }
+
+bodies::Box::Box(const bodies::AABB& aabb) : Body()
+{
+  type_ = shapes::BOX;
+  shapes::Box shape(aabb.sizes()[0], aabb.sizes()[1], aabb.sizes()[2]);
+  setDimensionsDirty(&shape);
+
+  Eigen::Isometry3d pose = Eigen::Isometry3d::Identity();
+  pose.translation() = aabb.center();
+  setPose(pose);
+}
+
+namespace bodies
+{
+struct ConvexMesh::MeshData
+{
+  EigenSTL::vector_Vector4d planes_;
+  EigenSTL::vector_Vector3d vertices_;
+  std::vector<unsigned int> triangles_;
+  std::map<unsigned int, unsigned int> plane_for_triangle_;
+  std::map<unsigned int, unsigned int> triangle_for_plane_;
+  Eigen::Vector3d mesh_center_;
+  double mesh_radiusB_;
+  Eigen::Vector3d box_offset_;
+  Eigen::Vector3d box_size_;
+  BoundingCylinder bounding_cylinder_;
+
+  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+};
+}  // namespace bodies
 
 bool bodies::ConvexMesh::containsPoint(const Eigen::Vector3d& p, bool /* verbose */) const
 {
@@ -929,12 +964,6 @@ void bodies::ConvexMesh::useDimensions(const shapes::Shape* shape)
   mesh_data_->mesh_radiusB_ = sqrt(mesh_data_->mesh_radiusB_);
   mesh_data_->triangles_.reserve(num_facets);
 
-  // HACK: only needed for ABI compatibility with melodic
-  if (detail::g_triangle_for_plane_.find(this) == detail::g_triangle_for_plane_.end())
-    detail::g_triangle_for_plane_.emplace(this, std::map<unsigned int, unsigned int>());
-  else
-    detail::g_triangle_for_plane_[this].clear();
-
   // neccessary for qhull macro
   facetT* facet;
   FORALLfacets
@@ -959,7 +988,7 @@ void bodies::ConvexMesh::useDimensions(const shapes::Shape* shape)
     }
 
     mesh_data_->plane_for_triangle_[(mesh_data_->triangles_.size() - 1) / 3] = mesh_data_->planes_.size() - 1;
-    detail::g_triangle_for_plane_[this][mesh_data_->planes_.size() - 1] = (mesh_data_->triangles_.size() - 1) / 3;
+    mesh_data_->triangle_for_plane_[mesh_data_->planes_.size() - 1] = (mesh_data_->triangles_.size() - 1) / 3;
   }
   qh_freeqhull(!qh_ALL);
   int curlong, totlong;
@@ -1144,7 +1173,7 @@ bool bodies::ConvexMesh::isPointInsidePlanes(const Eigen::Vector3d& point) const
     // we also cannot simply subtract padding_ from it, because padding of the points on the plane causes a different
     // effect than adding padding along this plane's normal (padding effect is direction-dependent)
     const auto scaled_point_on_plane =
-        scaled_vertices_->at(mesh_data_->triangles_[3 * detail::g_triangle_for_plane_[this][i]]);
+        scaled_vertices_->at(mesh_data_->triangles_[3 * mesh_data_->triangle_for_plane_[i]]);
     const double w_scaled_padded = -plane_vec.dot(scaled_point_on_plane);
     const double dist = plane_vec.dot(point) + w_scaled_padded - detail::ZERO;
     if (dist > 0.0)
@@ -1276,13 +1305,6 @@ bool bodies::ConvexMesh::intersectsRay(const Eigen::Vector3d& origin, const Eige
   }
 
   return result;
-}
-
-bodies::ConvexMesh::~ConvexMesh()
-{
-  // HACK: only needed for ABI compatibility with melodic
-  if (detail::g_triangle_for_plane_.find(this) != detail::g_triangle_for_plane_.end())
-    detail::g_triangle_for_plane_.erase(this);
 }
 
 bodies::BodyVector::BodyVector()
