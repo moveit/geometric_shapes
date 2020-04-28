@@ -199,6 +199,9 @@ public:
   /** \brief Get the dimensions associated to this body (as read from corresponding shape) */
   virtual std::vector<double> getDimensions() const = 0;
 
+  /** \brief Get the dimensions associated to this body (scaled and padded) */
+  virtual std::vector<double> getScaledDimensions() const = 0;
+
   /** \brief Set the dimensions of the body (from corresponding shape) */
   void setDimensions(const shapes::Shape* shape);
 
@@ -313,6 +316,7 @@ public:
 
   /** \brief Get the radius of the sphere */
   std::vector<double> getDimensions() const override;
+  std::vector<double> getScaledDimensions() const override;
 
   bool containsPoint(const Eigen::Vector3d& p, bool verbose = false) const override;
   double computeVolume() const override;
@@ -372,6 +376,7 @@ public:
 
   /** \brief Get the radius & length of the cylinder */
   std::vector<double> getDimensions() const override;
+  std::vector<double> getScaledDimensions() const override;
 
   bool containsPoint(const Eigen::Vector3d& p, bool verbose = false) const override;
   double computeVolume() const override;
@@ -444,6 +449,7 @@ public:
 
   /** \brief Get the length & width & height (x, y, z) of the box */
   std::vector<double> getDimensions() const override;
+  std::vector<double> getScaledDimensions() const override;
 
   bool containsPoint(const Eigen::Vector3d& p, bool verbose = false) const override;
   double computeVolume() const override;
@@ -507,6 +513,8 @@ public:
 
   /** \brief Returns an empty vector */
   std::vector<double> getDimensions() const override;
+  /** \brief Returns an empty vector */
+  std::vector<double> getScaledDimensions() const override;
 
   bool containsPoint(const Eigen::Vector3d& p, bool verbose = false) const override;
   double computeVolume() const override;

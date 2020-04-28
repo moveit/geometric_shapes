@@ -197,6 +197,11 @@ std::vector<double> bodies::Sphere::getDimensions() const
   return d;
 }
 
+std::vector<double> bodies::Sphere::getScaledDimensions() const
+{
+  return { radiusU_ };
+}
+
 void bodies::Sphere::updateInternalData()
 {
   const auto tmpRadiusU = radius_ * scale_ + padding_;
@@ -363,6 +368,11 @@ std::vector<double> bodies::Cylinder::getDimensions() const
   d[0] = radius_;
   d[1] = length_;
   return d;
+}
+
+std::vector<double> bodies::Cylinder::getScaledDimensions() const
+{
+  return { radiusU_, 2 * length2_ };
 }
 
 void bodies::Cylinder::updateInternalData()
@@ -590,6 +600,11 @@ std::vector<double> bodies::Box::getDimensions() const
   d[1] = width_;
   d[2] = height_;
   return d;
+}
+
+std::vector<double> bodies::Box::getScaledDimensions() const
+{
+  return { 2 * length2_, 2 * width2_, 2 * height2_ };
 }
 
 void bodies::Box::updateInternalData()
@@ -977,6 +992,11 @@ void bodies::ConvexMesh::useDimensions(const shapes::Shape* shape)
 }
 
 std::vector<double> bodies::ConvexMesh::getDimensions() const
+{
+  return std::vector<double>();
+}
+
+std::vector<double> bodies::ConvexMesh::getScaledDimensions() const
 {
   return std::vector<double>();
 }
