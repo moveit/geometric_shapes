@@ -39,29 +39,40 @@
 #include <console_bridge/console.h>
 #include <Eigen/Geometry>
 
+bodies::Body* bodies::createEmptyBodyFromShapeType(const shapes::ShapeType& shapeType)
+{
+  Body* body = nullptr;
+
+  switch (shapeType)
+  {
+    case shapes::BOX:
+      body = new bodies::Box();
+      break;
+    case shapes::SPHERE:
+      body = new bodies::Sphere();
+      break;
+    case shapes::CYLINDER:
+      body = new bodies::Cylinder();
+      break;
+    case shapes::MESH:
+      body = new bodies::ConvexMesh();
+      break;
+    default:
+      CONSOLE_BRIDGE_logError("Creating body from shape: Unknown shape type %d", (int)shapeType);
+      break;
+  }
+  return body;
+}
+
 bodies::Body* bodies::createBodyFromShape(const shapes::Shape* shape)
 {
   Body* body = nullptr;
 
   if (shape)
-    switch (shape->type)
-    {
-      case shapes::BOX:
-        body = new bodies::Box(shape);
-        break;
-      case shapes::SPHERE:
-        body = new bodies::Sphere(shape);
-        break;
-      case shapes::CYLINDER:
-        body = new bodies::Cylinder(shape);
-        break;
-      case shapes::MESH:
-        body = new bodies::ConvexMesh(shape);
-        break;
-      default:
-        CONSOLE_BRIDGE_logError("Creating body from shape: Unknown shape type %d", (int)shape->type);
-        break;
-    }
+  {
+    body = createEmptyBodyFromShapeType(shape->type);
+    body->setDimensions(shape);
+  }
 
   return body;
 }
@@ -106,7 +117,7 @@ Body* constructBodyFromMsgHelper(const T& shape_msg, const geometry_msgs::Pose& 
 
   if (shape)
   {
-    Body* body = createBodyFromShape(shape);
+    Body* body = createEmptyBodyFromShapeType(shape->type);
     if (body)
     {
       Eigen::Quaterniond q(pose.orientation.w, pose.orientation.x, pose.orientation.y, pose.orientation.z);
@@ -116,7 +127,9 @@ Body* constructBodyFromMsgHelper(const T& shape_msg, const geometry_msgs::Pose& 
         q = Eigen::Quaterniond(1.0, 0.0, 0.0, 0.0);
       }
       Eigen::Isometry3d af(Eigen::Translation3d(pose.position.x, pose.position.y, pose.position.z) * q);
-      body->setPose(af);
+      body->setPoseDirty(af);
+      body->setDimensionsDirty(shape);
+      body->updateInternalData();
       return body;
     }
   }
