@@ -136,6 +136,16 @@ void filterIntersections(std::vector<detail::intersc>& ipts, EigenSTL::vector_Ve
 // geometric_shapes; in newer releases, it should instead be added as a member to ConvexMesh::MeshData.
 std::unordered_map<const ConvexMesh*, std::map<size_t, size_t>> g_triangle_for_plane_;
 std::mutex g_triangle_for_plane_mutex;  //!< Lock this mutex every time you work with g_triangle_for_plane_.
+static std::map<size_t, size_t>& getTriangleForPlane(const ConvexMesh* mesh)
+{
+  std::lock_guard<std::mutex> lock(g_triangle_for_plane_mutex);
+  auto it = g_triangle_for_plane_.find(mesh);
+  if (it == detail::g_triangle_for_plane_.end())
+    return detail::g_triangle_for_plane_.emplace(mesh, std::map<size_t, size_t>()).first->second;
+
+  it->second.clear();
+  return it->second;
+}
 }  // namespace detail
 
 inline Eigen::Vector3d normalize(const Eigen::Vector3d& dir)
@@ -932,15 +942,7 @@ void bodies::ConvexMesh::useDimensions(const shapes::Shape* shape)
   mesh_data_->triangles_.reserve(num_facets);
 
   // HACK: only needed for ABI compatibility with melodic
-  std::map<size_t, size_t>* triangle_for_plane = nullptr;
-  {
-    std::lock_guard<std::mutex> lock(detail::g_triangle_for_plane_mutex);
-    if (detail::g_triangle_for_plane_.find(this) == detail::g_triangle_for_plane_.end())
-      detail::g_triangle_for_plane_.emplace(this, std::map<size_t, size_t>());
-    else
-      detail::g_triangle_for_plane_[this].clear();
-    triangle_for_plane = &detail::g_triangle_for_plane_[this];
-  }
+  std::map<size_t, size_t>& triangle_for_plane = detail::getTriangleForPlane(this);
 
   // neccessary for qhull macro
   facetT* facet;
@@ -966,7 +968,7 @@ void bodies::ConvexMesh::useDimensions(const shapes::Shape* shape)
     }
 
     mesh_data_->plane_for_triangle_[(mesh_data_->triangles_.size() - 1) / 3] = mesh_data_->planes_.size() - 1;
-    (*triangle_for_plane)[mesh_data_->planes_.size() - 1] = (mesh_data_->triangles_.size() - 1) / 3;
+    triangle_for_plane[mesh_data_->planes_.size() - 1] = (mesh_data_->triangles_.size() - 1) / 3;
   }
   qh_freeqhull(!qh_ALL);
   int curlong, totlong;
@@ -1143,11 +1145,7 @@ void bodies::ConvexMesh::computeBoundingBox(bodies::AABB& bbox) const
 bool bodies::ConvexMesh::isPointInsidePlanes(const Eigen::Vector3d& point) const
 {
   unsigned int numplanes = mesh_data_->planes_.size();
-  const std::map<size_t, size_t>* triangle_for_plane = nullptr;
-  {
-    std::lock_guard<std::mutex> lock(detail::g_triangle_for_plane_mutex);
-    triangle_for_plane = &detail::g_triangle_for_plane_[this];
-  }
+  const std::map<size_t, size_t>& triangle_for_plane = detail::getTriangleForPlane(this);
   for (unsigned int i = 0; i < numplanes; ++i)
   {
     const Eigen::Vector4d& plane = mesh_data_->planes_[i];
@@ -1155,7 +1153,7 @@ bool bodies::ConvexMesh::isPointInsidePlanes(const Eigen::Vector3d& point) const
     // w() needs to be recomputed from a scaled vertex as normally it refers to the unscaled plane
     // we also cannot simply subtract padding_ from it, because padding of the points on the plane causes a different
     // effect than adding padding along this plane's normal (padding effect is direction-dependent)
-    const auto scaled_point_on_plane = scaled_vertices_->at(mesh_data_->triangles_[3 * triangle_for_plane->at(i)]);
+    const auto scaled_point_on_plane = scaled_vertices_->at(mesh_data_->triangles_[3 * triangle_for_plane.at(i)]);
     const double w_scaled_padded = -plane_vec.dot(scaled_point_on_plane);
     const double dist = plane_vec.dot(point) + w_scaled_padded - detail::ZERO;
     if (dist > 0.0)
