@@ -286,7 +286,7 @@ public:
 
   Mesh();
   Mesh(unsigned int v_count, unsigned int t_count);
-  virtual ~Mesh();
+  ~Mesh() override;
 
   /** \brief The type of the shape, as a string */
   static const std::string STRING_NAME;
@@ -404,6 +404,6 @@ typedef std::shared_ptr<Shape> ShapePtr;
 
 /** \brief Shared pointer to a const Shape */
 typedef std::shared_ptr<const Shape> ShapeConstPtr;
-}
+}  // namespace shapes
 
 #endif

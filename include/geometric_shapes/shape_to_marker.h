@@ -53,6 +53,6 @@ void constructMarkerFromShape(const shape_msgs::Mesh& shape_msg, visualization_m
 
     On incorrect input, this function throws a std::runtime_error. */
 void constructMarkerFromShape(const shape_msgs::SolidPrimitive& shape_msg, visualization_msgs::Marker& marker);
-}
+}  // namespace geometric_shapes
 
 #endif

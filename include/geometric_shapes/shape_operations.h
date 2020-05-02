@@ -80,6 +80,6 @@ void saveAsText(const Shape* shape, std::ostream& out);
 
 /** \brief Construct a shape from plain text description */
 Shape* constructShapeFromText(std::istream& in);
-}
+}  // namespace shapes
 
 #endif

@@ -65,5 +65,5 @@ void mergeBoundingBoxes(const std::vector<AABB>& boxes, AABB& mergedBox);
 
 /** \brief Compute the bounding sphere for a set of \e bodies and store the resulting sphere in \e mergedSphere */
 void computeBoundingSphere(const std::vector<const Body*>& bodies, BoundingSphere& mergedSphere);
-}
+}  // namespace bodies
 #endif
