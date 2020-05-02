@@ -245,7 +245,7 @@ public:
       number is 0, all intersections are returned.
       Passing dir as a unit vector will result in faster computation. */
   virtual bool intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vector3d& dir,
-                             EigenSTL::vector_Vector3d* intersections = NULL, unsigned int count = 0) const = 0;
+                             EigenSTL::vector_Vector3d* intersections = nullptr, unsigned int count = 0) const = 0;
 
   /** \brief Compute the volume of the body. This method includes
       changes induced by scaling and padding */
@@ -334,29 +334,29 @@ public:
     setPose(pose);
   }
 
-  virtual ~Sphere()
+  ~Sphere() override
   {
   }
 
   /** \brief Get the radius of the sphere */
-  virtual std::vector<double> getDimensions() const;
+  std::vector<double> getDimensions() const override;
 
-  virtual bool containsPoint(const Eigen::Vector3d& p, bool verbose = false) const;
-  virtual double computeVolume() const;
-  virtual bool samplePointInside(random_numbers::RandomNumberGenerator& rng, unsigned int max_attempts,
-                                 Eigen::Vector3d& result) const;
-  virtual void computeBoundingSphere(BoundingSphere& sphere) const;
-  virtual void computeBoundingCylinder(BoundingCylinder& cylinder) const;
-  virtual void computeBoundingBox(AABB& bbox) const;
-  virtual bool intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vector3d& dir,
-                             EigenSTL::vector_Vector3d* intersections = NULL, unsigned int count = 0) const;
+  bool containsPoint(const Eigen::Vector3d& p, bool verbose = false) const override;
+  double computeVolume() const override;
+  bool samplePointInside(random_numbers::RandomNumberGenerator& rng, unsigned int max_attempts,
+                         Eigen::Vector3d& result) const override;
+  void computeBoundingSphere(BoundingSphere& sphere) const override;
+  void computeBoundingCylinder(BoundingCylinder& cylinder) const override;
+  void computeBoundingBox(AABB& bbox) const override;
+  bool intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vector3d& dir,
+                     EigenSTL::vector_Vector3d* intersections = nullptr, unsigned int count = 0) const override;
 
-  virtual BodyPtr cloneAt(const Eigen::Isometry3d& pose, double padding, double scale) const;
+  BodyPtr cloneAt(const Eigen::Isometry3d& pose, double padding, double scale) const override;
 
-  virtual void updateInternalData();
+  void updateInternalData() override;
 
 protected:
-  virtual void useDimensions(const shapes::Shape* shape);
+  void useDimensions(const shapes::Shape* shape) override;
 
   // shape-dependent data
   double radius_;
@@ -393,29 +393,29 @@ public:
     setPose(cylinder.pose);
   }
 
-  virtual ~Cylinder()
+  ~Cylinder() override
   {
   }
 
   /** \brief Get the radius & length of the cylinder */
-  virtual std::vector<double> getDimensions() const;
+  std::vector<double> getDimensions() const override;
 
-  virtual bool containsPoint(const Eigen::Vector3d& p, bool verbose = false) const;
-  virtual double computeVolume() const;
-  virtual bool samplePointInside(random_numbers::RandomNumberGenerator& rng, unsigned int max_attempts,
-                                 Eigen::Vector3d& result) const;
-  virtual void computeBoundingSphere(BoundingSphere& sphere) const;
-  virtual void computeBoundingCylinder(BoundingCylinder& cylinder) const;
-  virtual void computeBoundingBox(AABB& bbox) const;
-  virtual bool intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vector3d& dir,
-                             EigenSTL::vector_Vector3d* intersections = NULL, unsigned int count = 0) const;
+  bool containsPoint(const Eigen::Vector3d& p, bool verbose = false) const override;
+  double computeVolume() const override;
+  bool samplePointInside(random_numbers::RandomNumberGenerator& rng, unsigned int max_attempts,
+                         Eigen::Vector3d& result) const override;
+  void computeBoundingSphere(BoundingSphere& sphere) const override;
+  void computeBoundingCylinder(BoundingCylinder& cylinder) const override;
+  void computeBoundingBox(AABB& bbox) const override;
+  bool intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vector3d& dir,
+                     EigenSTL::vector_Vector3d* intersections = nullptr, unsigned int count = 0) const override;
 
-  virtual BodyPtr cloneAt(const Eigen::Isometry3d& pose, double padding, double scale) const;
+  BodyPtr cloneAt(const Eigen::Isometry3d& pose, double padding, double scale) const override;
 
-  virtual void updateInternalData();
+  void updateInternalData() override;
 
 protected:
-  virtual void useDimensions(const shapes::Shape* shape);
+  void useDimensions(const shapes::Shape* shape) override;
 
   // shape-dependent data
   double length_;
@@ -465,29 +465,29 @@ public:
     setPose(pose);
   }
 
-  virtual ~Box()
+  ~Box() override
   {
   }
 
   /** \brief Get the length & width & height (x, y, z) of the box */
-  virtual std::vector<double> getDimensions() const;
+  std::vector<double> getDimensions() const override;
 
-  virtual bool containsPoint(const Eigen::Vector3d& p, bool verbose = false) const;
-  virtual double computeVolume() const;
-  virtual bool samplePointInside(random_numbers::RandomNumberGenerator& rng, unsigned int max_attempts,
-                                 Eigen::Vector3d& result) const;
-  virtual void computeBoundingSphere(BoundingSphere& sphere) const;
-  virtual void computeBoundingCylinder(BoundingCylinder& cylinder) const;
-  virtual void computeBoundingBox(AABB& bbox) const;
-  virtual bool intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vector3d& dir,
-                             EigenSTL::vector_Vector3d* intersections = NULL, unsigned int count = 0) const;
+  bool containsPoint(const Eigen::Vector3d& p, bool verbose = false) const override;
+  double computeVolume() const override;
+  bool samplePointInside(random_numbers::RandomNumberGenerator& rng, unsigned int max_attempts,
+                         Eigen::Vector3d& result) const override;
+  void computeBoundingSphere(BoundingSphere& sphere) const override;
+  void computeBoundingCylinder(BoundingCylinder& cylinder) const override;
+  void computeBoundingBox(AABB& bbox) const override;
+  bool intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vector3d& dir,
+                     EigenSTL::vector_Vector3d* intersections = nullptr, unsigned int count = 0) const override;
 
-  virtual BodyPtr cloneAt(const Eigen::Isometry3d& pose, double padding, double scale) const;
+  BodyPtr cloneAt(const Eigen::Isometry3d& pose, double padding, double scale) const override;
 
-  virtual void updateInternalData();
+  void updateInternalData() override;
 
 protected:
-  virtual void useDimensions(const shapes::Shape* shape);  // (x, y, z) = (length, width, height)
+  void useDimensions(const shapes::Shape* shape) override;  // (x, y, z) = (length, width, height)
 
   // shape-dependent data
   double length_;
@@ -520,29 +520,29 @@ public:
   ConvexMesh() : Body()
   {
     type_ = shapes::MESH;
-    scaled_vertices_ = NULL;
+    scaled_vertices_ = nullptr;
   }
 
   ConvexMesh(const shapes::Shape* shape) : Body()
   {
     type_ = shapes::MESH;
-    scaled_vertices_ = NULL;
+    scaled_vertices_ = nullptr;
     setDimensions(shape);
   }
 
-  virtual ~ConvexMesh();
+  ~ConvexMesh() override;
 
   /** \brief Returns an empty vector */
-  virtual std::vector<double> getDimensions() const;
+  std::vector<double> getDimensions() const override;
 
-  virtual bool containsPoint(const Eigen::Vector3d& p, bool verbose = false) const;
-  virtual double computeVolume() const;
+  bool containsPoint(const Eigen::Vector3d& p, bool verbose = false) const override;
+  double computeVolume() const override;
 
-  virtual void computeBoundingSphere(BoundingSphere& sphere) const;
-  virtual void computeBoundingCylinder(BoundingCylinder& cylinder) const;
-  virtual void computeBoundingBox(AABB& bbox) const;
-  virtual bool intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vector3d& dir,
-                             EigenSTL::vector_Vector3d* intersections = NULL, unsigned int count = 0) const;
+  void computeBoundingSphere(BoundingSphere& sphere) const override;
+  void computeBoundingCylinder(BoundingCylinder& cylinder) const override;
+  void computeBoundingBox(AABB& bbox) const override;
+  bool intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vector3d& dir,
+                     EigenSTL::vector_Vector3d* intersections = nullptr, unsigned int count = 0) const override;
 
   const std::vector<unsigned int>& getTriangles() const;
   const EigenSTL::vector_Vector3d& getVertices() const;
@@ -554,17 +554,17 @@ public:
    */
   const EigenSTL::vector_Vector4d& getPlanes() const;
 
-  virtual BodyPtr cloneAt(const Eigen::Isometry3d& pose, double padding, double scale) const;
+  BodyPtr cloneAt(const Eigen::Isometry3d& pose, double padding, double scale) const override;
 
   /// Project the original vertex to the scaled and padded planes and average.
   void computeScaledVerticesFromPlaneProjections();
 
   void correctVertexOrderFromPlanes();
 
-  virtual void updateInternalData();
+  void updateInternalData() override;
 
 protected:
-  virtual void useDimensions(const shapes::Shape* shape);
+  void useDimensions(const shapes::Shape* shape) override;
 
   /** \brief (Used mainly for debugging) Count the number of vertices behind a plane*/
   unsigned int countVerticesBehindPlane(const Eigen::Vector4f& planeNormal) const;
@@ -655,7 +655,7 @@ public:
       the intersection points are computed and set to \e intersections
       (only for the first body that is found to intersect the ray) */
   bool intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vector3d& dir, std::size_t& index,
-                     EigenSTL::vector_Vector3d* intersections = NULL, unsigned int count = 0) const;
+                     EigenSTL::vector_Vector3d* intersections = nullptr, unsigned int count = 0) const;
 
   /** \brief Get the \e i<sup>th</sup> body in the vector*/
   const Body* getBody(unsigned int i) const;
@@ -669,6 +669,6 @@ typedef std::shared_ptr<Body> BodyPtr;
 
 /** \brief Shared pointer to a const Body */
 typedef std::shared_ptr<const Body> BodyConstPtr;
-}
+}  // namespace bodies
 
 #endif

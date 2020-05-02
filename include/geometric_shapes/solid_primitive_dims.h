@@ -83,4 +83,4 @@ struct SolidPrimitiveDimCount<shape_msgs::SolidPrimitive::CYLINDER>
     value = 2u
   };
 };
-}
+}  // namespace geometric_shapes

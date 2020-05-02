@@ -95,6 +95,6 @@ Mesh* createMeshFromShape(const Cone& cone);
 
 /** \brief Write the mesh to a buffer in STL format */
 void writeSTLBinary(const Mesh* mesh, std::vector<char>& buffer);
-}
+}  // namespace shapes
 
 #endif
