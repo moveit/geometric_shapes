@@ -68,7 +68,6 @@ extern "C" {
 #include <algorithm>
 #include <Eigen/Geometry>
 #include <unordered_map>
-#include <mutex>
 
 namespace bodies
 {
@@ -130,20 +129,6 @@ void filterIntersections(std::vector<detail::intersc>& ipts, EigenSTL::vector_Ve
       continue;
     intersections->push_back(p.pt);
   }
-}
-
-// HACK: The global map g_triangle_for_plane_ is needed for ABI compatibility with the melodic version of
-// geometric_shapes; in newer releases, it should instead be added as a member to ConvexMesh::MeshData.
-std::unordered_map<const ConvexMesh*, std::map<size_t, size_t>> g_triangle_for_plane_;
-std::mutex g_triangle_for_plane_mutex;  //!< Lock this mutex every time you work with g_triangle_for_plane_.
-static std::map<size_t, size_t>& getTriangleForPlane(const ConvexMesh* mesh)
-{
-  std::lock_guard<std::mutex> lock(g_triangle_for_plane_mutex);
-  auto it = g_triangle_for_plane_.find(mesh);
-  if (it == detail::g_triangle_for_plane_.end())
-    return detail::g_triangle_for_plane_.emplace(mesh, std::map<size_t, size_t>()).first->second;
-  else
-    return it->second;
 }
 }  // namespace detail
 
@@ -570,7 +555,7 @@ bool bodies::Box::samplePointInside(random_numbers::RandomNumberGenerator& rng, 
 
 bool bodies::Box::containsPoint(const Eigen::Vector3d& p, bool /* verbose */) const
 {
-  const Eigen::Vector3d aligned = (pose_.linear().transpose() * (p - center_)).cwiseAbs();
+  const Eigen::Vector3d aligned = (invRot_ * (p - center_)).cwiseAbs();
   return aligned[0] <= length2_ && aligned[1] <= width2_ && aligned[2] <= height2_;
 }
 
@@ -611,10 +596,7 @@ void bodies::Box::updateInternalData()
   radiusB_ = sqrt(radius2_);
 
   ASSERT_ISOMETRY(pose_);
-  Eigen::Matrix3d basis = pose_.linear();
-  normalL_ = basis.col(0);
-  normalW_ = basis.col(1);
-  normalH_ = basis.col(2);
+  invRot_ = pose_.linear().transpose();
 
   // rotation is intentionally not applied, the corners are used in intersectsRay()
   const Eigen::Vector3d tmp(length2_, width2_, height2_);
@@ -694,9 +676,8 @@ bool bodies::Box::intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vect
 
   // The implemented method only works for axis-aligned boxes. So we treat ours as such, cancel its rotation, and
   // rotate the origin and dir instead. corner1_ and corner2_ are corners with canceled rotation.
-  const Eigen::Matrix3d invRot = pose_.linear().transpose();
-  const Eigen::Vector3d o(invRot * (origin - center_) + center_);
-  const Eigen::Vector3d d(invRot * dirNorm);
+  const Eigen::Vector3d o(invRot_ * (origin - center_) + center_);
+  const Eigen::Vector3d d(invRot_ * dirNorm);
 
   Eigen::Vector3d tmpTmin, tmpTmax;
   tmpTmin = (corner1_ - o).cwiseQuotient(d);
@@ -940,10 +921,6 @@ void bodies::ConvexMesh::useDimensions(const shapes::Shape* shape)
   mesh_data_->mesh_radiusB_ = sqrt(mesh_data_->mesh_radiusB_);
   mesh_data_->triangles_.reserve(num_facets);
 
-  // HACK: only needed for ABI compatibility with melodic
-  std::map<size_t, size_t>& triangle_for_plane = detail::getTriangleForPlane(this);
-  triangle_for_plane.clear();
-
   // neccessary for qhull macro
   facetT* facet;
   FORALLfacets
@@ -968,7 +945,7 @@ void bodies::ConvexMesh::useDimensions(const shapes::Shape* shape)
     }
 
     mesh_data_->plane_for_triangle_[(mesh_data_->triangles_.size() - 1) / 3] = mesh_data_->planes_.size() - 1;
-    triangle_for_plane[mesh_data_->planes_.size() - 1] = (mesh_data_->triangles_.size() - 1) / 3;
+    mesh_data_->triangle_for_plane_[mesh_data_->planes_.size() - 1] = (mesh_data_->triangles_.size() - 1) / 3;
   }
   qh_freeqhull(!qh_ALL);
   int curlong, totlong;
@@ -1145,7 +1122,6 @@ void bodies::ConvexMesh::computeBoundingBox(bodies::AABB& bbox) const
 bool bodies::ConvexMesh::isPointInsidePlanes(const Eigen::Vector3d& point) const
 {
   unsigned int numplanes = mesh_data_->planes_.size();
-  const std::map<size_t, size_t>& triangle_for_plane = detail::getTriangleForPlane(this);
   for (unsigned int i = 0; i < numplanes; ++i)
   {
     const Eigen::Vector4d& plane = mesh_data_->planes_[i];
@@ -1153,7 +1129,8 @@ bool bodies::ConvexMesh::isPointInsidePlanes(const Eigen::Vector3d& point) const
     // w() needs to be recomputed from a scaled vertex as normally it refers to the unscaled plane
     // we also cannot simply subtract padding_ from it, because padding of the points on the plane causes a different
     // effect than adding padding along this plane's normal (padding effect is direction-dependent)
-    const auto scaled_point_on_plane = scaled_vertices_->at(mesh_data_->triangles_[3 * triangle_for_plane.at(i)]);
+    const auto scaled_point_on_plane =
+        scaled_vertices_->at(mesh_data_->triangles_[3 * mesh_data_->triangle_for_plane_[i]]);
     const double w_scaled_padded = -plane_vec.dot(scaled_point_on_plane);
     const double dist = plane_vec.dot(point) + w_scaled_padded - detail::ZERO;
     if (dist > 0.0)
@@ -1285,15 +1262,6 @@ bool bodies::ConvexMesh::intersectsRay(const Eigen::Vector3d& origin, const Eige
   }
 
   return result;
-}
-
-bodies::ConvexMesh::~ConvexMesh()
-{
-  // HACK: only needed for ABI compatibility with melodic
-  {
-    std::lock_guard<std::mutex> lock(detail::g_triangle_for_plane_mutex);
-    detail::g_triangle_for_plane_.erase(this);
-  }
 }
 
 bodies::BodyVector::BodyVector()
