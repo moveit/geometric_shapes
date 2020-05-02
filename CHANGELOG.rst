@@ -2,6 +2,24 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.6.2 (2020-05-02)
+------------------
+* [maint]   clang-tidy fixes in headers (`#139 <https://github.com/ros-planning/geometric_shapes/issues/139>`_)
+* [fix]     Various fixes + performance improvements (`#109 <https://github.com/ros-planning/geometric_shapes/issues/109>`_, `#126 <https://github.com/ros-planning/geometric_shapes/issues/126>`_, `#107 <https://github.com/ros-planning/geometric_shapes/issues/107>`_, `#108 <https://github.com/ros-planning/geometric_shapes/issues/108>`_)
+  * Use Eigen::Isometry3d::linear() instead of rotation()
+  * Normalize the direction vector passed to Body::intersectsRay() (`#115 <https://github.com/ros-planning/geometric_shapes/issues/115>`_)
+  * Improved test coverage
+* [feature] Added support for non-uniform scaling and padding of shapes. (`#103 <https://github.com/ros-planning/geometric_shapes/issues/103>`_)
+* [maint]   Made bodies::samplePointInside() const. (`#133 <https://github.com/ros-planning/geometric_shapes/issues/133>`_)
+* [fix]     Throw runtime exception when a shape or body should have a negative dimension. (`#106 <https://github.com/ros-planning/geometric_shapes/issues/106>`_)
+* [maint]   Prefer std::make_shared (`#116 <https://github.com/ros-planning/geometric_shapes/issues/116>`_)
+* [maint]   clang-tidy fixes (`#114 <https://github.com/ros-planning/geometric_shapes/issues/114>`_)
+* [fix]     Use covariant returns for clone() (`#102 <https://github.com/ros-planning/geometric_shapes/issues/102>`_)
+* [feature] Added bodies::Body::computeBoundingBox (aligned box version). (`#104 <https://github.com/ros-planning/geometric_shapes/issues/104>`_)
+* [maint]   Windows compatibility: fix ASSIMP libraries path (`#101 <https://github.com/ros-planning/geometric_shapes/issues/101>`_)
+* [fix]     Body::containsPoint(): always include surface points (`#97 <https://github.com/ros-planning/geometric_shapes/issues/97>`_)
+* Contributors: Martin Pecka, Alejandro Hernández Cordero, Bryce Willey, Michael Görner, Mike Lautman, Robert Haschke, RoboticsYY, Sean Yen, Tyler Weaver
+
 0.6.1 (2018-12-09)
 ------------------
 * Limit minimum number of cylinder vertices (on circumference) to 6 (`#92 <https://github.com/ros-planning/geometric_shapes/issues/92>`_)
