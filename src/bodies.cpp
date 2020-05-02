@@ -142,9 +142,8 @@ static std::map<size_t, size_t>& getTriangleForPlane(const ConvexMesh* mesh)
   auto it = g_triangle_for_plane_.find(mesh);
   if (it == detail::g_triangle_for_plane_.end())
     return detail::g_triangle_for_plane_.emplace(mesh, std::map<size_t, size_t>()).first->second;
-
-  it->second.clear();
-  return it->second;
+  else
+    return it->second;
 }
 }  // namespace detail
 
@@ -943,6 +942,7 @@ void bodies::ConvexMesh::useDimensions(const shapes::Shape* shape)
 
   // HACK: only needed for ABI compatibility with melodic
   std::map<size_t, size_t>& triangle_for_plane = detail::getTriangleForPlane(this);
+  triangle_for_plane.clear();
 
   // neccessary for qhull macro
   facetT* facet;
