@@ -47,6 +47,7 @@ catkin_package(
   CATKIN_DEPENDS
     eigen_stl_containers
     random_numbers
+    resource_retriever
     shape_msgs
     visualization_msgs
   DEPENDS
