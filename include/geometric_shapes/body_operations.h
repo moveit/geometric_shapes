@@ -46,6 +46,9 @@
 namespace bodies
 {
 /** \brief Create a body from a given shape */
+Body* createEmptyBodyFromShapeType(const shapes::ShapeType& shapeType);
+
+/** \brief Create a body from a given shape */
 Body* createBodyFromShape(const shapes::Shape* shape);
 
 /** \brief Create a body from a given shape */
