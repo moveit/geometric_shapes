@@ -86,25 +86,25 @@ shapes::ShapeConstPtr bodies::constructShapeFromBody(const bodies::Body* body)
   {
     case shapes::SPHERE:
     {
-      const auto& dims = dynamic_cast<const bodies::Sphere*>(body)->getScaledDimensions();
+      const auto& dims = static_cast<const bodies::Sphere*>(body)->getScaledDimensions();
       result.reset(new shapes::Sphere(dims[0]));
       break;
     }
     case shapes::BOX:
     {
-      const auto& dims = dynamic_cast<const bodies::Box*>(body)->getScaledDimensions();
+      const auto& dims = static_cast<const bodies::Box*>(body)->getScaledDimensions();
       result.reset(new shapes::Box(dims[0], dims[1], dims[2]));
       break;
     }
     case shapes::CYLINDER:
     {
-      const auto& dims = dynamic_cast<const bodies::Cylinder*>(body)->getScaledDimensions();
+      const auto& dims = static_cast<const bodies::Cylinder*>(body)->getScaledDimensions();
       result.reset(new shapes::Cylinder(dims[0], dims[1]));
       break;
     }
     case shapes::MESH:
     {
-      const auto mesh = dynamic_cast<const bodies::ConvexMesh*>(body);
+      const auto mesh = static_cast<const bodies::ConvexMesh*>(body);
       const auto& scaledVertices = mesh->getScaledVertices();
 
       // createMeshFromVertices requires an "expanded" list of triangles where each triangle is
