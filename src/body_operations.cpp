@@ -160,9 +160,11 @@ void bodies::computeBoundingSphere(const std::vector<const bodies::Body*>& bodie
   unsigned int vertex_count = 0;
   for (auto body : bodies)
   {
-    const bodies::ConvexMesh* conv = dynamic_cast<const bodies::ConvexMesh*>(body);
-    if (!conv)
+    if (!body || body->getType() != shapes::MESH)
       continue;
+    // MESH type implies bodies::ConvexMesh
+    const bodies::ConvexMesh* conv = static_cast<const bodies::ConvexMesh*>(body);
+
     for (unsigned int j = 0; j < conv->getScaledVertices().size(); j++, vertex_count++)
     {
       sum += conv->getPose() * conv->getScaledVertices()[j];
@@ -174,9 +176,11 @@ void bodies::computeBoundingSphere(const std::vector<const bodies::Body*>& bodie
   double max_dist_squared = 0.0;
   for (auto body : bodies)
   {
-    const bodies::ConvexMesh* conv = dynamic_cast<const bodies::ConvexMesh*>(body);
-    if (!conv)
+    if (!body || body->getType() != shapes::MESH)
       continue;
+    // MESH type implies bodies::ConvexMesh
+    const bodies::ConvexMesh* conv = static_cast<const bodies::ConvexMesh*>(body);
+
     for (unsigned int j = 0; j < conv->getScaledVertices().size(); j++)
     {
       double dist = (conv->getPose() * conv->getScaledVertices()[j] - sphere.center).squaredNorm();
