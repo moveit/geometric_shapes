@@ -35,6 +35,7 @@
 /** \author Ioan Sucan, E. Gil Jones */
 
 #include <geometric_shapes/body_operations.h>
+#include <geometric_shapes/check_isometry.h>
 #include <geometric_shapes/shape_operations.h>
 #include <console_bridge/console.h>
 #include <Eigen/Geometry>

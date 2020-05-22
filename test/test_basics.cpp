@@ -32,10 +32,32 @@
 *  POSSIBILITY OF SUCH DAMAGE.
 *********************************************************************/
 
-#include <geometric_shapes/bodies.h>
+#include <Eigen/Core>
+#include <Eigen/Geometry>
+#include <geometric_shapes/check_isometry.h>
 #include <gtest/gtest.h>
 
 TEST(Utils, checkIsometry)
+{
+  Eigen::Isometry3d t(Eigen::AngleAxisd(0.42, Eigen::Vector3d(1, 1, 1).normalized()));
+  ASSERT_TRUE(::checkIsometry(t));
+
+  const Eigen::Vector3d oldDiagonal = t.linear().diagonal();
+  t.linear() = t.linear() * Eigen::DiagonalMatrix<double, 3, 3>(1.0, 2.0, 3.0);
+  ASSERT_FALSE(::checkIsometry(t));
+
+  t.matrix().row(3) = Eigen::Vector4d(1e-6, 1e-6, 1e-6, 1 - 1e-6);
+  ASSERT_FALSE(::checkIsometry(t, CHECK_ISOMETRY_PRECISION));
+
+  t.linear().diagonal() = oldDiagonal;
+  ASSERT_TRUE(::checkIsometry(t, 1e-0, false));
+  ASSERT_FALSE(::checkIsometry(t, 1e-1));
+  ASSERT_FALSE(::checkIsometry(t, 1e-2, false));
+
+  std::cerr.flush();
+}
+
+TEST(Utils, assertIsometry)
 {
   Eigen::Isometry3d t(Eigen::AngleAxisd(0.42, Eigen::Vector3d(1, 1, 1).normalized()));
   ASSERT_ISOMETRY(t);
@@ -53,6 +75,8 @@ TEST(Utils, checkIsometry)
 #else
   ASSERT_DEATH(ASSERT_ISOMETRY(t), "Invalid isometry transform");
 #endif
+
+  std::cerr.flush();
 }
 
 int main(int argc, char** argv)
