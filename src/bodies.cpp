@@ -36,6 +36,7 @@
 
 #include "geometric_shapes/bodies.h"
 #include "geometric_shapes/body_operations.h"
+#include "geometric_shapes/check_isometry.h"
 
 #include <console_bridge/console.h>
 

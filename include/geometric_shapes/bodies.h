@@ -74,33 +74,6 @@ struct BoundingCylinder
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 };
 
-// To be able to use the more efficient Eigen::Transform::linear() instead of rotation(),
-// we need to check the user has really passed an isometry. To avoid runtime costs,
-// this check is only done as assert, which get compiled-out in release builds
-#ifdef NDEBUG
-#define ASSERT_ISOMETRY(transform) assert(true);
-#else
-inline void checkIsometry(const Eigen::Isometry3d& transform)
-{
-  if (!transform.matrix().row(3).isApprox(Eigen::Vector4d::UnitW().transpose()))
-  {
-    std::cerr << "The given transform is not an isometry! It's last row is: " << std::endl
-              << transform.matrix().row(3) << std::endl;
-    assert(!"Invalid isometry transform");
-  }
-
-  Eigen::Isometry3d::LinearMatrixType scale;
-  transform.computeRotationScaling((Eigen::Isometry3d::LinearMatrixType*)nullptr, &scale);
-  if (!scale.isApprox(Eigen::Matrix3d::Identity()))
-  {
-    std::cerr << "The given transform is not an isometry! It's linear part involves scaling: " << std::endl
-              << scale.diagonal().transpose() << std::endl;
-    assert(!"Invalid isometry transform");
-  }
-}
-#define ASSERT_ISOMETRY(transform) ::bodies::checkIsometry(transform);
-#endif
-
 class Body;
 
 /** \brief Shared pointer to a Body */
