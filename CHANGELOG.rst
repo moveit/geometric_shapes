@@ -2,6 +2,15 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.7.0 (2020-05-25)
+------------------
+* [feature] Added constructShapeFromBody() and constructMarkerFromBody() (`#138 <https://github.com/ros-planning/geometric_shapes/issues/138>`_)
+* [maint]   API cleanup
+  * Improve inlining
+  * ConvexMesh::MeshData as pimpl
+  * Reverted ABI compatibility fixups for Melodic: ed4cf1339cf3765ae9ffa6e6fd111a4e342c5fa2, d582479084a10cac53a7f17e29818b3d8be6161e
+* Contributors: Martin Pecka, Robert Haschke
+
 0.6.3 (2020-05-25)
 ------------------
 * [maint]   Provide checkIsometry() helper function (`#144 <https://github.com/ros-planning/geometric_shapes/issues/144>`_)
