@@ -2,6 +2,14 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.6.3 (2020-05-25)
+------------------
+* [maint]   Provide checkIsometry() helper function (`#144 <https://github.com/ros-planning/geometric_shapes/issues/144>`_)
+* [maint]   Remove dynamic casts (`#143 <https://github.com/ros-planning/geometric_shapes/issues/143>`_)
+* [feature] Added createEmptyBodyFromShapeType() (`#137 <https://github.com/ros-planning/geometric_shapes/issues/137>`_)
+  This allows more efficient body construction when scale, padding or pose should also be set during the construction.
+* Contributors: Martin Pecka, Michael Görner
+
 0.6.2 (2020-05-02)
 ------------------
 * [maint]   clang-tidy fixes in headers (`#139 <https://github.com/ros-planning/geometric_shapes/issues/139>`_)
