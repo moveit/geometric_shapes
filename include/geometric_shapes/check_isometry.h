@@ -57,7 +57,7 @@
 
 #ifndef CHECK_ISOMETRY_PRECISION
 /** \brief The default precision to which the transform has to correspond to an isometry. */
-#define CHECK_ISOMETRY_PRECISION Eigen::NumTraits<double>::dummy_precision()
+#define CHECK_ISOMETRY_PRECISION 1e-6
 #endif
 
 /**
