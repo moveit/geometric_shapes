@@ -74,7 +74,7 @@ TEST(SphereBoundingBox, Sphere2)
   EXPECT_NEAR(4.0, bbox.max().y(), 1e-4);
   EXPECT_NEAR(5.0, bbox.max().z(), 1e-4);
 
-  pose *= Eigen::AngleAxisd(M_PI_2, Eigen::Vector3d(1, 1, 1));
+  pose *= Eigen::AngleAxisd(M_PI_2, Eigen::Vector3d(1, 1, 1).normalized());
   body.setPose(pose);
   body.computeBoundingBox(bbox);
 
@@ -145,7 +145,7 @@ TEST(BoxBoundingBox, Box2)
   EXPECT_NEAR(3.0, bbox.max().y(), 1e-4);
   EXPECT_NEAR(4.5, bbox.max().z(), 1e-4);
 
-  pose *= Eigen::AngleAxisd(M_PI_2, Eigen::Vector3d(1, 1, 1));
+  pose *= Eigen::AngleAxisd(M_PI_2, Eigen::Vector3d(1, 1, 1).normalized());
   body.setPose(pose);
   body.computeBoundingBox(bbox);
 
@@ -157,7 +157,7 @@ TEST(BoxBoundingBox, Box2)
   EXPECT_NEAR(4.5326, bbox.max().z(), 1e-4);
 }
 
-TEST(CylinderBoundingCylinder, Cylinder1)
+TEST(CylinderBoundingBox, Cylinder1)
 {
   shapes::Cylinder shape(1.0, 2.0);
   bodies::Cylinder body(&shape);
@@ -172,7 +172,7 @@ TEST(CylinderBoundingCylinder, Cylinder1)
   EXPECT_NEAR(1.0, bbox.max().z(), 1e-4);
 }
 
-TEST(CylinderBoundingCylinder, Cylinder2)
+TEST(CylinderBoundingBox, Cylinder2)
 {
   shapes::Cylinder shape(1.0, 2.0);
   bodies::Cylinder body(&shape);
@@ -190,7 +190,7 @@ TEST(CylinderBoundingCylinder, Cylinder2)
   EXPECT_NEAR(3.0, bbox.max().y(), 1e-4);
   EXPECT_NEAR(4.0, bbox.max().z(), 1e-4);
 
-  pose.linear() = Eigen::AngleAxisd(M_PI_2, Eigen::Vector3d(1, 1, 1)).toRotationMatrix();
+  pose *= Eigen::AngleAxisd(M_PI_2, Eigen::Vector3d(1, 1, 1).normalized());
   body.setPose(pose);
   body.computeBoundingBox(bbox);
 
@@ -203,7 +203,7 @@ TEST(CylinderBoundingCylinder, Cylinder2)
 
   // verify the bounding box is yaw-invariant
 
-  random_numbers::RandomNumberGenerator gen;
+  random_numbers::RandomNumberGenerator gen(0);
   const auto rollPitch =
       Eigen::AngleAxisd(1.0, Eigen::Vector3d::UnitX()) * Eigen::AngleAxisd(1.0, Eigen::Vector3d::UnitY());
 
@@ -352,7 +352,7 @@ TEST(MeshBoundingBox, Mesh2)
   EXPECT_NEAR(3.0, bbox.max().y(), 1e-4);
   EXPECT_NEAR(4.5, bbox.max().z(), 1e-4);
 
-  pose *= Eigen::AngleAxisd(M_PI_2, Eigen::Vector3d(1, 1, 1));
+  pose *= Eigen::AngleAxisd(M_PI_2, Eigen::Vector3d(1, 1, 1).normalized());
   body.setPose(pose);
   body.computeBoundingBox(bbox);
 

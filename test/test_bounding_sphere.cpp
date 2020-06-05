@@ -175,8 +175,8 @@ TEST(ConeBoundingSphere, Cone4)
 TEST(MeshBoundingSphere, Mesh1)
 {
   shapes::Shape* shape = new shapes::Mesh(8, 12);
-  shapes::Mesh* m = dynamic_cast<shapes::Mesh*>(shape);
-  EXPECT_TRUE(m);
+  EXPECT_EQ(shape->type, shapes::MESH);
+  shapes::Mesh* m = static_cast<shapes::Mesh*>(shape);
 
   // box mesh
 

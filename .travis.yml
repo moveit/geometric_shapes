@@ -21,6 +21,7 @@ env:
   matrix:
     - TEST="clang-format, ament_lint"
     - ROS_DISTRO=dashing
+    - ROS_DISTRO=eloquent  TEST=code-coverage
 
 matrix:
   include:

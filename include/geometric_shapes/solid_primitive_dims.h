@@ -65,4 +65,4 @@ constexpr unsigned int solidPrimitiveDimCount<shape_msgs::msg::SolidPrimitive::C
 {
   return 2u;
 }
-}
+}  // namespace geometric_shapes

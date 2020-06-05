@@ -1,7 +1,7 @@
 /*********************************************************************
 * Software License Agreement (BSD License)
 *
-*  Copyright (c) 2019, Open Robotics
+*  Copyright (c) 2019, Bielefeld University
 *  All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
 *     copyright notice, this list of conditions and the following
 *     disclaimer in the documentation and/or other materials provided
 *     with the distribution.
-*   * Neither the name of Open Robotics nor the names of its
+*   * Neither the name of the Bielefeld University nor the names of its
 *     contributors may be used to endorse or promote products derived
 *     from this software without specific prior written permission.
 *
@@ -32,27 +32,55 @@
 *  POSSIBILITY OF SUCH DAMAGE.
 *********************************************************************/
 
-/* Author: Martin Pecka */
-
-#ifndef GEOMETRIC_SHAPES_AABB_H
-#define GEOMETRIC_SHAPES_AABB_H
-
+#include <Eigen/Core>
 #include <Eigen/Geometry>
+#include <geometric_shapes/check_isometry.h>
+#include <gtest/gtest.h>
 
-namespace bodies
+TEST(Utils, checkIsometry)
 {
-/** \brief Represents an axis-aligned bounding box. */
-class AABB : public Eigen::AlignedBox3d
+  Eigen::Isometry3d t(Eigen::AngleAxisd(0.42, Eigen::Vector3d(1, 1, 1).normalized()));
+  ASSERT_TRUE(::checkIsometry(t));
+
+  const Eigen::Vector3d oldDiagonal = t.linear().diagonal();
+  t.linear() = t.linear() * Eigen::DiagonalMatrix<double, 3, 3>(1.0, 2.0, 3.0);
+  ASSERT_FALSE(::checkIsometry(t));
+
+  t.matrix().row(3) = Eigen::Vector4d(1e-6, 1e-6, 1e-6, 1 - 1e-6);
+  ASSERT_FALSE(::checkIsometry(t, CHECK_ISOMETRY_PRECISION));
+
+  t.linear().diagonal() = oldDiagonal;
+  ASSERT_TRUE(::checkIsometry(t, 1e-0, false));
+  ASSERT_FALSE(::checkIsometry(t, 1e-1));
+  ASSERT_FALSE(::checkIsometry(t, 1e-2, false));
+
+  std::cerr.flush();
+}
+
+TEST(Utils, assertIsometry)
 {
-  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+  Eigen::Isometry3d t(Eigen::AngleAxisd(0.42, Eigen::Vector3d(1, 1, 1).normalized()));
+  ASSERT_ISOMETRY(t);
 
-  // inherit parent class constructors (since C++11)
-  using Eigen::AlignedBox3d::AlignedBox;
+  t.linear() = t.linear() * Eigen::DiagonalMatrix<double, 3, 3>(1.0, 2.0, 3.0);
+#ifdef NDEBUG
+  ASSERT_ISOMETRY(t)  // noop in release mode
+#else
+  ASSERT_DEATH(ASSERT_ISOMETRY(t), "Invalid isometry transform");
+#endif
 
-public:
-  /** \brief Extend with a box transformed by the given transform. */
-  void extendWithTransformedBox(const Eigen::Isometry3d& transform, const Eigen::Vector3d& box);
-};
-}  // namespace bodies
+  t.matrix().row(3) = Eigen::Vector4d(1e-6, 1e-6, 1e-6, 1 - 1e-6);
+#ifdef NDEBUG
+  ASSERT_ISOMETRY(t)  // noop in release mode
+#else
+  ASSERT_DEATH(ASSERT_ISOMETRY(t), "Invalid isometry transform");
+#endif
 
-#endif  // GEOMETRIC_SHAPES_AABB_H
+  std::cerr.flush();
+}
+
+int main(int argc, char** argv)
+{
+  testing::InitGoogleTest(&argc, argv);
+  return RUN_ALL_TESTS();
+}

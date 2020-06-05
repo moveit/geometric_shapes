@@ -35,35 +35,112 @@
 /** \author Ioan Sucan, E. Gil Jones */
 
 #include <geometric_shapes/body_operations.h>
+#include <geometric_shapes/check_isometry.h>
 #include <geometric_shapes/shape_operations.h>
 #include <console_bridge/console.h>
 #include <Eigen/Geometry>
+
+bodies::Body* bodies::createEmptyBodyFromShapeType(const shapes::ShapeType& shapeType)
+{
+  Body* body = nullptr;
+
+  switch (shapeType)
+  {
+    case shapes::BOX:
+      body = new bodies::Box();
+      break;
+    case shapes::SPHERE:
+      body = new bodies::Sphere();
+      break;
+    case shapes::CYLINDER:
+      body = new bodies::Cylinder();
+      break;
+    case shapes::MESH:
+      body = new bodies::ConvexMesh();
+      break;
+    default:
+      CONSOLE_BRIDGE_logError("Creating body from shape: Unknown shape type %d", (int)shapeType);
+      break;
+  }
+  return body;
+}
 
 bodies::Body* bodies::createBodyFromShape(const shapes::Shape* shape)
 {
   Body* body = nullptr;
 
   if (shape)
-    switch (shape->type)
-    {
-      case shapes::BOX:
-        body = new bodies::Box(shape);
-        break;
-      case shapes::SPHERE:
-        body = new bodies::Sphere(shape);
-        break;
-      case shapes::CYLINDER:
-        body = new bodies::Cylinder(shape);
-        break;
-      case shapes::MESH:
-        body = new bodies::ConvexMesh(shape);
-        break;
-      default:
-        CONSOLE_BRIDGE_logError("Creating body from shape: Unknown shape type %d", (int)shape->type);
-        break;
-    }
+  {
+    body = createEmptyBodyFromShapeType(shape->type);
+    body->setDimensions(shape);
+  }
 
   return body;
+}
+
+shapes::ShapeConstPtr bodies::constructShapeFromBody(const bodies::Body* body)
+{
+  shapes::ShapePtr result;
+
+  switch (body->getType())
+  {
+    case shapes::SPHERE:
+    {
+      const auto& dims = static_cast<const bodies::Sphere*>(body)->getScaledDimensions();
+      result.reset(new shapes::Sphere(dims[0]));
+      break;
+    }
+    case shapes::BOX:
+    {
+      const auto& dims = static_cast<const bodies::Box*>(body)->getScaledDimensions();
+      result.reset(new shapes::Box(dims[0], dims[1], dims[2]));
+      break;
+    }
+    case shapes::CYLINDER:
+    {
+      const auto& dims = static_cast<const bodies::Cylinder*>(body)->getScaledDimensions();
+      result.reset(new shapes::Cylinder(dims[0], dims[1]));
+      break;
+    }
+    case shapes::MESH:
+    {
+      const auto mesh = static_cast<const bodies::ConvexMesh*>(body);
+      const auto& scaledVertices = mesh->getScaledVertices();
+
+      // createMeshFromVertices requires an "expanded" list of triangles where each triangle is
+      // represented by its three vertex positions
+      EigenSTL::vector_Vector3d vertexList;
+      vertexList.reserve(3 * mesh->getTriangles().size());
+      for (const auto& triangle : mesh->getTriangles())
+        vertexList.push_back(scaledVertices[triangle]);
+
+      result.reset(shapes::createMeshFromVertices(vertexList));
+      break;
+    }
+    default:
+    {
+      CONSOLE_BRIDGE_logError("Unknown body type: %d", (int)body->getType());
+      break;
+    }
+  }
+  return result;
+}
+
+void bodies::constructMarkerFromBody(const bodies::Body* body, visualization_msgs::msg::Marker& msg)
+{
+  auto shape = bodies::constructShapeFromBody(body);
+  shapes::constructMarkerFromShape(shape.get(), msg, true);
+  const auto& pose = body->getPose();
+  msg.pose.position.x = pose.translation().x();
+  msg.pose.position.y = pose.translation().y();
+  msg.pose.position.z = pose.translation().z();
+
+  ASSERT_ISOMETRY(pose);
+  Eigen::Quaterniond quat(pose.linear().matrix());
+  msg.pose.orientation.x = quat.x();
+  msg.pose.orientation.y = quat.y();
+  msg.pose.orientation.z = quat.z();
+  msg.pose.orientation.w = quat.w();
 }
 
 void bodies::mergeBoundingSpheres(const std::vector<BoundingSphere>& spheres, BoundingSphere& mergedSphere)
@@ -106,7 +183,7 @@ Body* constructBodyFromMsgHelper(const T& shape_msg, const geometry_msgs::msg::P
 
   if (shape)
   {
-    Body* body = createBodyFromShape(shape);
+    Body* body = createEmptyBodyFromShapeType(shape->type);
     if (body)
     {
       Eigen::Quaterniond q(pose.orientation.w, pose.orientation.x, pose.orientation.y, pose.orientation.z);
@@ -116,7 +193,9 @@ Body* constructBodyFromMsgHelper(const T& shape_msg, const geometry_msgs::msg::P
         q = Eigen::Quaterniond(1.0, 0.0, 0.0, 0.0);
       }
       Eigen::Isometry3d af(Eigen::Translation3d(pose.position.x, pose.position.y, pose.position.z) * q);
-      body->setPose(af);
+      body->setPoseDirty(af);
+      body->setDimensionsDirty(shape);
+      body->updateInternalData();
       return body;
     }
   }
@@ -148,9 +227,11 @@ void bodies::computeBoundingSphere(const std::vector<const bodies::Body*>& bodie
   unsigned int vertex_count = 0;
   for (auto body : bodies)
   {
-    const bodies::ConvexMesh* conv = dynamic_cast<const bodies::ConvexMesh*>(body);
-    if (!conv)
+    if (!body || body->getType() != shapes::MESH)
       continue;
+    // MESH type implies bodies::ConvexMesh
+    const bodies::ConvexMesh* conv = static_cast<const bodies::ConvexMesh*>(body);
+
     for (unsigned int j = 0; j < conv->getScaledVertices().size(); j++, vertex_count++)
     {
       sum += conv->getPose() * conv->getScaledVertices()[j];
@@ -162,9 +243,11 @@ void bodies::computeBoundingSphere(const std::vector<const bodies::Body*>& bodie
   double max_dist_squared = 0.0;
   for (auto body : bodies)
   {
-    const bodies::ConvexMesh* conv = dynamic_cast<const bodies::ConvexMesh*>(body);
-    if (!conv)
+    if (!body || body->getType() != shapes::MESH)
       continue;
+    // MESH type implies bodies::ConvexMesh
+    const bodies::ConvexMesh* conv = static_cast<const bodies::ConvexMesh*>(body);
+
     for (unsigned int j = 0; j < conv->getScaledVertices().size(); j++)
     {
       double dist = (conv->getPose() * conv->getScaledVertices()[j] - sphere.center).squaredNorm();

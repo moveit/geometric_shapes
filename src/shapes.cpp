@@ -101,6 +101,8 @@ Sphere::Sphere() : Shape()
 
 Sphere::Sphere(double r) : Shape()
 {
+  if (r < 0)
+    throw std::runtime_error("Sphere radius must be non-negative.");
   type = SPHERE;
   radius = r;
 }
@@ -113,6 +115,8 @@ Cylinder::Cylinder() : Shape()
 
 Cylinder::Cylinder(double r, double l) : Shape()
 {
+  if (r < 0 || l < 0)
+    throw std::runtime_error("Cylinder dimensions must be non-negative.");
   type = CYLINDER;
   length = l;
   radius = r;
@@ -126,6 +130,8 @@ Cone::Cone() : Shape()
 
 Cone::Cone(double r, double l) : Shape()
 {
+  if (r < 0 || l < 0)
+    throw std::runtime_error("Cone dimensions must be non-negative.");
   type = CONE;
   length = l;
   radius = r;
@@ -139,6 +145,8 @@ Box::Box() : Shape()
 
 Box::Box(double x, double y, double z) : Shape()
 {
+  if (x < 0 || y < 0 || z < 0)
+    throw std::runtime_error("Box dimensions must be non-negative.");
   type = BOX;
   size[0] = x;
   size[1] = y;
@@ -284,30 +292,90 @@ void Shape::padd(double padding)
 
 void Sphere::scaleAndPadd(double scale, double padding)
 {
-  radius = radius * scale + padding;
+  const auto tmpRadius = radius * scale + padding;
+  if (tmpRadius < 0)
+    throw std::runtime_error("Sphere radius must be non-negative.");
+  radius = tmpRadius;
 }
 
-void Cylinder::scaleAndPadd(double scale, double padding)
+void Cylinder::scaleAndPadd(double scaleRadius, double scaleLength, double paddRadius, double paddLength)
 {
-  radius = radius * scale + padding;
-  length = length * scale + 2.0 * padding;
+  const auto tmpRadius = radius * scaleRadius + paddRadius;
+  const auto tmpLength = length * scaleLength + 2.0 * paddLength;
+  if (tmpRadius < 0 || tmpLength < 0)
+    throw std::runtime_error("Cylinder dimensions must be non-negative.");
+  radius = tmpRadius;
+  length = tmpLength;
 }
 
-void Cone::scaleAndPadd(double scale, double padding)
+void Cylinder::scale(double scaleRadius, double scaleLength)
 {
-  radius = radius * scale + padding;
-  length = length * scale + 2.0 * padding;
+  scaleAndPadd(scaleRadius, scaleLength, 0.0, 0.0);
 }
 
-void Box::scaleAndPadd(double scale, double padding)
+void Cylinder::padd(double paddRadius, double paddLength)
 {
-  double p2 = padding * 2.0;
-  size[0] = size[0] * scale + p2;
-  size[1] = size[1] * scale + p2;
-  size[2] = size[2] * scale + p2;
+  scaleAndPadd(1.0, 1.0, paddRadius, paddLength);
 }
 
-void Mesh::scaleAndPadd(double scale, double padding)
+void Cylinder::scaleAndPadd(double scale, double padd)
+{
+  scaleAndPadd(scale, scale, padd, padd);
+}
+
+void Cone::scaleAndPadd(double scaleRadius, double scaleLength, double paddRadius, double paddLength)
+{
+  const auto tmpRadius = radius * scaleRadius + paddRadius;
+  const auto tmpLength = length * scaleLength + 2.0 * paddLength;
+  if (tmpRadius < 0 || tmpLength < 0)
+    throw std::runtime_error("Cone dimensions must be non-negative.");
+  radius = tmpRadius;
+  length = tmpLength;
+}
+
+void Cone::scale(double scaleRadius, double scaleLength)
+{
+  scaleAndPadd(scaleRadius, scaleLength, 0.0, 0.0);
+}
+
+void Cone::padd(double paddRadius, double paddLength)
+{
+  scaleAndPadd(1.0, 1.0, paddRadius, paddLength);
+}
+
+void Cone::scaleAndPadd(double scale, double padd)
+{
+  scaleAndPadd(scale, scale, padd, padd);
+}
+
+void Box::scaleAndPadd(double scaleX, double scaleY, double scaleZ, double paddX, double paddY, double paddZ)
+{
+  const auto tmpSize0 = size[0] * scaleX + paddX * 2.0;
+  const auto tmpSize1 = size[1] * scaleY + paddY * 2.0;
+  const auto tmpSize2 = size[2] * scaleZ + paddZ * 2.0;
+  if (tmpSize0 < 0 || tmpSize1 < 0 || tmpSize2 < 0)
+    throw std::runtime_error("Box dimensions must be non-negative.");
+  size[0] = tmpSize0;
+  size[1] = tmpSize1;
+  size[2] = tmpSize2;
+}
+
+void Box::scale(double scaleX, double scaleY, double scaleZ)
+{
+  scaleAndPadd(scaleX, scaleY, scaleZ, 0.0, 0.0, 0.0);
+}
+
+void Box::padd(double paddX, double paddY, double paddZ)
+{
+  scaleAndPadd(1.0, 1.0, 1.0, paddX, paddY, paddZ);
+}
+
+void Box::scaleAndPadd(double scale, double padd)
+{
+  scaleAndPadd(scale, scale, scale, padd, padd, padd);
+}
+
+void Mesh::scaleAndPadd(double scaleX, double scaleY, double scaleZ, double paddX, double paddY, double paddZ)
 {
   // find the center of the mesh
   double sx = 0.0, sy = 0.0, sz = 0.0;
@@ -336,21 +404,35 @@ void Mesh::scaleAndPadd(double scale, double padding)
     double norm = sqrt(dx * dx + dy * dy + dz * dz);
     if (norm > 1e-6)
     {
-      double fact = scale + padding / norm;
-      vertices[i3] = sx + dx * fact;
-      vertices[i3 + 1] = sy + dy * fact;
-      vertices[i3 + 2] = sz + dz * fact;
+      vertices[i3] = sx + dx * (scaleX + paddX / norm);
+      vertices[i3 + 1] = sy + dy * (scaleY + paddY / norm);
+      vertices[i3 + 2] = sz + dz * (scaleZ + paddZ / norm);
     }
     else
     {
-      double ndx = ((dx > 0) ? dx + padding : dx - padding);
-      double ndy = ((dy > 0) ? dy + padding : dy - padding);
-      double ndz = ((dz > 0) ? dz + padding : dz - padding);
+      double ndx = ((dx > 0) ? dx + paddX : dx - paddX);
+      double ndy = ((dy > 0) ? dy + paddY : dy - paddY);
+      double ndz = ((dz > 0) ? dz + paddZ : dz - paddZ);
       vertices[i3] = sx + ndx;
       vertices[i3 + 1] = sy + ndy;
       vertices[i3 + 2] = sz + ndz;
     }
   }
+}
+
+void Mesh::scale(double scaleX, double scaleY, double scaleZ)
+{
+  scaleAndPadd(scaleX, scaleY, scaleZ, 0.0, 0.0, 0.0);
+}
+
+void Mesh::padd(double paddX, double paddY, double paddZ)
+{
+  scaleAndPadd(1.0, 1.0, 1.0, paddX, paddY, paddZ);
+}
+
+void Mesh::scaleAndPadd(double scale, double padd)
+{
+  scaleAndPadd(scale, scale, scale, padd, padd, padd);
 }
 
 void Shape::print(std::ostream& out) const

@@ -71,7 +71,6 @@ struct BoundingCylinder
   Eigen::Isometry3d pose;
   double radius;
   double length;
-
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 };
 
@@ -94,65 +93,122 @@ public:
     pose_.setIdentity();
   }
 
-  virtual ~Body()
-  {
-  }
+  virtual ~Body() = default;
 
   /** \brief Get the type of shape this body represents */
-  shapes::ShapeType getType() const
+  inline shapes::ShapeType getType() const
   {
     return type_;
   }
 
-  /** \brief If the dimension of the body should be scaled, this
-      method sets the scale. Default is 1.0 */
-  void setScale(double scale)
+  /**
+   * \brief If the dimension of the body should be scaled, this method sets the scale.
+   * \note This is the dirty version of the function which does not update internal data that depend on the scale.
+   *       In the general case, you should call setScale() instead. Only call this function if you have a series of
+   *       calls like setScale/setPadding/setPose/setDimensions and you want to avoid the overhead of updating the
+   *       internal structures after each call. When you are finished with the batch, call updateInternalData().
+   * \param scale The scale to set. 1.0 means no scaling.
+   */
+  inline void setScaleDirty(double scale)
   {
     scale_ = scale;
+  }
+
+  /** \brief If the dimension of the body should be scaled, this
+      method sets the scale. Default is 1.0 */
+  inline void setScale(double scale)
+  {
+    setScaleDirty(scale);
     updateInternalData();
   }
 
   /** \brief Retrieve the current scale */
-  double getScale() const
+  inline double getScale() const
   {
     return scale_;
   }
 
-  /** \brief If constant padding should be added to the body, this
-      method sets the padding. Default is 0.0 */
-  void setPadding(double padd)
+  /**
+   * \brief If the dimension of the body should be padded, this method sets the pading.
+   * \note This is the dirty version of the function which does not update internal data that depend on the scale.
+   *       In the general case, you should call setPadding() instead. Only call this function if you have a series of
+   *       calls like setScale/setPadding/setPose/setDimensions and you want to avoid the overhead of updating the
+   *       internal structures after each call. When you are finished with the batch, call updateInternalData().
+   * \param padd The padding to set (in meters). 0.0 means no padding.
+   */
+  inline void setPaddingDirty(double padd)
   {
     padding_ = padd;
+  }
+
+  /** \brief If constant padding should be added to the body, this
+      method sets the padding. Default is 0.0 */
+  inline void setPadding(double padd)
+  {
+    setPaddingDirty(padd);
     updateInternalData();
   }
 
   /** \brief Retrieve the current padding */
-  double getPadding() const
+  inline double getPadding() const
   {
     return padding_;
   }
 
-  /** \brief Set the pose of the body. Default is identity */
-  void setPose(const Eigen::Isometry3d& pose)
+  /**
+   * \brief Set the pose of the body.
+   * \note This is the dirty version of the function which does not update internal data that depend on the pose.
+   *       In the general case, you should call setPose() instead. Only call this function if you have a series of
+   *       calls like setScale/setPadding/setPose/setDimensions and you want to avoid the overhead of updating the
+   *       internal structures after each call. When you are finished with the batch, call updateInternalData().
+   * \param pose The pose to set. Default is identity.
+   */
+  inline void setPoseDirty(const Eigen::Isometry3d& pose)
   {
     pose_ = pose;
+  }
+
+  /** \brief Set the pose of the body. Default is identity */
+  inline void setPose(const Eigen::Isometry3d& pose)
+  {
+    setPoseDirty(pose);
     updateInternalData();
   }
 
   /** \brief Retrieve the pose of the body */
-  const Eigen::Isometry3d& getPose() const
+  inline const Eigen::Isometry3d& getPose() const
   {
     return pose_;
+  }
+
+  /**
+   * \brief Set the dimensions of the body (from corresponding shape).
+   * \note This is the dirty version of the function which does not update internal data that depend on the dimensions.
+   *       In the general case, you should call setDimensions() instead. Only call this function if you have a series of
+   *       calls like setScale/setPadding/setPose/setDimensions and you want to avoid the overhead of updating the
+   *       internal structures after each call. When you are finished with the batch, call updateInternalData().
+   * \param shape The shape whose dimensions should be assumed. After the function finishes, the pointer can be deleted.
+   */
+  inline void setDimensionsDirty(const shapes::Shape* shape)
+  {
+    useDimensions(shape);
   }
 
   /** \brief Get the dimensions associated to this body (as read from corresponding shape) */
   virtual std::vector<double> getDimensions() const = 0;
 
+  /** \brief Get the dimensions associated to this body (scaled and padded) */
+  virtual std::vector<double> getScaledDimensions() const = 0;
+
   /** \brief Set the dimensions of the body (from corresponding shape) */
-  void setDimensions(const shapes::Shape* shape);
+  inline void setDimensions(const shapes::Shape* shape)
+  {
+    setDimensionsDirty(shape);
+    updateInternalData();
+  }
 
   /** \brief Check if a point is inside the body */
-  bool containsPoint(double x, double y, double z, bool verbose = false) const
+  inline bool containsPoint(double x, double y, double z, bool verbose = false) const
   {
     Eigen::Vector3d pt(x, y, z);
     return containsPoint(pt, verbose);
@@ -164,9 +220,10 @@ public:
   /** \brief Check if a ray intersects the body, and find the
       set of intersections, in order, along the ray. A maximum
       number of intersections can be specified as well. If that
-      number is 0, all intersections are returned */
+      number is 0, all intersections are returned.
+      Passing dir as a unit vector will result in faster computation. */
   virtual bool intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vector3d& dir,
-                             EigenSTL::vector_Vector3d* intersections = NULL, unsigned int count = 0) const = 0;
+                             EigenSTL::vector_Vector3d* intersections = nullptr, unsigned int count = 0) const = 0;
 
   /** \brief Compute the volume of the body. This method includes
       changes induced by scaling and padding */
@@ -178,7 +235,7 @@ public:
      The function terminates with failure (returns false) after \e max_attempts attempts.
      If the call is successful (returns true) the point is written to \e result */
   virtual bool samplePointInside(random_numbers::RandomNumberGenerator& rng, unsigned int max_attempts,
-                                 Eigen::Vector3d& result);
+                                 Eigen::Vector3d& result) const;
 
   /** \brief Compute the bounding radius for the body, in its current
       pose. Scaling and padding are accounted for. */
@@ -193,7 +250,7 @@ public:
   virtual void computeBoundingBox(AABB& bbox) const = 0;
 
   /** \brief Get a clone of this body, but one that is located at the pose \e pose */
-  BodyPtr cloneAt(const Eigen::Isometry3d& pose) const
+  inline BodyPtr cloneAt(const Eigen::Isometry3d& pose) const
   {
     return cloneAt(pose, padding_, scale_);
   }
@@ -204,12 +261,12 @@ public:
       thread safety, when bodies need to be moved around. */
   virtual BodyPtr cloneAt(const Eigen::Isometry3d& pose, double padding, double scaling) const = 0;
 
-protected:
   /** \brief This function is called every time a change to the body
       is made, so that intermediate values stored for efficiency
       reasons are kept up to date. */
   virtual void updateInternalData() = 0;
 
+protected:
   /** \brief Depending on the shape, this function copies the relevant data to the body. */
   virtual void useDimensions(const shapes::Shape* shape) = 0;
 
@@ -244,28 +301,30 @@ public:
     setDimensions(shape);
   }
 
-  virtual ~Sphere()
-  {
-  }
+  explicit Sphere(const BoundingSphere& sphere);
+
+  ~Sphere() override = default;
 
   /** \brief Get the radius of the sphere */
-  virtual std::vector<double> getDimensions() const;
+  std::vector<double> getDimensions() const override;
+  std::vector<double> getScaledDimensions() const override;
 
-  virtual bool containsPoint(const Eigen::Vector3d& p, bool verbose = false) const;
-  virtual double computeVolume() const;
-  virtual bool samplePointInside(random_numbers::RandomNumberGenerator& rng, unsigned int max_attempts,
-                                 Eigen::Vector3d& result);
-  virtual void computeBoundingSphere(BoundingSphere& sphere) const;
-  virtual void computeBoundingCylinder(BoundingCylinder& cylinder) const;
-  virtual void computeBoundingBox(AABB& bbox) const;
-  virtual bool intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vector3d& dir,
-                             EigenSTL::vector_Vector3d* intersections = NULL, unsigned int count = 0) const;
+  bool containsPoint(const Eigen::Vector3d& p, bool verbose = false) const override;
+  double computeVolume() const override;
+  bool samplePointInside(random_numbers::RandomNumberGenerator& rng, unsigned int max_attempts,
+                         Eigen::Vector3d& result) const override;
+  void computeBoundingSphere(BoundingSphere& sphere) const override;
+  void computeBoundingCylinder(BoundingCylinder& cylinder) const override;
+  void computeBoundingBox(AABB& bbox) const override;
+  bool intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vector3d& dir,
+                     EigenSTL::vector_Vector3d* intersections = nullptr, unsigned int count = 0) const override;
 
-  virtual BodyPtr cloneAt(const Eigen::Isometry3d& pose, double padding, double scale) const;
+  BodyPtr cloneAt(const Eigen::Isometry3d& pose, double padding, double scale) const override;
+
+  void updateInternalData() override;
 
 protected:
-  virtual void useDimensions(const shapes::Shape* shape);
-  virtual void updateInternalData();
+  void useDimensions(const shapes::Shape* shape) override;
 
   // shape-dependent data
   double radius_;
@@ -294,28 +353,30 @@ public:
     setDimensions(shape);
   }
 
-  virtual ~Cylinder()
-  {
-  }
+  explicit Cylinder(const BoundingCylinder& cylinder);
+
+  ~Cylinder() override = default;
 
   /** \brief Get the radius & length of the cylinder */
-  virtual std::vector<double> getDimensions() const;
+  std::vector<double> getDimensions() const override;
+  std::vector<double> getScaledDimensions() const override;
 
-  virtual bool containsPoint(const Eigen::Vector3d& p, bool verbose = false) const;
-  virtual double computeVolume() const;
-  virtual bool samplePointInside(random_numbers::RandomNumberGenerator& rng, unsigned int max_attempts,
-                                 Eigen::Vector3d& result);
-  virtual void computeBoundingSphere(BoundingSphere& sphere) const;
-  virtual void computeBoundingCylinder(BoundingCylinder& cylinder) const;
-  virtual void computeBoundingBox(AABB& bbox) const;
-  virtual bool intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vector3d& dir,
-                             EigenSTL::vector_Vector3d* intersections = NULL, unsigned int count = 0) const;
+  bool containsPoint(const Eigen::Vector3d& p, bool verbose = false) const override;
+  double computeVolume() const override;
+  bool samplePointInside(random_numbers::RandomNumberGenerator& rng, unsigned int max_attempts,
+                         Eigen::Vector3d& result) const override;
+  void computeBoundingSphere(BoundingSphere& sphere) const override;
+  void computeBoundingCylinder(BoundingCylinder& cylinder) const override;
+  void computeBoundingBox(AABB& bbox) const override;
+  bool intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vector3d& dir,
+                     EigenSTL::vector_Vector3d* intersections = nullptr, unsigned int count = 0) const override;
 
-  virtual BodyPtr cloneAt(const Eigen::Isometry3d& pose, double padding, double scale) const;
+  BodyPtr cloneAt(const Eigen::Isometry3d& pose, double padding, double scale) const override;
+
+  void updateInternalData() override;
 
 protected:
-  virtual void useDimensions(const shapes::Shape* shape);
-  virtual void updateInternalData();
+  void useDimensions(const shapes::Shape* shape) override;
 
   // shape-dependent data
   double length_;
@@ -354,28 +415,30 @@ public:
     setDimensions(shape);
   }
 
-  virtual ~Box()
-  {
-  }
+  explicit Box(const AABB& aabb);
+
+  ~Box() override = default;
 
   /** \brief Get the length & width & height (x, y, z) of the box */
-  virtual std::vector<double> getDimensions() const;
+  std::vector<double> getDimensions() const override;
+  std::vector<double> getScaledDimensions() const override;
 
-  virtual bool containsPoint(const Eigen::Vector3d& p, bool verbose = false) const;
-  virtual double computeVolume() const;
-  virtual bool samplePointInside(random_numbers::RandomNumberGenerator& rng, unsigned int max_attempts,
-                                 Eigen::Vector3d& result);
-  virtual void computeBoundingSphere(BoundingSphere& sphere) const;
-  virtual void computeBoundingCylinder(BoundingCylinder& cylinder) const;
-  virtual void computeBoundingBox(AABB& bbox) const;
-  virtual bool intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vector3d& dir,
-                             EigenSTL::vector_Vector3d* intersections = NULL, unsigned int count = 0) const;
+  bool containsPoint(const Eigen::Vector3d& p, bool verbose = false) const override;
+  double computeVolume() const override;
+  bool samplePointInside(random_numbers::RandomNumberGenerator& rng, unsigned int max_attempts,
+                         Eigen::Vector3d& result) const override;
+  void computeBoundingSphere(BoundingSphere& sphere) const override;
+  void computeBoundingCylinder(BoundingCylinder& cylinder) const override;
+  void computeBoundingBox(AABB& bbox) const override;
+  bool intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vector3d& dir,
+                     EigenSTL::vector_Vector3d* intersections = nullptr, unsigned int count = 0) const override;
 
-  virtual BodyPtr cloneAt(const Eigen::Isometry3d& pose, double padding, double scale) const;
+  BodyPtr cloneAt(const Eigen::Isometry3d& pose, double padding, double scale) const override;
+
+  void updateInternalData() override;
 
 protected:
-  virtual void useDimensions(const shapes::Shape* shape);  // (x, y, z) = (length, width, height)
-  virtual void updateInternalData();
+  void useDimensions(const shapes::Shape* shape) override;  // (x, y, z) = (length, width, height)
 
   // shape-dependent data
   double length_;
@@ -384,12 +447,10 @@ protected:
 
   // pose/padding/scaling-dependent values & values computed for convenience and fast upcoming computations
   Eigen::Vector3d center_;
-  Eigen::Vector3d normalL_;
-  Eigen::Vector3d normalW_;
-  Eigen::Vector3d normalH_;
+  Eigen::Matrix3d invRot_;
 
-  Eigen::Vector3d corner1_;
-  Eigen::Vector3d corner2_;
+  Eigen::Vector3d minCorner_;  //!< The translated, but not rotated min corner
+  Eigen::Vector3d maxCorner_;  //!< The translated, but not rotated max corner
 
   double length2_;
   double width2_;
@@ -408,31 +469,31 @@ public:
   ConvexMesh() : Body()
   {
     type_ = shapes::MESH;
-    scaled_vertices_ = NULL;
+    scaled_vertices_ = nullptr;
   }
 
   ConvexMesh(const shapes::Shape* shape) : Body()
   {
     type_ = shapes::MESH;
-    scaled_vertices_ = NULL;
+    scaled_vertices_ = nullptr;
     setDimensions(shape);
   }
 
-  virtual ~ConvexMesh()
-  {
-  }
+  ~ConvexMesh() override = default;
 
   /** \brief Returns an empty vector */
-  virtual std::vector<double> getDimensions() const;
+  std::vector<double> getDimensions() const override;
+  /** \brief Returns an empty vector */
+  std::vector<double> getScaledDimensions() const override;
 
-  virtual bool containsPoint(const Eigen::Vector3d& p, bool verbose = false) const;
-  virtual double computeVolume() const;
+  bool containsPoint(const Eigen::Vector3d& p, bool verbose = false) const override;
+  double computeVolume() const override;
 
-  virtual void computeBoundingSphere(BoundingSphere& sphere) const;
-  virtual void computeBoundingCylinder(BoundingCylinder& cylinder) const;
-  virtual void computeBoundingBox(AABB& bbox) const;
-  virtual bool intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vector3d& dir,
-                             EigenSTL::vector_Vector3d* intersections = NULL, unsigned int count = 0) const;
+  void computeBoundingSphere(BoundingSphere& sphere) const override;
+  void computeBoundingCylinder(BoundingCylinder& cylinder) const override;
+  void computeBoundingBox(AABB& bbox) const override;
+  bool intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vector3d& dir,
+                     EigenSTL::vector_Vector3d* intersections = nullptr, unsigned int count = 0) const override;
 
   const std::vector<unsigned int>& getTriangles() const;
   const EigenSTL::vector_Vector3d& getVertices() const;
@@ -444,37 +505,31 @@ public:
    */
   const EigenSTL::vector_Vector4d& getPlanes() const;
 
-  virtual BodyPtr cloneAt(const Eigen::Isometry3d& pose, double padding, double scale) const;
+  BodyPtr cloneAt(const Eigen::Isometry3d& pose, double padding, double scale) const override;
 
   /// Project the original vertex to the scaled and padded planes and average.
   void computeScaledVerticesFromPlaneProjections();
 
   void correctVertexOrderFromPlanes();
 
+  void updateInternalData() override;
+
 protected:
-  virtual void useDimensions(const shapes::Shape* shape);
-  virtual void updateInternalData();
+  void useDimensions(const shapes::Shape* shape) override;
 
   /** \brief (Used mainly for debugging) Count the number of vertices behind a plane*/
   unsigned int countVerticesBehindPlane(const Eigen::Vector4f& planeNormal) const;
 
-  /** \brief Check if a point is inside a set of planes that make up a convex mesh*/
+  /** \brief Check if the point is inside all halfspaces this mesh consists of (mesh_data_->planes_).
+   *
+   * \note The point is expected to have pose_ "cancelled" (have inverse pose of this mesh applied to it).
+   * \note Scale and padding of the mesh are taken into account.
+   * \note There is a 1e-9 margin "outside" the planes where points are still considered to be inside.
+   */
   bool isPointInsidePlanes(const Eigen::Vector3d& point) const;
 
-  struct MeshData
-  {
-    EigenSTL::vector_Vector4d planes_;
-    EigenSTL::vector_Vector3d vertices_;
-    std::vector<unsigned int> triangles_;
-    std::map<unsigned int, unsigned int> plane_for_triangle_;
-    Eigen::Vector3d mesh_center_;
-    double mesh_radiusB_;
-    Eigen::Vector3d box_offset_;
-    Eigen::Vector3d box_size_;
-    BoundingCylinder bounding_cylinder_;
-
-    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-  };
+  // PIMPL structure
+  struct MeshData;
 
   // shape-dependent data; keep this in one struct so that a cheap pointer copy can be done in cloneAt()
   std::shared_ptr<MeshData> mesh_data_;
@@ -539,7 +594,7 @@ public:
       the intersection points are computed and set to \e intersections
       (only for the first body that is found to intersect the ray) */
   bool intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vector3d& dir, std::size_t& index,
-                     EigenSTL::vector_Vector3d* intersections = NULL, unsigned int count = 0) const;
+                     EigenSTL::vector_Vector3d* intersections = nullptr, unsigned int count = 0) const;
 
   /** \brief Get the \e i<sup>th</sup> body in the vector*/
   const Body* getBody(unsigned int i) const;
@@ -553,6 +608,6 @@ typedef std::shared_ptr<Body> BodyPtr;
 
 /** \brief Shared pointer to a const Body */
 typedef std::shared_ptr<const Body> BodyConstPtr;
-}
+}  // namespace bodies
 
 #endif
