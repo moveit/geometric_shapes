@@ -68,10 +68,10 @@ ament_target_dependencies(${PROJECT_NAME}
   geometry_msgs
   resource_retriever
   console_bridge
-  octomap
   ASSIMP
   QHULL
 )
+target_link_libraries(${PROJECT_NAME} octomap)
 
 ament_export_libraries(${PROJECT_NAME})
 ament_export_include_directories(include)
