@@ -19,7 +19,7 @@ env:
     - CXXFLAGS="-Wall -Wextra -Wwrite-strings -Wunreachable-code -Wpointer-arith -Wredundant-decls -Wno-unused-parameter"
     - WARNINGS_OK=false
   matrix:
-    - TEST="clang-format, ament_lint"
+    - TEST="ament_lint"  # TODO(henningkayser): re-enable clang-format
     - ROS_DISTRO=eloquent
     - ROS_DISTRO=foxy TEST=code-coverage
 
