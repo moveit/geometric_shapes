@@ -20,7 +20,6 @@ env:
     - WARNINGS_OK=false
   matrix:
     - TEST="ament_lint"  # TODO(henningkayser): re-enable clang-format
-    - ROS_DISTRO=eloquent
     - ROS_DISTRO=foxy TEST=code-coverage
 
 matrix:
