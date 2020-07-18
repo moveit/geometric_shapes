@@ -35,7 +35,7 @@ find_package(Boost REQUIRED system filesystem)
 find_package(console_bridge REQUIRED)
 find_package(eigen3_cmake_module REQUIRED)
 find_package(Eigen3 REQUIRED)
-find_package(octomap REQUIRED)
+find_package(OCTOMAP REQUIRED)
 find_package(ament_cmake REQUIRED)
 find_package(eigen_stl_containers REQUIRED)
 find_package(random_numbers REQUIRED)
@@ -71,7 +71,7 @@ ament_target_dependencies(${PROJECT_NAME}
   geometry_msgs
   resource_retriever
   console_bridge
-  octomap
+  OCTOMAP
   ASSIMP
   QHULL
 )
@@ -82,15 +82,11 @@ ament_export_dependencies(
   Eigen3
   eigen3_cmake_module  # export Eigen3 headers
   Boost
-  ASSIMP
   random_numbers
   eigen_stl_containers
   shape_msgs
   visualization_msgs
-)
-target_link_libraries(${PROJECT_NAME}
-# resource_retriever doesn't support ament export hook (fixed in 2.1.1)
-  resource_retriever::resource_retriever
+  OCTOMAP
 )
 
 if(BUILD_TESTING)
