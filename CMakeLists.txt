@@ -45,7 +45,10 @@ if(HAVE_QHULL_2011)
   add_definitions(-DGEOMETRIC_SHAPES_HAVE_QHULL_2011)
 endif()
 
-include_directories(include)
+include_directories(
+  include
+  ${OCTOMAP_INCLUDE_DIRS}
+)
 
 add_library(${PROJECT_NAME} SHARED
   src/aabb.cpp
@@ -88,6 +91,7 @@ ament_export_dependencies(
 target_link_libraries(${PROJECT_NAME}
 # resource_retriever doesn't support ament export hook (fixed in 2.1.1)
   resource_retriever::resource_retriever
+  ${OCTOMAP_LIBRARIES}
 )
 
 if(BUILD_TESTING)
