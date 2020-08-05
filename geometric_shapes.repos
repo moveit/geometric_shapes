@@ -2,7 +2,7 @@ repositories:
   geometric_shapes:
     type: git
     url: https://github.com/ros-planning/geometric_shapes
-    version: dashing-devel
+    version: ros2
   random_numbers:
     type: git
     url: https://github.com/ros-planning/random_numbers
