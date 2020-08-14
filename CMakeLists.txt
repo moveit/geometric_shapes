@@ -31,7 +31,7 @@ find_library(ASSIMP_ABS_LIBRARIES NAMES ${ASSIMP_LIBRARIES} assimp HINTS ${ASSIM
 set(ASSIMP_LIBRARIES "${ASSIMP_ABS_LIBRARIES}")
 
 find_package(rclcpp REQUIRED)
-find_package(Boost REQUIRED filesystem math)
+find_package(Boost REQUIRED filesystem)
 find_package(console_bridge_vendor REQUIRED)
 find_package(console_bridge REQUIRED)
 find_package(eigen3_cmake_module REQUIRED)
