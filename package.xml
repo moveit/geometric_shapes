@@ -5,14 +5,14 @@
   <version>0.7.0</version>
   <description>This package contains generic definitions of geometric shapes and bodies.</description>
 
-  <author email="isucan@google.com">Ioan Sucan</author>
-  <author email="gjones@willowgarage.edu">Gil Jones</author>
-
   <maintainer email="dave@dav.ee">Dave Coleman</maintainer>
   <maintainer email="130s@2000.jukuin.keio.ac.jp">Isaac I. Y. Saito</maintainer>
 
   <license>BSD</license>
   <url>http://ros.org/wiki/geometric_shapes</url>
+
+  <author email="isucan@google.com">Ioan Sucan</author>
+  <author email="gjones@willowgarage.edu">Gil Jones</author>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
   <buildtool_depend>rosidl_default_generators</buildtool_depend>
@@ -26,7 +26,6 @@
   <build_export_depend>eigen</build_export_depend>
 
   <depend>rclcpp</depend>
-  <depend>boost</depend>
   <depend>eigen_stl_containers</depend>
   <depend>console_bridge_vendor</depend>
   <depend>libqhull</depend>
@@ -39,8 +38,13 @@
 
   <build_depend>assimp-dev</build_depend>
   <build_depend>pkg-config</build_depend>
+  <build_depend>libboost-dev</build_depend>
+  <build_depend>libboost-filesystem-dev</build_depend>
+
+  <build_export_depend>libboost-dev</build_export_depend>
 
   <exec_depend>assimp</exec_depend>
+  <exec_depend>libboost-filesystem</exec_depend>
   <exec_depend>rosidl_default_runtime</exec_depend>
 
   <test_depend>ament_cmake_gtest</test_depend>
