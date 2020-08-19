@@ -74,6 +74,7 @@ add_library(${PROJECT_NAME}
   src/shape_to_marker.cpp
   src/shapes.cpp
 )
+set_target_properties(${PROJECT_NAME} PROPERTIES VERSION ${${PROJECT_NAME}_VERSION})
 
 target_link_libraries(${PROJECT_NAME} ${ASSIMP_LIBRARIES} ${QHULL_LIBRARIES} ${catkin_LIBRARIES} ${console_bridge_LIBRARIES} ${Boost_LIBRARIES})
 
