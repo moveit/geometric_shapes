@@ -12,13 +12,12 @@ set(QHULL_DEBUG_NAME qhull_rd)
 find_file(QHULL_HEADER
           NAMES libqhull_r.h
           HINTS "${QHULL_ROOT}" "$ENV{QHULL_ROOT}" "${QHULL_INCLUDE_DIR}"
-          PATHS "$ENV{PROGRAMFILES}/QHull" "$ENV{PROGRAMW6432}/QHull" 
+          PATHS "$ENV{PROGRAMFILES}/QHull" "$ENV{PROGRAMW6432}/QHull"
           PATH_SUFFIXES libqhull_r)
 
 set(QHULL_HEADER "${QHULL_HEADER}" CACHE INTERNAL "QHull header" FORCE )
 
 if(QHULL_HEADER)
-  get_filename_component(qhull_header ${QHULL_HEADER} NAME_WE)
   get_filename_component(QHULL_INCLUDE_DIR ${QHULL_HEADER} PATH)
 else(QHULL_HEADER)
   set(QHULL_INCLUDE_DIR "QHULL_INCLUDE_DIR-NOTFOUND")
@@ -26,16 +25,16 @@ endif(QHULL_HEADER)
 
 set(QHULL_INCLUDE_DIR "${QHULL_INCLUDE_DIR}" CACHE PATH "QHull include dir." FORCE)
 
-find_library(QHULL_LIBRARY 
+find_library(QHULL_LIBRARY
              NAMES ${QHULL_RELEASE_NAME}
              HINTS "${QHULL_ROOT}" "$ENV{QHULL_ROOT}"
-             PATHS "$ENV{PROGRAMFILES}/QHull" "$ENV{PROGRAMW6432}/QHull" 
+             PATHS "$ENV{PROGRAMFILES}/QHull" "$ENV{PROGRAMW6432}/QHull"
              PATH_SUFFIXES project build bin lib)
 
-find_library(QHULL_LIBRARY_DEBUG 
+find_library(QHULL_LIBRARY_DEBUG
              NAMES ${QHULL_DEBUG_NAME} ${QHULL_RELEASE_NAME}
              HINTS "${QHULL_ROOT}" "$ENV{QHULL_ROOT}"
-             PATHS "$ENV{PROGRAMFILES}/QHull" "$ENV{PROGRAMW6432}/QHull" 
+             PATHS "$ENV{PROGRAMFILES}/QHull" "$ENV{PROGRAMW6432}/QHull"
              PATH_SUFFIXES project build bin lib)
 
 if(NOT QHULL_LIBRARY_DEBUG)
