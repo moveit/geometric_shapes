@@ -58,9 +58,9 @@ catkin_package(
 find_package(Qhull REQUIRED)
 
 include_directories(include)
-include_directories(${EIGEN3_INCLUDE_DIR} ${Boost_INCLUDE_DIR} ${ASSIMP_INCLUDE_DIRS} ${OCTOMAP_INCLUDE_DIRS})
-include_directories(${catkin_INCLUDE_DIRS} ${console_bridge_INCLUDE_DIRS})
-include_directories(SYSTEM ${QHULL_INCLUDE_DIRS})
+include_directories(SYSTEM
+  ${EIGEN3_INCLUDE_DIR} ${Boost_INCLUDE_DIR} ${ASSIMP_INCLUDE_DIRS} ${OCTOMAP_INCLUDE_DIRS}
+  ${QHULL_INCLUDE_DIRS} ${catkin_INCLUDE_DIRS} ${console_bridge_INCLUDE_DIRS})
 
 add_library(${PROJECT_NAME}
   src/aabb.cpp
