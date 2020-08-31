@@ -1,6 +1,6 @@
 # This config file for Travis CI utilizes https://github.com/ros-planning/moveit_ci/ package.
-sudo: required
-dist: xenial  # distro used by Travis, moveit_ci uses the docker image's distro
+os: linux
+dist: bionic # distro used by Travis, moveit_ci uses the docker image's distro
 services:
   - docker
 language: cpp
@@ -8,9 +8,8 @@ cache: ccache
 compiler: gcc
 
 notifications:
-  email:
-    recipients:
-      - 130s@2000.jukuin.keio.ac.jp
+  email: true
+
 env:
   global:
     - ROS_DISTRO=melodic
@@ -19,14 +18,14 @@ env:
     - WARNINGS_OK=false
   matrix:
     - TEST="clang-format, catkin_lint"
-    - ROS_DISTRO=kinetic
-    - ROS_DISTRO=melodic  TEST=code-coverage
+    - TEST=code-coverage
+    - ROS_DISTRO=noetic
+      BEFORE_SCRIPT="apt-get install -yq libassimp-dev; sed -i 's/if(ON)/if(1)/g' /usr/lib/x86_64-linux-gnu/cmake/assimp-5.0/assimpTargets.cmake"
 
 matrix:
   include:
     - compiler: clang
       env: TEST=clang-tidy-fix
-           CXXFLAGS="-Wall -Wextra -Wwrite-strings -Wunreachable-code -Wpointer-arith -Wredundant-decls -Wno-unused-parameter"
 
 before_script:
   - git clone -q --depth=1 https://github.com/ros-planning/moveit_ci.git .moveit_ci
