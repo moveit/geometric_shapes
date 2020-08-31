@@ -2,6 +2,13 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.7.1 (2020-08-31)
+------------------
+* [maint] Declare external includes as SYSTEM includes
+* [maint] Migration to reentrant qhull (`#149 <https://github.com/ros-planning/geometric_shapes/issues/149>`_)
+* [maint] Use soname version for library (`#157 <https://github.com/ros-planning/geometric_shapes/issues/157>`_)
+* Contributors: Jochen Sprickerhof, Robert Haschke, Tyler Weaver
+
 0.7.0 (2020-05-25)
 ------------------
 * [feature] Added constructShapeFromBody() and constructMarkerFromBody() (`#138 <https://github.com/ros-planning/geometric_shapes/issues/138>`_)
