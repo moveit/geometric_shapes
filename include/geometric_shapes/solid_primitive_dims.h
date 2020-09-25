@@ -65,4 +65,17 @@ constexpr unsigned int solidPrimitiveDimCount<shape_msgs::SolidPrimitive::CONE>(
 {
   return 2u;
 }
+
+// clang-format off
+template <int shape>
+struct [[deprecated("Replace SolidPrimitiveDimCount<SHAPE>::value with solidPrimitiveDimCount<SHAPE>()")]]
+SolidPrimitiveDimCount
+// clang-format on
+{
+  enum
+  {
+    value = solidPrimitiveDimCount<shape>()
+  };
+};
+
 }  // namespace geometric_shapes
