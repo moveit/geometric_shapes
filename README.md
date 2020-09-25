@@ -23,6 +23,6 @@ Note: `bodies::ConvexMesh::MeshData` was made implementation-private in Noetic a
 
 Travis CI: [![Build Status](https://travis-ci.org/ros-planning/geometric_shapes.svg?branch=melodic-devel)](https://travis-ci.org/ros-planning/geometric_shapes)
 
-Devel Job: [![Build Status](http://build.ros.org/buildStatus/icon?job=Msrc_uB__geometric_shapes__ubuntu_bionic__source)](http://build.ros.org/view/Msrc_uB/job/Msrc_uB__geometric_shapes__ubuntu_bionic__source)
+Devel Job: [![Build Status](http://build.ros.org/buildStatus/icon?job=Nsrc_uF__geometric_shapes__ubuntu_focal__source)](http://build.ros.org/view/Nsrc_uF/job/Nsrc_uF__geometric_shapes__ubuntu_focal__source)
 
-Debian Job: [![Build Status](http://build.ros.org/buildStatus/icon?job=Mbin_uB64__geometric_shapes__ubuntu_bionic_amd64__binary)](http://build.ros.org/view/Mbin_uB64/job/Mbin_uB64__geometric_shapes__ubuntu_bionic_amd64__binary)
+Debian Job: [![Build Status](http://build.ros.org/buildStatus/icon?job=Nbin_uF64__geometric_shapes__ubuntu_focal_amd64__binary)](http://build.ros.org/view/Nbin_uF64/job/Nbin_uF64__geometric_shapes__ubuntu_focal_amd64__binary)
