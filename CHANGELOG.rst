@@ -2,6 +2,14 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.7.2 (2020-09-25)
+------------------
+* [maint] Renamed SolidPrimitiveDimCount<shape>::value -> solidPrimitiveDimCount<shape>() (`#121 <https://github.com/ros-planning/geometric_shapes/issues/121>`_)
+* [maint] cmake: Consistently use uppercase letters for QHULL dependency
+* [maint] cmake: Fix assimp warning
+* [maint] Update build badges for Noetic
+* Contributors: Robert Haschke
+
 0.7.1 (2020-08-31)
 ------------------
 * [maint] Declare external includes as SYSTEM includes
