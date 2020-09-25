@@ -46,6 +46,6 @@ void getShapeExtents(const shape_msgs::msg::SolidPrimitive& shape_msg, double& x
 
 /** \brief Get the dimensions of an axis-aligned bounding box for the shape described by \e shape_msg */
 void getShapeExtents(const shape_msgs::msg::Mesh& shape_msg, double& x_extent, double& y_extent, double& z_extent);
-}
+}  // namespace geometric_shapes
 
 #endif

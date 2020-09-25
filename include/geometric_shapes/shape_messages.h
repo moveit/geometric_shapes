@@ -50,6 +50,6 @@ namespace shapes
 {
 /** \brief Type that can hold any of the desired shape message types */
 typedef boost::variant<shape_msgs::msg::SolidPrimitive, shape_msgs::msg::Mesh, shape_msgs::msg::Plane> ShapeMsg;
-}
+}  // namespace shapes
 
 #endif

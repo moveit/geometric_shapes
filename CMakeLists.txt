@@ -45,9 +45,6 @@ find_package(shape_msgs REQUIRED)
 find_package(visualization_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(QHULL REQUIRED)
-if(HAVE_QHULL_2011)
-  add_definitions(-DGEOMETRIC_SHAPES_HAVE_QHULL_2011)
-endif()
 
 include_directories(include)
 
@@ -61,6 +58,7 @@ add_library(${PROJECT_NAME} SHARED
   src/shape_to_marker.cpp
   src/shapes.cpp
 )
+set_target_properties(${PROJECT_NAME} PROPERTIES VERSION ${${PROJECT_NAME}_VERSION})
 ament_target_dependencies(${PROJECT_NAME}
   Boost
   Eigen3
