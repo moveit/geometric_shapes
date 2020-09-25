@@ -43,13 +43,12 @@ void geometric_shapes::getShapeExtents(const shape_msgs::SolidPrimitive& shape_m
 
   if (shape_msg.type == shape_msgs::SolidPrimitive::SPHERE)
   {
-    if (shape_msg.dimensions.size() >=
-        geometric_shapes::SolidPrimitiveDimCount<shape_msgs::SolidPrimitive::SPHERE>::value)
+    if (shape_msg.dimensions.size() >= geometric_shapes::solidPrimitiveDimCount<shape_msgs::SolidPrimitive::SPHERE>())
       x_extent = y_extent = z_extent = shape_msg.dimensions[shape_msgs::SolidPrimitive::SPHERE_RADIUS] * 2.0;
   }
   else if (shape_msg.type == shape_msgs::SolidPrimitive::BOX)
   {
-    if (shape_msg.dimensions.size() >= geometric_shapes::SolidPrimitiveDimCount<shape_msgs::SolidPrimitive::BOX>::value)
+    if (shape_msg.dimensions.size() >= geometric_shapes::solidPrimitiveDimCount<shape_msgs::SolidPrimitive::BOX>())
     {
       x_extent = shape_msg.dimensions[shape_msgs::SolidPrimitive::BOX_X];
       y_extent = shape_msg.dimensions[shape_msgs::SolidPrimitive::BOX_Y];
@@ -58,8 +57,7 @@ void geometric_shapes::getShapeExtents(const shape_msgs::SolidPrimitive& shape_m
   }
   else if (shape_msg.type == shape_msgs::SolidPrimitive::CYLINDER)
   {
-    if (shape_msg.dimensions.size() >=
-        geometric_shapes::SolidPrimitiveDimCount<shape_msgs::SolidPrimitive::CYLINDER>::value)
+    if (shape_msg.dimensions.size() >= geometric_shapes::solidPrimitiveDimCount<shape_msgs::SolidPrimitive::CYLINDER>())
     {
       x_extent = y_extent = shape_msg.dimensions[shape_msgs::SolidPrimitive::CYLINDER_RADIUS] * 2.0;
       z_extent = shape_msg.dimensions[shape_msgs::SolidPrimitive::CYLINDER_HEIGHT];
@@ -67,8 +65,7 @@ void geometric_shapes::getShapeExtents(const shape_msgs::SolidPrimitive& shape_m
   }
   else if (shape_msg.type == shape_msgs::SolidPrimitive::CONE)
   {
-    if (shape_msg.dimensions.size() >=
-        geometric_shapes::SolidPrimitiveDimCount<shape_msgs::SolidPrimitive::CONE>::value)
+    if (shape_msg.dimensions.size() >= geometric_shapes::solidPrimitiveDimCount<shape_msgs::SolidPrimitive::CONE>())
     {
       x_extent = y_extent = shape_msg.dimensions[shape_msgs::SolidPrimitive::CONE_RADIUS] * 2.0;
       z_extent = shape_msg.dimensions[shape_msgs::SolidPrimitive::CONE_HEIGHT];
