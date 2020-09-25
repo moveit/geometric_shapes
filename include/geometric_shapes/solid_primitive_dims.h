@@ -39,7 +39,7 @@
 namespace geometric_shapes
 {
 /** Get the number of dimensions of a particular shape */
-template <int>
+template <int shape>
 constexpr unsigned int solidPrimitiveDimCount();
 
 template <>

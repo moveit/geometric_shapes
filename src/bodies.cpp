@@ -1,36 +1,36 @@
 /*********************************************************************
-* Software License Agreement (BSD License)
-*
-*  Copyright (c) 2008, Willow Garage, Inc.
-*  All rights reserved.
-*
-*  Redistribution and use in source and binary forms, with or without
-*  modification, are permitted provided that the following conditions
-*  are met:
-*
-*   * Redistributions of source code must retain the above copyright
-*     notice, this list of conditions and the following disclaimer.
-*   * Redistributions in binary form must reproduce the above
-*     copyright notice, this list of conditions and the following
-*     disclaimer in the documentation and/or other materials provided
-*     with the distribution.
-*   * Neither the name of the Willow Garage nor the names of its
-*     contributors may be used to endorse or promote products derived
-*     from this software without specific prior written permission.
-*
-*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-*  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-*  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
-*  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
-*  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-*  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
-*  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-*  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-*  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
-*  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
-*  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-*  POSSIBILITY OF SUCH DAMAGE.
-*********************************************************************/
+ * Software License Agreement (BSD License)
+ *
+ *  Copyright (c) 2008, Willow Garage, Inc.
+ *  All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without
+ *  modification, are permitted provided that the following conditions
+ *  are met:
+ *
+ *   * Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ *   * Redistributions in binary form must reproduce the above
+ *     copyright notice, this list of conditions and the following
+ *     disclaimer in the documentation and/or other materials provided
+ *     with the distribution.
+ *   * Neither the name of the Willow Garage nor the names of its
+ *     contributors may be used to endorse or promote products derived
+ *     from this software without specific prior written permission.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ *  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ *  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ *  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ *  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ *  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ *  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ *  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ *  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ *  POSSIBILITY OF SUCH DAMAGE.
+ *********************************************************************/
 
 /* Author: Ioan Sucan */
 
@@ -41,25 +41,7 @@
 #include <console_bridge/console.h>
 
 extern "C" {
-#ifdef GEOMETRIC_SHAPES_HAVE_QHULL_2011
-#include <libqhull/libqhull.h>
-#include <libqhull/mem.h>
-#include <libqhull/qset.h>
-#include <libqhull/geom.h>
-#include <libqhull/merge.h>
-#include <libqhull/poly.h>
-#include <libqhull/io.h>
-#include <libqhull/stat.h>
-#else
-#include <qhull/qhull.h>
-#include <qhull/mem.h>
-#include <qhull/qset.h>
-#include <qhull/geom.h>
-#include <qhull/merge.h>
-#include <qhull/poly.h>
-#include <qhull/io.h>
-#include <qhull/stat.h>
-#endif
+#include <libqhull_r.h>
 }
 
 #include <boost/math/constants/constants.hpp>
@@ -933,20 +915,24 @@ void bodies::ConvexMesh::useDimensions(const shapes::Shape* shape)
   static FILE* null = fopen("/dev/null", "w");
 
   char flags[] = "qhull Tv Qt";
-  int exitcode = qh_new_qhull(3, mesh->vertex_count, points, true, flags, null, null);
+  qhT qh_qh;
+  qhT* qh = &qh_qh;
+  QHULL_LIB_CHECK
+  qh_zero(qh, null);
+  int exitcode = qh_new_qhull(qh, 3, mesh->vertex_count, points, true, flags, null, null);
 
   if (exitcode != 0)
   {
     CONSOLE_BRIDGE_logWarn("Convex hull creation failed");
-    qh_freeqhull(!qh_ALL);
+    qh_freeqhull(qh, !qh_ALL);
     int curlong, totlong;
-    qh_memfreeshort(&curlong, &totlong);
+    qh_memfreeshort(qh, &curlong, &totlong);
     return;
   }
 
-  int num_facets = qh num_facets;
+  int num_facets = qh->num_facets;
 
-  int num_vertices = qh num_vertices;
+  int num_vertices = qh->num_vertices;
   mesh_data_->vertices_.reserve(num_vertices);
   Eigen::Vector3d sum(0, 0, 0);
 
@@ -990,7 +976,7 @@ void bodies::ConvexMesh::useDimensions(const shapes::Shape* shape)
 
     // Needed by FOREACHvertex_i_
     int vertex_n, vertex_i;
-    FOREACHvertex_i_((*facet).vertices)
+    FOREACHvertex_i_(qh, (*facet).vertices)
     {
       mesh_data_->triangles_.push_back(qhull_vertex_table[vertex->id]);
     }
@@ -998,9 +984,9 @@ void bodies::ConvexMesh::useDimensions(const shapes::Shape* shape)
     mesh_data_->plane_for_triangle_[(mesh_data_->triangles_.size() - 1) / 3] = mesh_data_->planes_.size() - 1;
     mesh_data_->triangle_for_plane_[mesh_data_->planes_.size() - 1] = (mesh_data_->triangles_.size() - 1) / 3;
   }
-  qh_freeqhull(!qh_ALL);
+  qh_freeqhull(qh, !qh_ALL);
   int curlong, totlong;
-  qh_memfreeshort(&curlong, &totlong);
+  qh_memfreeshort(qh, &curlong, &totlong);
 }
 
 std::vector<double> bodies::ConvexMesh::getDimensions() const

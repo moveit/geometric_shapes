@@ -23,9 +23,6 @@ Note: `bodies::ConvexMesh::MeshData` was made implementation-private and is no l
 
 Travis CI: [![Build Status](https://travis-ci.com/ros-planning/geometric_shapes.svg?branch=ros2)](https://travis-ci.com/ros-planning/geometric_shapes)
 
-<!--
-TODO(henningkayser): Fix Devel/Debian build tags for ROS2
-Devel Job: [![Build Status](http://build.ros.org/buildStatus/icon?job=Msrc_uB__geometric_shapes__ubuntu_bionic__source)](http://build.ros.org/view/Msrc_uB/job/Msrc_uB__geometric_shapes__ubuntu_bionic__source)
+Devel Job: [![Build Status](http://build.ros2.org/buildStatus/icon?job=Fsrc_uF__geometric_shapes__ubuntu_focal__source)](http://build.ros2.org/view/Fsrc_uF/job/Fsrc_uF__geometric_shapes__ubuntu_focal__source)
 
-Debian Job: [![Build Status](http://build.ros.org/buildStatus/icon?job=Mbin_uB64__geometric_shapes__ubuntu_bionic_amd64__binary)](http://build.ros.org/view/Mbin_uB64/job/Mbin_uB64__geometric_shapes__ubuntu_bionic_amd64__binary)
--->
+Debian Job: [![Build Status](http://build.ros2.org/buildStatus/icon?job=Fbin_uF64__geometric_shapes__ubuntu_focal_amd64__binary)](http://build.ros2.org/view/Fbin_uF64/job/Fbin_uF64__geometric_shapes__ubuntu_focal_amd64__binary)
