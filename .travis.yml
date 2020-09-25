@@ -12,15 +12,14 @@ notifications:
 
 env:
   global:
-    - ROS_DISTRO=melodic
+    - ROS_DISTRO=noetic
     - ROS_REPO=ros
     - CXXFLAGS="-Wall -Wextra -Wwrite-strings -Wunreachable-code -Wpointer-arith -Wredundant-decls -Wno-unused-parameter"
     - WARNINGS_OK=false
   matrix:
     - TEST="clang-format, catkin_lint"
     - TEST=code-coverage
-    - ROS_DISTRO=noetic
-      BEFORE_SCRIPT="apt-get install -yq libassimp-dev; sed -i 's/if(ON)/if(1)/g' /usr/lib/x86_64-linux-gnu/cmake/assimp-5.0/assimpTargets.cmake"
+    - ROS_DISTRO=melodic
 
 matrix:
   include:

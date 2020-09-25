@@ -10,6 +10,9 @@ if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
 endif()
 
+# TODO(henningkayser): Remove policy fix when assimp 5.1 is available
+# Suppress policy warning in assimp (https://github.com/assimp/assimp/pull/2722)
+set(CMAKE_POLICY_DEFAULT_CMP0012 NEW)
 find_package(ASSIMP QUIET)
 if (NOT ASSIMP_FOUND)
   find_package(PkgConfig REQUIRED)
