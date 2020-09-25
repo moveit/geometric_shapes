@@ -5,7 +5,7 @@ add_compile_options(-std=c++11)
 
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/")
 
-if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
+if(NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
   message("${PROJECT_NAME}: You did not request a specific build type: Choosing 'Release' for maximum performance")
   set(CMAKE_BUILD_TYPE Release)
 endif()
@@ -14,7 +14,7 @@ endif()
 # Suppress policy warning in assimp (https://github.com/assimp/assimp/pull/2722)
 set(CMAKE_POLICY_DEFAULT_CMP0012 NEW)
 find_package(ASSIMP QUIET)
-if (NOT ASSIMP_FOUND)
+if(NOT ASSIMP_FOUND)
   find_package(PkgConfig REQUIRED)
   # assimp is required, so REQUIRE the second attempt
   pkg_check_modules(ASSIMP_PC REQUIRED assimp)
