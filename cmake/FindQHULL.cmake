@@ -15,7 +15,7 @@ find_file(QHULL_HEADER
           PATHS "$ENV{PROGRAMFILES}/QHull" "$ENV{PROGRAMW6432}/QHull"
           PATH_SUFFIXES libqhull_r)
 
-set(QHULL_HEADER "${QHULL_HEADER}" CACHE INTERNAL "QHull header" FORCE )
+set(QHULL_HEADER "${QHULL_HEADER}" CACHE INTERNAL "QHull header" FORCE)
 
 if(QHULL_HEADER)
   get_filename_component(QHULL_INCLUDE_DIR ${QHULL_HEADER} PATH)
@@ -45,7 +45,7 @@ set(QHULL_INCLUDE_DIRS ${QHULL_INCLUDE_DIR})
 set(QHULL_LIBRARIES optimized ${QHULL_LIBRARY} debug ${QHULL_LIBRARY_DEBUG})
 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(Qhull DEFAULT_MSG QHULL_LIBRARY QHULL_INCLUDE_DIR)
+find_package_handle_standard_args(QHULL DEFAULT_MSG QHULL_LIBRARY QHULL_INCLUDE_DIR)
 
 mark_as_advanced(QHULL_LIBRARY QHULL_LIBRARY_DEBUG QHULL_INCLUDE_DIR)
 

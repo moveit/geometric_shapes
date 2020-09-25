@@ -58,7 +58,7 @@ catkin_package(
     console_bridge
   )
 
-find_package(Qhull REQUIRED)
+find_package(QHULL REQUIRED)
 
 include_directories(include)
 include_directories(SYSTEM
