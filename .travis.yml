@@ -16,7 +16,7 @@ env:
     - ROS_REPO=ros
     - UPSTREAM_WORKSPACE=geometric_shapes.repos
     - CXXFLAGS="-Wall -Wextra -Wwrite-strings -Wunreachable-code -Wpointer-arith -Wredundant-decls -Wno-unused-parameter"
-    - WARNINGS_OK=false
+    - WARNINGS_OK=true  # gcc warns about redundant declarations in qhull includes
   matrix:
     - TEST="ament_lint, clang-format"
     - TEST=code-coverage
