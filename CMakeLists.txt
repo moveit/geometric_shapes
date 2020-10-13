@@ -46,6 +46,9 @@ find_package(visualization_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(QHULL REQUIRED)
 
+# Set VERSION from package.xml
+ament_package_xml()
+
 include_directories(include)
 
 add_library(${PROJECT_NAME} SHARED
