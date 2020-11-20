@@ -2,6 +2,26 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+2.0.0 (2020-11-20)
+-----------
+* [maint] Travis: Disable warnings as gcc warns about redundant declarations in qhull includes
+* [maint] Inherit package VERSION (for library soname) from package.xml
+* [maint] Trim boost dependencies `#156 <https://github.com/ros-planning/geometric_shapes/issues/156>`_
+  * libboost-math libraries unnecessary as only headers-only parts are used
+  * move author tags below to comply with the xsd
+* [maint] Compile on ROS2 Foxy (`#153 <https://github.com/ros-planning/geometric_shapes/issues/153>`_)
+  * Suppress assimp CMP0012 policy warning
+  * Use console_bridge_vendor dependency wrapper
+  * Fix CMakeLists issues:
+    * remove ASSIMP export dependency
+    * fix linking of OCTOMAP, resource_retriever
+* [maint] Resolve octomap dependency with rosdep (`#124 <https://github.com/ros-planning/geometric_shapes/issues/124>`_)
+* [maint] struct SolidPrimitiveDimCount -> function solidPrimitiveDimCount() (`#121 <https://github.com/ros-planning/geometric_shapes/issues/121>`_)
+* [ros2-migration] Port to ROS 2 (`#122 <https://github.com/ros-planning/geometric_shapes/issues/122>`_)
+  * Migrate CMakeLists.txt, package.xml, messages
+  * Enable Travis: Run on ROS 2, enable ament_lint_cmake
+* Contributors: Henning Kayser, Mikael Arguedas, Robert Haschke, Víctor Mayoral Vilches
+
 0.7.2 (2020-09-25)
 ------------------
 * [maint] Renamed SolidPrimitiveDimCount<shape>::value -> solidPrimitiveDimCount<shape>() (`#121 <https://github.com/ros-planning/geometric_shapes/issues/121>`_)
