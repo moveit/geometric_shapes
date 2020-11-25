@@ -97,14 +97,18 @@ if(BUILD_TESTING)
   add_subdirectory(test)
 endif()
 
-install(TARGETS ${PROJECT_NAME}
-        ARCHIVE DESTINATION lib
-        LIBRARY DESTINATION lib
-        RUNTIME DESTINATION bin
+install(
+  DIRECTORY include/
+  DESTINATION include
 )
 
-install(DIRECTORY include/
-        DESTINATION include
+install(
+  TARGETS ${PROJECT_NAME}
+  EXPORT ${PROJECT_NAME}
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib
+  RUNTIME DESTINATION bin
+  INCLUDES DESTINATION include
 )
 
 ament_package()
