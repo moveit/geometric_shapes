@@ -6,8 +6,7 @@
   <author email="isucan@google.com">Ioan Sucan</author>
   <author email="gjones@willowgarage.edu">Gil Jones</author>
 
-  <maintainer email="dave@dav.ee">Dave Coleman</maintainer>
-  <maintainer email="130s@2000.jukuin.keio.ac.jp">Isaac I. Y. Saito</maintainer>
+  <maintainer email="tyler@picknik.ai">Tyler Weaver</maintainer>
 
   <license>BSD</license>
   <url>http://ros.org/wiki/geometric_shapes</url>
