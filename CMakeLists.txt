@@ -107,6 +107,10 @@ if(BUILD_TESTING)
   find_package(ament_cmake_gtest REQUIRED)
   # Unit tests
   add_subdirectory(test)
+
+  # ament_lint
+  find_package(ament_lint_auto REQUIRED)
+  ament_lint_auto_find_test_dependencies()
 endif()
 
 install(
