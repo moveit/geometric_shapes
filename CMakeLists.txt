@@ -6,6 +6,17 @@ if(NOT CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_STANDARD 14)
 endif()
 
+# Set compile options 
+set(PROJECT_COMPILE_OPTIONS 
+  -Wall 
+  -Wextra 
+  -Wwrite-strings 
+  -Wunreachable-code 
+  -Wpointer-arith 
+  -Wredundant-decls 
+  -Wno-unused-parameter
+)
+
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/")
 
 if(NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
@@ -62,6 +73,7 @@ add_library(${PROJECT_NAME} SHARED
   src/shapes.cpp
 )
 set_target_properties(${PROJECT_NAME} PROPERTIES VERSION ${${PROJECT_NAME}_VERSION})
+target_compile_options(${PROJECT_NAME} PRIVATE ${PROJECT_COMPILE_OPTIONS})
 ament_target_dependencies(${PROJECT_NAME}
   Boost
   Eigen3
