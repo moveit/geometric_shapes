@@ -17,7 +17,7 @@ Note: [shape_tools](https://github.com/ros-planning/shape_tools) package was rec
 
 ## Build Status
 
-Travis CI: [![Build Status](https://travis-ci.org/ros-planning/geometric_shapes.svg?branch=melodic-devel)](https://travis-ci.org/ros-planning/geometric_shapes)
+GitHub Actions: [![Format](https://github.com/ros-planning/geometric_shapes/actions/workflows/format.yml/badge.svg?branch=melodic-devel)](https://github.com/ros-planning/geometric_shapes/actions/workflows/format.yml?branch=melodic-devel) [![BuildAndTest](https://github.com/ros-planning/geometric_shapes/actions/workflows/industrial_ci_action.yml/badge.svg?branch=melodic-devel)](https://github.com/ros-planning/geometric_shapes/actions/workflows/industrial_ci_action.yml?branch=melodic-devel)
 
 Devel Job: [![Build Status](http://build.ros.org/buildStatus/icon?job=Msrc_uB__geometric_shapes__ubuntu_bionic__source)](http://build.ros.org/view/Msrc_uB/job/Msrc_uB__geometric_shapes__ubuntu_bionic__source)
 
