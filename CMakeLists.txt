@@ -3,6 +3,17 @@ project(geometric_shapes)
 
 add_compile_options(-std=c++11)
 
+# Set compile options 
+set(PROJECT_COMPILE_OPTIONS 
+  -Wall 
+  -Wextra 
+  -Wwrite-strings 
+  -Wunreachable-code 
+  -Wpointer-arith 
+  -Wredundant-decls 
+  -Wno-unused-parameter
+)
+
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/")
 
 if(NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
@@ -75,6 +86,7 @@ add_library(${PROJECT_NAME}
   src/shape_to_marker.cpp
   src/shapes.cpp
 )
+target_compile_options(${PROJECT_NAME} PRIVATE ${PROJECT_COMPILE_OPTIONS})
 set_target_properties(${PROJECT_NAME} PROPERTIES VERSION ${${PROJECT_NAME}_VERSION})
 
 target_link_libraries(${PROJECT_NAME} ${ASSIMP_LIBRARIES} ${QHULL_LIBRARIES} ${catkin_LIBRARIES} ${console_bridge_LIBRARIES} ${Boost_LIBRARIES})

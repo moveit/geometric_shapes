@@ -21,7 +21,7 @@ Note: `bodies::ConvexMesh::MeshData` was made implementation-private in Noetic a
 
 ## Build Status
 
-Travis CI: [![Build Status](https://travis-ci.org/ros-planning/geometric_shapes.svg?branch=melodic-devel)](https://travis-ci.org/ros-planning/geometric_shapes)
+GitHub Actions: [![Format](https://github.com/ros-planning/geometric_shapes/actions/workflows/format.yml/badge.svg?branch=noetic-devel)](https://github.com/ros-planning/geometric_shapes/actions/workflows/format.yml?branch=noetic-devel) [![BuildAndTest](https://github.com/ros-planning/geometric_shapes/actions/workflows/industrial_ci_action.yml/badge.svg?branch=noetic-devel)](https://github.com/ros-planning/geometric_shapes/actions/workflows/industrial_ci_action.yml?branch=noetic-devel)
 
 Devel Job: [![Build Status](http://build.ros.org/buildStatus/icon?job=Nsrc_uF__geometric_shapes__ubuntu_focal__source)](http://build.ros.org/view/Nsrc_uF/job/Nsrc_uF__geometric_shapes__ubuntu_focal__source)
 
