@@ -3,11 +3,7 @@
 
 name: BuildAndTest
 
-on:
-  push:
-    branches: [ ros2 ]
-  pull_request:
-    branches: [ ros2 ]
+on: [push, pull_request]
 
 jobs:
   industrial_ci:

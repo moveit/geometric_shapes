@@ -21,7 +21,7 @@ Note: `bodies::ConvexMesh::MeshData` was made implementation-private and is no l
 
 ## Build Status
 
-Travis CI: [![Build Status](https://travis-ci.com/ros-planning/geometric_shapes.svg?branch=ros2)](https://travis-ci.com/ros-planning/geometric_shapes)
+GitHub Actions: [![Format](https://github.com/ros-planning/geometric_shapes/actions/workflows/format.yml/badge.svg?branch=ros2)](https://github.com/ros-planning/geometric_shapes/actions/workflows/format.yml?branch=ros2) [![BuildAndTest](https://github.com/ros-planning/geometric_shapes/actions/workflows/industrial_ci_action.yml/badge.svg?branch=ros2)](https://github.com/ros-planning/geometric_shapes/actions/workflows/industrial_ci_action.yml?branch=ros2)
 
 Devel Job: [![Build Status](http://build.ros2.org/buildStatus/icon?job=Fsrc_uF__geometric_shapes__ubuntu_focal__source)](http://build.ros2.org/view/Fsrc_uF/job/Fsrc_uF__geometric_shapes__ubuntu_focal__source)
 
