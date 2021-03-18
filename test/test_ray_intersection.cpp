@@ -188,9 +188,9 @@ TEST(SphereRayIntersection, OriginInside)
   const auto sq3 = sqrt(pow(1 + 0.1, 2) / 3);
   const auto dir3 = Eigen::Vector3d::Ones().normalized();
   // clang-format off
-  CHECK_INTERSECTS_ONCE(sphere, (   0,    0,    0), ( dir3), ( sq3,  sq3,  sq3), 1e-4)
-  CHECK_INTERSECTS_ONCE(sphere, ( 0.5,  0.5,  0.5), ( dir3), ( sq3,  sq3,  sq3), 1e-4)
-  CHECK_INTERSECTS_ONCE(sphere, (-0.5, -0.5, -0.5), ( dir3), ( sq3,  sq3,  sq3), 1e-4)
+  CHECK_INTERSECTS_ONCE(sphere, (   0,    0,    0), ( dir3), ( sq3,  sq3,  sq3), 1e-4) // NOLINT(performance-unnecessary-copy-initialization)
+  CHECK_INTERSECTS_ONCE(sphere, ( 0.5,  0.5,  0.5), ( dir3), ( sq3,  sq3,  sq3), 1e-4) // NOLINT(performance-unnecessary-copy-initialization)
+  CHECK_INTERSECTS_ONCE(sphere, (-0.5, -0.5, -0.5), ( dir3), ( sq3,  sq3,  sq3), 1e-4) // NOLINT(performance-unnecessary-copy-initialization)
   CHECK_INTERSECTS_ONCE(sphere, (   0,    0,    0), (-dir3), (-sq3, -sq3, -sq3), 1e-4)
   CHECK_INTERSECTS_ONCE(sphere, ( 0.5,  0.5,  0.5), (-dir3), (-sq3, -sq3, -sq3), 1e-4)
   CHECK_INTERSECTS_ONCE(sphere, (-0.5, -0.5, -0.5), (-dir3), (-sq3, -sq3, -sq3), 1e-4)
@@ -348,7 +348,7 @@ TEST(SphereRayIntersection, OriginOutside)
     }
 
     // check that the opposite ray misses
-    CHECK_NO_INTERSECTION(sphere, (origin), (-dir))
+    CHECK_NO_INTERSECTION(sphere, (origin), (-dir))  // NOLINT(performance-unnecessary-copy-initialization)
 
     // shift the ray a bit sideways
 
@@ -473,9 +473,9 @@ TEST(CylinderRayIntersection, OriginInside)
   // direction towards the very "corner" of the cylinder
   const auto dir3 = Eigen::Vector3d({ sq2, sq2, 1.1 }).normalized();
   // clang-format off
-  CHECK_INTERSECTS_ONCE(cylinder, ( 0,  0,  0), ( dir3), ( sq2,  sq2,  1.1), 1e-4)
-  CHECK_INTERSECTS_ONCE(cylinder, (  dir3 / 2), ( dir3), ( sq2,  sq2,  1.1), 1e-4)
-  CHECK_INTERSECTS_ONCE(cylinder, ( -dir3 / 2), ( dir3), ( sq2,  sq2,  1.1), 1e-4)
+  CHECK_INTERSECTS_ONCE(cylinder, ( 0,  0,  0), ( dir3), ( sq2,  sq2,  1.1), 1e-4) // NOLINT(performance-unnecessary-copy-initialization)
+  CHECK_INTERSECTS_ONCE(cylinder, (  dir3 / 2), ( dir3), ( sq2,  sq2,  1.1), 1e-4) // NOLINT(performance-unnecessary-copy-initialization)
+  CHECK_INTERSECTS_ONCE(cylinder, ( -dir3 / 2), ( dir3), ( sq2,  sq2,  1.1), 1e-4) // NOLINT(performance-unnecessary-copy-initialization)
   CHECK_INTERSECTS_ONCE(cylinder, ( 0,  0,  0), (-dir3), (-sq2, -sq2, -1.1), 1e-4)
   CHECK_INTERSECTS_ONCE(cylinder, (  dir3 / 2), (-dir3), (-sq2, -sq2, -1.1), 1e-4)
   CHECK_INTERSECTS_ONCE(cylinder, ( -dir3 / 2), (-dir3), (-sq2, -sq2, -1.1), 1e-4)
@@ -639,7 +639,7 @@ TEST(CylinderRayIntersection, OriginOutside)
     }
 
     // check that the opposite ray misses
-    CHECK_NO_INTERSECTION(cylinder, (origin), (-dir))
+    CHECK_NO_INTERSECTION(cylinder, (origin), (-dir))  // NOLINT(performance-unnecessary-copy-initialization)
 
     // shift the ray a bit sideways
 
@@ -818,9 +818,9 @@ TEST(BoxRayIntersection, OriginInside)
 
   const auto dir3 = Eigen::Vector3d::Ones().normalized();
   // clang-format off
-  CHECK_INTERSECTS_ONCE(box, (   0,    0,    0), ( dir3), ( 1.1,  1.1,  1.1), 1e-4)
-  CHECK_INTERSECTS_ONCE(box, ( 0.5,  0.5,  0.5), ( dir3), ( 1.1,  1.1,  1.1), 1e-4)
-  CHECK_INTERSECTS_ONCE(box, (-0.5, -0.5, -0.5), ( dir3), ( 1.1,  1.1,  1.1), 1e-4)
+  CHECK_INTERSECTS_ONCE(box, (   0,    0,    0), ( dir3), ( 1.1,  1.1,  1.1), 1e-4) // NOLINT(performance-unnecessary-copy-initialization)
+  CHECK_INTERSECTS_ONCE(box, ( 0.5,  0.5,  0.5), ( dir3), ( 1.1,  1.1,  1.1), 1e-4) // NOLINT(performance-unnecessary-copy-initialization)
+  CHECK_INTERSECTS_ONCE(box, (-0.5, -0.5, -0.5), ( dir3), ( 1.1,  1.1,  1.1), 1e-4) // NOLINT(performance-unnecessary-copy-initialization)
   CHECK_INTERSECTS_ONCE(box, (   0,    0,    0), (-dir3), (-1.1, -1.1, -1.1), 1e-4)
   CHECK_INTERSECTS_ONCE(box, ( 0.5,  0.5,  0.5), (-dir3), (-1.1, -1.1, -1.1), 1e-4)
   CHECK_INTERSECTS_ONCE(box, (-0.5, -0.5, -0.5), (-dir3), (-1.1, -1.1, -1.1), 1e-4)
@@ -996,7 +996,7 @@ TEST(BoxRayIntersection, OriginOutsideIntersects)
     }
 
     // check that the opposite ray misses
-    CHECK_NO_INTERSECTION(box, (origin), (-dir))
+    CHECK_NO_INTERSECTION(box, (origin), (-dir))  // NOLINT(performance-unnecessary-copy-initialization)
 
     // shift the ray a bit sideways
 
@@ -1151,9 +1151,9 @@ TEST(ConvexMeshRayIntersection, OriginInside)
 
   const auto dir3 = Eigen::Vector3d::Ones().normalized();
   // clang-format off
-  CHECK_INTERSECTS_ONCE(mesh, (   0,    0,    0), ( dir3), ( s,  s,  s), 1e-4)
-  CHECK_INTERSECTS_ONCE(mesh, ( 0.5,  0.5,  0.5), ( dir3), ( s,  s,  s), 1e-4)
-  CHECK_INTERSECTS_ONCE(mesh, (-0.5, -0.5, -0.5), ( dir3), ( s,  s,  s), 1e-4)
+  CHECK_INTERSECTS_ONCE(mesh, (   0,    0,    0), ( dir3), ( s,  s,  s), 1e-4) // NOLINT(performance-unnecessary-copy-initialization)
+  CHECK_INTERSECTS_ONCE(mesh, ( 0.5,  0.5,  0.5), ( dir3), ( s,  s,  s), 1e-4) // NOLINT(performance-unnecessary-copy-initialization)
+  CHECK_INTERSECTS_ONCE(mesh, (-0.5, -0.5, -0.5), ( dir3), ( s,  s,  s), 1e-4) // NOLINT(performance-unnecessary-copy-initialization)
   CHECK_INTERSECTS_ONCE(mesh, (   0,    0,    0), (-dir3), (-s, -s, -s), 1e-4)
   CHECK_INTERSECTS_ONCE(mesh, ( 0.5,  0.5,  0.5), (-dir3), (-s, -s, -s), 1e-4)
   CHECK_INTERSECTS_ONCE(mesh, (-0.5, -0.5, -0.5), (-dir3), (-s, -s, -s), 1e-4)
@@ -1331,7 +1331,7 @@ TEST(ConvexMeshRayIntersection, OriginOutsideIntersects)
     }
 
     // check that the opposite ray misses
-    CHECK_NO_INTERSECTION(mesh, (origin), (-dir))
+    CHECK_NO_INTERSECTION(mesh, (origin), (-dir))  // NOLINT(performance-unnecessary-copy-initialization)
 
     // shift the ray a bit sideways
 
