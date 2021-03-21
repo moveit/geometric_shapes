@@ -21,7 +21,11 @@ Note: `bodies::ConvexMesh::MeshData` was made implementation-private and is no l
 
 ## Build Status
 
-GitHub Actions: [![Format](https://github.com/ros-planning/geometric_shapes/actions/workflows/format.yml/badge.svg?branch=ros2)](https://github.com/ros-planning/geometric_shapes/actions/workflows/format.yml?branch=ros2) [![BuildAndTest](https://github.com/ros-planning/geometric_shapes/actions/workflows/industrial_ci_action.yml/badge.svg?branch=ros2)](https://github.com/ros-planning/geometric_shapes/actions/workflows/industrial_ci_action.yml?branch=ros2)
+GitHub Actions: [![Format](https://github.com/ros-planning/geometric_shapes/actions/workflows/format.yml/badge.svg?branch=ros2)](https://github.com/ros-planning/geometric_shapes/actions/workflows/format.yml?branch=ros2) [![BuildAndTest](https://github.com/ros-planning/geometric_shapes/actions/workflows/industrial_ci_action.yml/badge.svg?branch=ros2)](https://github.com/ros-planning/geometric_shapes/actions/workflows/industrial_ci_action.yml?branch=ros2)[![codecov](https://codecov.io/gh/ros-planning/geometric_shapes/branch/ros2/graph/badge.svg?token=W7uHKcY0ly)](https://codecov.io/gh/ros-planning/geometric_shapes)
+
+Code Coverage Grid:
+
+[![Code Coverage Grid](https://codecov.io/gh/ros-planning/geometric_shapes/branch/ros2/graphs/tree.svg)](https://codecov.io/gh/ros-planning/geometric_shapes/branch/ros2/graphs/tree.svg)
 
 Devel Job: [![Build Status](http://build.ros2.org/buildStatus/icon?job=Fsrc_uF__geometric_shapes__ubuntu_focal__source)](http://build.ros2.org/view/Fsrc_uF/job/Fsrc_uF__geometric_shapes__ubuntu_focal__source)
 

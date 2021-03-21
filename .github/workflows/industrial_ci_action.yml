@@ -10,11 +10,17 @@ jobs:
     strategy:
       matrix:
         env:
-          - {ROS_DISTRO: foxy, ROS_REPO: main, CLANG_TIDY: pedantic}
-          - {ROS_DISTRO: foxy, ROS_REPO: testing}
+          - {
+            ROS_DISTRO: foxy, ROS_REPO: main, CCOV_UPLOAD: true,
+            TARGET_CMAKE_ARGS: "-DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_FLAGS='--coverage' -DCMAKE_CXX_FLAGS='--coverage' --no-warn-unused-cli",
+            AFTER_RUN_TARGET_TEST: './.ci.prepare_codecov',
+            ADDITIONAL_DEBS: 'lcov'
+          }
+          - {ROS_DISTRO: foxy, ROS_REPO: testing, CCOV_UPLOAD: false}
     env:
       UPSTREAM_WORKSPACE: geometric_shapes.repos
-      CCACHE_DIR: ~/.ccache
+      CCACHE_DIR: /home/runner/.ccache
+      BASEDIR: .base
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -26,3 +32,12 @@ jobs:
             ccache-${{ matrix.env.ROS_DISTRO }}-${{ matrix.env.ROS_REPO }}
       - uses: 'ros-industrial/industrial_ci@master'
         env: ${{ matrix.env }}
+      - uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: test-results
+          path: ${{ env.BASEDIR }}/target_ws/**/test_results/**/*.xml
+      - uses: codecov/codecov-action@v1
+        if: ${{ matrix.env.CCOV_UPLOAD }} 
+        with:
+          files: ${{ env.BASEDIR }}/coverage.info
