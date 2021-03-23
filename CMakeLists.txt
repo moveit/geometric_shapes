@@ -6,14 +6,14 @@ if(NOT CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_STANDARD 14)
 endif()
 
-# Set compile options 
-set(PROJECT_COMPILE_OPTIONS 
-  -Wall 
-  -Wextra 
-  -Wwrite-strings 
-  -Wunreachable-code 
-  -Wpointer-arith 
-  -Wredundant-decls 
+# Set compile options
+set(PROJECT_COMPILE_OPTIONS
+  -Wall
+  -Wextra
+  -Wwrite-strings
+  -Wunreachable-code
+  -Wpointer-arith
+  -Wredundant-decls
   -Wno-unused-parameter
 )
 
