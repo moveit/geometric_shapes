@@ -19,13 +19,24 @@ repos:
     hooks:
       - id: check-added-large-files
       - id: check-case-conflict
+      - id: check-json
       - id: check-merge-conflict
       - id: check-symlinks
+      - id: check-toml
       - id: check-xml
       - id: check-yaml
       - id: debug-statements
+      - id: destroyed-symlinks
+      - id: detect-private-key
       - id: end-of-file-fixer
       - id: mixed-line-ending
+      - id: pretty-format-json
+      - id: trailing-whitespace
+
+  - repo: https://github.com/psf/black
+    rev: 20.8b1
+    hooks:
+      - id: black
 
   - repo: local
     hooks:
@@ -45,3 +56,10 @@ repos:
         language: pygrep
         entry: Moveit|MoveIt!
         exclude: .pre-commit-config.yaml|README.md
+      - id: catkin_lint
+        name: catkin_lint
+        description: Check package.xml and cmake files
+        entry: catkin_lint .
+        language: system
+        always_run: true
+        pass_filenames: false
