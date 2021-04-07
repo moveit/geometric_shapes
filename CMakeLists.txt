@@ -3,14 +3,14 @@ project(geometric_shapes)
 
 add_compile_options(-std=c++11)
 
-# Set compile options 
-set(PROJECT_COMPILE_OPTIONS 
-  -Wall 
-  -Wextra 
-  -Wwrite-strings 
-  -Wunreachable-code 
-  -Wpointer-arith 
-  -Wredundant-decls 
+# Set compile options
+set(PROJECT_COMPILE_OPTIONS
+  -Wall
+  -Wextra
+  -Wwrite-strings
+  -Wunreachable-code
+  -Wpointer-arith
+  -Wredundant-decls
   -Wno-unused-parameter
 )
 
