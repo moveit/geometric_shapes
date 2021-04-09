@@ -2,6 +2,12 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+2.0.1 (2021-04-09)
+------------------
+* Set target compile options in cmake for warnings
+* [fix] cmake install command (`#164 <https://github.com/ros-planning/geometric_shapes/issues/164>`_)
+* Contributors: Tyler Weaver
+
 2.0.0 (2020-11-20)
 -----------
 * [maint] Travis: Disable warnings as gcc warns about redundant declarations in qhull includes
