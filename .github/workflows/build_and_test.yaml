@@ -1,7 +1,7 @@
 # This config uses industrial_ci (https://github.com/ros-industrial/industrial_ci.git).
 # For troubleshooting, see readme (https://github.com/ros-industrial/industrial_ci/blob/master/README.rst)
 
-name: BuildAndTest
+name: Build and Test
 
 on:
   workflow_dispatch:
@@ -20,8 +20,12 @@ jobs:
             CCOV: true
           - ROS_DISTRO: foxy
             ROS_REPO: testing
+          - ROS_DISTRO: rolling
+            ROS_REPO: main
+          - ROS_DISTRO: rolling
+            ROS_REPO: testing
     env:
-      UPSTREAM_WORKSPACE: geometric_shapes.repos
+      UPSTREAM_WORKSPACE: geometric_shapes${{ matrix.env.ROS_DISTRO == 'rolling' && '_rolling' || '' }}.repos
       AFTER_SETUP_UPSTREAM_WORKSPACE: 'vcs pull $BASEDIR/upstream_ws/src'
       AFTER_RUN_TARGET_TEST: ${{ matrix.env.CCOV && './.ci.prepare_codecov' || '' }}
       TARGET_CMAKE_ARGS: >

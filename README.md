@@ -21,7 +21,9 @@ Note: `bodies::ConvexMesh::MeshData` was made implementation-private and is no l
 
 ## Build Status
 
-GitHub Actions: [![Format](https://github.com/ros-planning/geometric_shapes/actions/workflows/format.yml/badge.svg?branch=ros2)](https://github.com/ros-planning/geometric_shapes/actions/workflows/format.yml?branch=ros2) [![BuildAndTest](https://github.com/ros-planning/geometric_shapes/actions/workflows/industrial_ci_action.yml/badge.svg?branch=ros2)](https://github.com/ros-planning/geometric_shapes/actions/workflows/industrial_ci_action.yml?branch=ros2)[![codecov](https://codecov.io/gh/ros-planning/geometric_shapes/branch/ros2/graph/badge.svg?token=W7uHKcY0ly)](https://codecov.io/gh/ros-planning/geometric_shapes)
+[![Formatting (pre-commit)](https://github.com/ros-planning/geometric_shapes/actions/workflows/format.yaml/badge.svg?branch=ros2)](https://github.com/ros-planning/geometric_shapes/actions/workflows/format.yaml?query=branch%3Aros2)
+[![Build and Test](https://github.com/ros-planning/geometric_shapes/actions/workflows/build_and_test.yaml/badge.svg?branch=ros2)](https://github.com/ros-planning/geometric_shapes/actions/workflows/build_and_test.yaml?query=branch%3Aros2)
+[![codecov](https://codecov.io/gh/ros-planning/geometric_shapes/branch/ros2/graph/badge.svg?token=W7uHKcY0ly)](https://codecov.io/gh/ros-planning/geometric_shapes)
 
 Code Coverage Grid:
 
