@@ -90,19 +90,6 @@ ament_target_dependencies(${PROJECT_NAME}
   QHULL
 )
 
-ament_export_libraries(${PROJECT_NAME})
-ament_export_include_directories(include)
-ament_export_dependencies(
-  Eigen3
-  eigen3_cmake_module  # export Eigen3 headers
-  Boost
-  random_numbers
-  eigen_stl_containers
-  shape_msgs
-  visualization_msgs
-  OCTOMAP
-)
-
 if(BUILD_TESTING)
   find_package(ament_cmake_gtest REQUIRED)
   # Unit tests
@@ -120,11 +107,25 @@ install(
 
 install(
   TARGETS ${PROJECT_NAME}
-  EXPORT ${PROJECT_NAME}
+  EXPORT export_${PROJECT_NAME}
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
   RUNTIME DESTINATION bin
   INCLUDES DESTINATION include
+)
+install(DIRECTORY include/ DESTINATION include)
+
+ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
+ament_export_dependencies(${THIS_PACKAGE_INCLUDE_DEPENDS})
+ament_export_dependencies(
+  Eigen3
+  eigen3_cmake_module  # export Eigen3 headers
+  Boost
+  random_numbers
+  eigen_stl_containers
+  shape_msgs
+  visualization_msgs
+  OCTOMAP
 )
 
 ament_package()
