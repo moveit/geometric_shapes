@@ -21,7 +21,9 @@ Note: `bodies::ConvexMesh::MeshData` was made implementation-private in Noetic a
 
 ## Build Status
 
-GitHub Actions: [![Format](https://github.com/ros-planning/geometric_shapes/actions/workflows/format.yml/badge.svg?branch=noetic-devel)](https://github.com/ros-planning/geometric_shapes/actions/workflows/format.yml?branch=noetic-devel) [![BuildAndTest](https://github.com/ros-planning/geometric_shapes/actions/workflows/industrial_ci_action.yml/badge.svg?branch=noetic-devel)](https://github.com/ros-planning/geometric_shapes/actions/workflows/industrial_ci_action.yml?branch=noetic-devel)
+GitHub Actions:
+[![Format](https://github.com/ros-planning/geometric_shapes/actions/workflows/format.yaml/badge.svg?branch=noetic-devel)](https://github.com/ros-planning/geometric_shapes/actions/workflows/format.yaml?query=branch%3Anoetic-devel)
+[![Build and Test](https://github.com/ros-planning/geometric_shapes/actions/workflows/build_and_test.yaml/badge.svg?branch=noetic-devel)](https://github.com/ros-planning/geometric_shapes/actions/workflows/build_and_test.yaml?query=branch%3Anoetic-devel)
 
 Devel Job: [![Build Status](http://build.ros.org/buildStatus/icon?job=Nsrc_uF__geometric_shapes__ubuntu_focal__source)](http://build.ros.org/view/Nsrc_uF/job/Nsrc_uF__geometric_shapes__ubuntu_focal__source)
 
