@@ -17,7 +17,9 @@ Note: [shape_tools](https://github.com/ros-planning/shape_tools) package was rec
 
 ## Build Status
 
-GitHub Actions: [![Format](https://github.com/ros-planning/geometric_shapes/actions/workflows/format.yml/badge.svg?branch=melodic-devel)](https://github.com/ros-planning/geometric_shapes/actions/workflows/format.yml?branch=melodic-devel) [![BuildAndTest](https://github.com/ros-planning/geometric_shapes/actions/workflows/industrial_ci_action.yml/badge.svg?branch=melodic-devel)](https://github.com/ros-planning/geometric_shapes/actions/workflows/industrial_ci_action.yml?branch=melodic-devel)
+GitHub Actions:
+[![Format](https://github.com/ros-planning/geometric_shapes/actions/workflows/format.yaml/badge.svg?branch=melodic-devel)](https://github.com/ros-planning/geometric_shapes/actions/workflows/format.yaml?query=branch%3Amelodic-devel)
+[![Build and Test](https://github.com/ros-planning/geometric_shapes/actions/workflows/build_and_test.yaml/badge.svg?branch=melodic-devel)](https://github.com/ros-planning/geometric_shapes/actions/workflows/build_and_test.yaml?query=branch%3Amelodic-devel)
 
 Devel Job: [![Build Status](http://build.ros.org/buildStatus/icon?job=Msrc_uB__geometric_shapes__ubuntu_bionic__source)](http://build.ros.org/view/Msrc_uB/job/Msrc_uB__geometric_shapes__ubuntu_bionic__source)
 
