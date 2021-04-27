@@ -41,21 +41,39 @@ endif()
 find_library(ASSIMP_ABS_LIBRARIES NAMES ${ASSIMP_LIBRARIES} assimp HINTS ${ASSIMP_LIBRARY_DIRS} ${ASSIMP_PC_LIBRARY_DIRS})
 set(ASSIMP_LIBRARIES "${ASSIMP_ABS_LIBRARIES}")
 
-find_package(rclcpp REQUIRED)
-find_package(Boost REQUIRED filesystem)
-find_package(console_bridge_vendor REQUIRED)
-find_package(console_bridge REQUIRED)
+# These need to be in this order to find header files
 find_package(eigen3_cmake_module REQUIRED)
 find_package(Eigen3 REQUIRED)
-find_package(OCTOMAP REQUIRED)
+
 find_package(ament_cmake REQUIRED)
+find_package(Boost REQUIRED filesystem)
+find_package(console_bridge REQUIRED)
+find_package(console_bridge_vendor REQUIRED)
 find_package(eigen_stl_containers REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(OCTOMAP REQUIRED)
+find_package(QHULL REQUIRED)
 find_package(random_numbers REQUIRED)
+find_package(rclcpp REQUIRED)
 find_package(resource_retriever REQUIRED)
 find_package(shape_msgs REQUIRED)
 find_package(visualization_msgs REQUIRED)
-find_package(geometry_msgs REQUIRED)
-find_package(QHULL REQUIRED)
+
+set(THIS_PACKAGE_EXPORT_DEPENDS
+  eigen3_cmake_module
+  Eigen3
+  Boost
+  console_bridge
+  console_bridge_vendor
+  eigen_stl_containers
+  geometry_msgs
+  OCTOMAP
+  random_numbers
+  rclcpp
+  resource_retriever
+  shape_msgs
+  visualization_msgs
+)
 
 # Set VERSION from package.xml
 ament_package_xml()
@@ -75,17 +93,9 @@ add_library(${PROJECT_NAME} SHARED
 set_target_properties(${PROJECT_NAME} PROPERTIES VERSION ${${PROJECT_NAME}_VERSION})
 target_compile_options(${PROJECT_NAME} PRIVATE ${PROJECT_COMPILE_OPTIONS})
 ament_target_dependencies(${PROJECT_NAME}
-  Boost
-  Eigen3
-  rclcpp
-  shape_msgs
-  visualization_msgs
-  random_numbers
-  eigen_stl_containers
-  geometry_msgs
-  resource_retriever
-  console_bridge
-  OCTOMAP
+  ${THIS_PACKAGE_EXPORT_DEPENDS}
+
+  # We don't export these dependencies because their cmake is broken
   ASSIMP
   QHULL
 )
@@ -101,11 +111,6 @@ if(BUILD_TESTING)
 endif()
 
 install(
-  DIRECTORY include/
-  DESTINATION include
-)
-
-install(
   TARGETS ${PROJECT_NAME}
   EXPORT export_${PROJECT_NAME}
   LIBRARY DESTINATION lib
@@ -116,16 +121,6 @@ install(
 install(DIRECTORY include/ DESTINATION include)
 
 ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
-ament_export_dependencies(${THIS_PACKAGE_INCLUDE_DEPENDS})
-ament_export_dependencies(
-  Eigen3
-  eigen3_cmake_module  # export Eigen3 headers
-  Boost
-  random_numbers
-  eigen_stl_containers
-  shape_msgs
-  visualization_msgs
-  OCTOMAP
-)
+ament_export_dependencies(${THIS_PACKAGE_EXPORT_DEPENDS})
 
 ament_package()
