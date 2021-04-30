@@ -92,9 +92,10 @@ add_library(${PROJECT_NAME} SHARED
 )
 set_target_properties(${PROJECT_NAME} PROPERTIES VERSION ${${PROJECT_NAME}_VERSION})
 target_compile_options(${PROJECT_NAME} PRIVATE ${PROJECT_COMPILE_OPTIONS})
-ament_target_dependencies(${PROJECT_NAME} SYSTEM
+ament_target_dependencies(${PROJECT_NAME}
   ${THIS_PACKAGE_EXPORT_DEPENDS}
-
+)
+ament_target_dependencies(${PROJECT_NAME} SYSTEM
   # We don't export these dependencies because their cmake is broken
   ASSIMP
   QHULL
