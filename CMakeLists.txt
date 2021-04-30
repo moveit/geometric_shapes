@@ -97,8 +97,8 @@ ament_target_dependencies(${PROJECT_NAME}
 
   # We don't export these dependencies because their cmake is broken
   ASSIMP
-  QHULL
 )
+ament_target_dependencies(${PROJECT_NAME} SYSTEM QHULL)
 
 if(BUILD_TESTING)
   find_package(ament_cmake_gtest REQUIRED)
