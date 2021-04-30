@@ -92,13 +92,13 @@ add_library(${PROJECT_NAME} SHARED
 )
 set_target_properties(${PROJECT_NAME} PROPERTIES VERSION ${${PROJECT_NAME}_VERSION})
 target_compile_options(${PROJECT_NAME} PRIVATE ${PROJECT_COMPILE_OPTIONS})
-ament_target_dependencies(${PROJECT_NAME}
+ament_target_dependencies(${PROJECT_NAME} SYSTEM
   ${THIS_PACKAGE_EXPORT_DEPENDS}
 
   # We don't export these dependencies because their cmake is broken
   ASSIMP
+  QHULL
 )
-ament_target_dependencies(${PROJECT_NAME} SYSTEM QHULL)
 
 if(BUILD_TESTING)
   find_package(ament_cmake_gtest REQUIRED)
