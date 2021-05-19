@@ -2,6 +2,13 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.6.4 (2021-05-19)
+------------------
+* [fix]   Fix memory leak (`#168 <https://github.com/ros-planning/geometric_shapes/issues/168>`_)
+* [fix]   Use proper Eigen alignment for make_shared calls (`#187 <https://github.com/ros-planning/geometric_shapes/issues/187>`_)
+* [maint] Migrate from Travis to GitHub actions (`#172 <https://github.com/ros-planning/geometric_shapes/issues/172>`_)
+* Contributors: Dave Coleman, Martin Pecka, Robert Haschke, Tyler Weaver
+
 0.6.3 (2020-05-25)
 ------------------
 * [maint]   Provide checkIsometry() helper function (`#144 <https://github.com/ros-planning/geometric_shapes/issues/144>`_)
