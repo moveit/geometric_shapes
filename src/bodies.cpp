@@ -174,7 +174,7 @@ void bodies::Sphere::updateInternalData()
 
 std::shared_ptr<bodies::Body> bodies::Sphere::cloneAt(const Eigen::Isometry3d& pose, double padding, double scale) const
 {
-  auto s = std::make_shared<Sphere>();
+  auto s = std::allocate_shared<Sphere>(Eigen::aligned_allocator<Sphere>());
   s->radius_ = radius_;
   s->padding_ = padding;
   s->scale_ = scale;
@@ -388,7 +388,7 @@ bool bodies::Cylinder::samplePointInside(random_numbers::RandomNumberGenerator& 
 std::shared_ptr<bodies::Body> bodies::Cylinder::cloneAt(const Eigen::Isometry3d& pose, double padding,
                                                         double scale) const
 {
-  auto c = std::make_shared<Cylinder>();
+  auto c = std::allocate_shared<Cylinder>(Eigen::aligned_allocator<Cylinder>());
   c->length_ = length_;
   c->radius_ = radius_;
   c->padding_ = padding;
@@ -609,7 +609,7 @@ void bodies::Box::updateInternalData()
 
 std::shared_ptr<bodies::Body> bodies::Box::cloneAt(const Eigen::Isometry3d& pose, double padding, double scale) const
 {
-  auto b = std::make_shared<Box>();
+  auto b = std::allocate_shared<Box>(Eigen::aligned_allocator<Box>());
   b->length_ = length_;
   b->width_ = width_;
   b->height_ = height_;
@@ -811,7 +811,7 @@ void bodies::ConvexMesh::correctVertexOrderFromPlanes()
 
 void bodies::ConvexMesh::useDimensions(const shapes::Shape* shape)
 {
-  mesh_data_ = std::make_shared<MeshData>();
+  mesh_data_ = std::allocate_shared<MeshData>(Eigen::aligned_allocator<MeshData>());
   const shapes::Mesh* mesh = static_cast<const shapes::Mesh*>(shape);
 
   double maxX = -std::numeric_limits<double>::infinity(), maxY = -std::numeric_limits<double>::infinity(),
@@ -1128,7 +1128,7 @@ const EigenSTL::vector_Vector4d& bodies::ConvexMesh::getPlanes() const
 std::shared_ptr<bodies::Body> bodies::ConvexMesh::cloneAt(const Eigen::Isometry3d& pose, double padding,
                                                           double scale) const
 {
-  auto m = std::make_shared<ConvexMesh>();
+  auto m = std::allocate_shared<ConvexMesh>(Eigen::aligned_allocator<ConvexMesh>());
   m->mesh_data_ = mesh_data_;
   m->padding_ = padding;
   m->scale_ = scale;

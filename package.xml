@@ -7,6 +7,7 @@
   <author email="gjones@willowgarage.edu">Gil Jones</author>
 
   <maintainer email="tyler@picknik.ai">Tyler Weaver</maintainer>
+  <maintainer email="rhaschke@techfak.uni-bielefeld.de">Robert Haschke</maintainer>
 
   <license>BSD</license>
   <url>http://ros.org/wiki/geometric_shapes</url>
