@@ -1,7 +1,7 @@
 # This config uses industrial_ci (https://github.com/ros-industrial/industrial_ci.git).
 # For troubleshooting, see readme (https://github.com/ros-industrial/industrial_ci/blob/master/README.rst)
 
-name: Build and Test
+name: CI
 
 on:
   workflow_dispatch:
@@ -11,7 +11,7 @@ on:
       - melodic-devel
 
 jobs:
-  industrial_ci:
+  default:
     strategy:
       matrix:
         env:
