@@ -2,6 +2,13 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+2.0.2 (2021-05-22)
+------------------
+* Declare assimp add qhull as SYSTEM dependency to suppress compiler warnings (`#186 <https://github.com/ros-planning/geometric_shapes/issues/186>`_)
+* Fix export depends (`#182 <https://github.com/ros-planning/geometric_shapes/issues/182>`_)
+* Add rolling to CI test (`#179 <https://github.com/ros-planning/geometric_shapes/issues/179>`_)
+* Contributors: Jafar Abdi, Tyler Weaver
+
 2.0.1 (2021-04-09)
 ------------------
 * Set target compile options in cmake for warnings
