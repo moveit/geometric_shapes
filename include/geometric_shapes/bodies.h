@@ -37,7 +37,7 @@
 #ifndef GEOMETRIC_SHAPES_BODIES_
 #define GEOMETRIC_SHAPES_BODIES_
 
-#if __cplusplus <= 199711L
+#if __cplusplus <= 199711L && _MSVC_LANG <= 199711L
 #error This header requires at least C++11
 #endif
 

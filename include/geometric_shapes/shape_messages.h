@@ -42,7 +42,7 @@
 #include <shape_msgs/msg/plane.hpp>
 #include <boost/variant.hpp>
 
-#if __cplusplus <= 199711L
+#if __cplusplus <= 199711L && _MSVC_LANG <= 199711L
 #error This header requires at least C++11 (boost::variant is incompatible between c++98 and c++11 and we enforce 11)
 #endif
 
