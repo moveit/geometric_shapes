@@ -261,7 +261,10 @@ Mesh* createMeshFromBinary(const char* buffer, std::size_t size, const Eigen::Ve
   // so they must be delayed until after clearing the root node transform above.
   importer.ApplyPostProcessing(aiProcess_OptimizeMeshes | aiProcess_OptimizeGraph);
 
-  return createMeshFromAsset(scene, scale, hint);
+  Mesh* mesh = createMeshFromAsset(scene, scale, hint);
+  delete scene;
+
+  return mesh;
 }
 
 Mesh* createMeshFromResource(const std::string& resource, const Eigen::Vector3d& scale)
