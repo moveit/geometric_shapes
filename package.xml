@@ -5,8 +5,8 @@
   <version>2.0.2</version>
   <description>This package contains generic definitions of geometric shapes and bodies.</description>
 
-  <maintainer email="dave@dav.ee">Dave Coleman</maintainer>
-  <maintainer email="130s@2000.jukuin.keio.ac.jp">Isaac I. Y. Saito</maintainer>
+  <maintainer email="tyler@picknik.ai">Tyler Weaver</maintainer>
+  <maintainer email="rhaschke@techfak.uni-bielefeld.de">Robert Haschke</maintainer>
 
   <license>BSD</license>
   <url>http://ros.org/wiki/geometric_shapes</url>
