@@ -90,6 +90,7 @@ add_library(${PROJECT_NAME} SHARED
   src/shape_to_marker.cpp
   src/shapes.cpp
 )
+target_compile_options(${PROJECT_NAME} PRIVATE ${PROJECT_COMPILE_OPTIONS})
 set_target_properties(${PROJECT_NAME} PROPERTIES VERSION ${${PROJECT_NAME}_VERSION})
 target_compile_options(${PROJECT_NAME} PRIVATE ${PROJECT_COMPILE_OPTIONS})
 ament_target_dependencies(${PROJECT_NAME}

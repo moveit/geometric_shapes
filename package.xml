@@ -5,14 +5,13 @@
   <version>2.0.2</version>
   <description>This package contains generic definitions of geometric shapes and bodies.</description>
 
-  <maintainer email="dave@dav.ee">Dave Coleman</maintainer>
-  <maintainer email="130s@2000.jukuin.keio.ac.jp">Isaac I. Y. Saito</maintainer>
+  <author email="isucan@google.com">Ioan Sucan</author>
+  <author email="gjones@willowgarage.edu">Gil Jones</author>
+
+  <maintainer email="tyler@picknik.ai">Tyler Weaver</maintainer>
 
   <license>BSD</license>
   <url>http://ros.org/wiki/geometric_shapes</url>
-
-  <author email="isucan@google.com">Ioan Sucan</author>
-  <author email="gjones@willowgarage.edu">Gil Jones</author>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
   <buildtool_depend>rosidl_default_generators</buildtool_depend>

@@ -179,7 +179,7 @@ namespace bodies
 template <typename T>
 Body* constructBodyFromMsgHelper(const T& shape_msg, const geometry_msgs::msg::Pose& pose)
 {
-  shapes::Shape* shape = shapes::constructShapeFromMsg(shape_msg);
+  shapes::ShapePtr shape(shapes::constructShapeFromMsg(shape_msg));
 
   if (shape)
   {
@@ -194,7 +194,7 @@ Body* constructBodyFromMsgHelper(const T& shape_msg, const geometry_msgs::msg::P
       }
       Eigen::Isometry3d af(Eigen::Translation3d(pose.position.x, pose.position.y, pose.position.z) * q);
       body->setPoseDirty(af);
-      body->setDimensionsDirty(shape);
+      body->setDimensionsDirty(shape.get());
       body->updateInternalData();
       return body;
     }

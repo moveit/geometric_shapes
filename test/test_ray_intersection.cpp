@@ -1041,7 +1041,7 @@ TEST(ConvexMeshRayIntersection, SimpleRay1)
   shapes::Mesh* shape = shapes::createMeshFromShape(&box);
   bodies::ConvexMesh mesh(shape);
   delete shape;
-  mesh.setScale(0.95);
+  mesh.setScale(0.95);  // NOLINT(performance-unnecessary-copy-initialization)
 
   CHECK_INTERSECTS_TWICE(mesh, (10, 0.449, 0), (-1, 0, 0), (0.475, 0.449, 0), (-0.475, 0.449, 0), 1e-4)
 }
