@@ -2,6 +2,12 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+2.1.0 (2021-06-15)
+------------------
+* Add Galactic CI, cleanup rolling (`#190 <https://github.com/ros-planning/geometric_shapes/issues/190>`_)
+* Sync ros2 branch with noetic-devel up to `d147f03 <https://github.com/ros-planning/geometric_shapes/commit/d147f0371afbece0b8c93a2d2d55149a284d5192>`_ (`#190 <https://github.com/ros-planning/geometric_shapes/issues/190>`_)
+* Contributors: Jafar Abdi, Henning Kayser, Vatan Aksoy Tezer
+
 2.0.2 (2021-05-22)
 ------------------
 * Declare assimp add qhull as SYSTEM dependency to suppress compiler warnings (`#186 <https://github.com/ros-planning/geometric_shapes/issues/186>`_)
