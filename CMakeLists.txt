@@ -17,8 +17,6 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     -Wredundant-decls
     -Wno-unused-parameter
   )
-else()
-  add_definitions(-D_USE_MATH_DEFINES)
 endif()
 
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/")

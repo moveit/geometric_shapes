@@ -41,6 +41,7 @@
 #error This header requires at least C++11
 #endif
 
+#define _USE_MATH_DEFINES
 #include "geometric_shapes/aabb.h"
 #include "geometric_shapes/shapes.h"
 #include <eigen_stl_containers/eigen_stl_containers.h>
