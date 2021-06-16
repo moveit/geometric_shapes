@@ -37,10 +37,7 @@
 #ifndef GEOMETRIC_SHAPES_BODIES_
 #define GEOMETRIC_SHAPES_BODIES_
 
-#if __cplusplus <= 199711L
-#error This header requires at least C++11
-#endif
-
+#define _USE_MATH_DEFINES
 #include "geometric_shapes/aabb.h"
 #include "geometric_shapes/shapes.h"
 #include <eigen_stl_containers/eigen_stl_containers.h>

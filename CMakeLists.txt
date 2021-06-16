@@ -7,15 +7,17 @@ if(NOT CMAKE_CXX_STANDARD)
 endif()
 
 # Set compile options
-set(PROJECT_COMPILE_OPTIONS
-  -Wall
-  -Wextra
-  -Wwrite-strings
-  -Wunreachable-code
-  -Wpointer-arith
-  -Wredundant-decls
-  -Wno-unused-parameter
-)
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  set(PROJECT_COMPILE_OPTIONS
+    -Wall
+    -Wextra
+    -Wwrite-strings
+    -Wunreachable-code
+    -Wpointer-arith
+    -Wredundant-decls
+    -Wno-unused-parameter
+  )
+endif()
 
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/")
 
@@ -90,8 +92,7 @@ add_library(${PROJECT_NAME} SHARED
   src/shape_to_marker.cpp
   src/shapes.cpp
 )
-target_compile_options(${PROJECT_NAME} PRIVATE ${PROJECT_COMPILE_OPTIONS})
-set_target_properties(${PROJECT_NAME} PROPERTIES VERSION ${${PROJECT_NAME}_VERSION})
+set_target_properties(${PROJECT_NAME} PROPERTIES VERSION ${${PROJECT_NAME}_VERSION} WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 target_compile_options(${PROJECT_NAME} PRIVATE ${PROJECT_COMPILE_OPTIONS})
 ament_target_dependencies(${PROJECT_NAME}
   ${THIS_PACKAGE_EXPORT_DEPENDS}
