@@ -42,10 +42,6 @@
 #include <shape_msgs/msg/plane.hpp>
 #include <boost/variant.hpp>
 
-#if __cplusplus <= 199711L && _MSVC_LANG <= 199711L
-#error This header requires at least C++11 (boost::variant is incompatible between c++98 and c++11 and we enforce 11)
-#endif
-
 namespace shapes
 {
 /** \brief Type that can hold any of the desired shape message types */

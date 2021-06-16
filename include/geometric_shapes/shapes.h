@@ -37,10 +37,6 @@
 #ifndef GEOMETRIC_SHAPES_SHAPES_
 #define GEOMETRIC_SHAPES_SHAPES_
 
-#if __cplusplus <= 199711L && _MSVC_LANG <= 199711L
-#error This header requires at least C++11
-#endif
-
 #include <cstdlib>
 #include <vector>
 #include <iostream>
