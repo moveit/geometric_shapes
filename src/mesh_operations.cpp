@@ -44,7 +44,7 @@
 #include <float.h>
 
 #include <console_bridge/console.h>
-#include <resource_retriever/retriever.h>
+#include <resource_retriever/retriever.hpp>
 
 #include <assimp/scene.h>
 #include <assimp/Importer.hpp>
