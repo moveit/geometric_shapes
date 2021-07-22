@@ -15,13 +15,9 @@ jobs:
     strategy:
       matrix:
         env:
-          - ROS_DISTRO: foxy
-            ROS_REPO: main
-            CCOV: true
-          - ROS_DISTRO: foxy
-            ROS_REPO: testing
           - ROS_DISTRO: rolling
             ROS_REPO: main
+            CCOV: true
           - ROS_DISTRO: rolling
             ROS_REPO: testing
           - ROS_DISTRO: galactic
