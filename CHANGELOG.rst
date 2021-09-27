@@ -2,8 +2,8 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.1.1 (2021-09-27)
+------------------
 * Changed retriever.h to retriever.hpp in mesh_operations.cpp in order to align with resource_retriever ros2 branch (`#200 <https://github.com/ros-planning/geometric_shapes/issues/200>`_)
 * Add Copyright and LICENSE files
 * Fix building on Windows with MSVC (`#189 <https://github.com/ros-planning/geometric_shapes/issues/189>`_)
