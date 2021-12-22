@@ -2,6 +2,18 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+2.1.1 (2021-12-22)
+------------------
+* Fix cmake such that Boost::filesystem is exported properly (`#206 <https://github.com/ros-planning/geometric_shapes/issues/206>`_) (`#211 <https://github.com/ros-planning/geometric_shapes/issues/211>`_)
+  Co-authored-by: Jafar Abdi <cafer.abdi@gmail.com>
+  Co-authored-by: Jordan Lack <jlack@houstonmechatronics.com>
+* Enable CI in foxy (`#208 <https://github.com/ros-planning/geometric_shapes/issues/208>`_)
+* CI: Update pat-s/always-upload-cache
+* CI for Foxy only
+* Add prerelease tests (`#195 <https://github.com/ros-planning/geometric_shapes/issues/195>`_)
+* Fix building on Windows with MSVC (`#189 <https://github.com/ros-planning/geometric_shapes/issues/189>`_)
+* Contributors: Akash, Tyler Weaver, Vatan Aksoy Tezer, jlack1987
+
 2.1.0 (2021-06-15)
 ------------------
 * Add Galactic CI, cleanup rolling (`#190 <https://github.com/ros-planning/geometric_shapes/issues/190>`_)
