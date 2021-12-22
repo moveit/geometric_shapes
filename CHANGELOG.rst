@@ -2,6 +2,12 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+2.1.2 (2021-12-22)
+------------------
+* Fix cmake such that Boost::filesystem is exported properly (`#206 <https://github.com/ros-planning/geometric_shapes/issues/206>`_)
+  Co-authored-by: Jordan Lack <jlack@houstonmechatronics.com>
+* Contributors: Jafar Abdi
+
 2.1.1 (2021-09-27)
 ------------------
 * Changed retriever.h to retriever.hpp in mesh_operations.cpp in order to align with resource_retriever ros2 branch (`#200 <https://github.com/ros-planning/geometric_shapes/issues/200>`_)
