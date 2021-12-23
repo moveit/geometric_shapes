@@ -38,7 +38,13 @@
 #include <float.h>
 
 #include <console_bridge/console.h>
+
+// Shim so this works on foxy/galactic/rolling
+#if __has_include(<resource_retriever/retriever.hpp>)
 #include <resource_retriever/retriever.hpp>
+#else
+#include <resource_retriever/retriever.h>
+#endif
 
 #include <assimp/scene.h>
 #include <assimp/Importer.hpp>

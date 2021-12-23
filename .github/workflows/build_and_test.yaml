@@ -24,6 +24,8 @@ jobs:
             ROS_REPO: main
           - ROS_DISTRO: galactic
             ROS_REPO: testing
+          - ROS_DISTRO: foxy
+            ROS_REPO: testing
     env:
       UPSTREAM_WORKSPACE: geometric_shapes.repos
       AFTER_SETUP_UPSTREAM_WORKSPACE: 'vcs pull $BASEDIR/upstream_ws/src'
