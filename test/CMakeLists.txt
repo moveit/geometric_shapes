@@ -16,7 +16,7 @@ catkin_add_gtest(test_bounding_sphere test_bounding_sphere.cpp)
 target_link_libraries(test_bounding_sphere ${PROJECT_NAME} ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 
 catkin_add_gtest(test_bounding_box test_bounding_box.cpp)
-target_link_libraries(test_bounding_box ${PROJECT_NAME} ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(test_bounding_box ${PROJECT_NAME} ${catkin_LIBRARIES} ${Boost_LIBRARIES} ${LIBFCL_LIBRARIES})
 
 catkin_add_gtest(test_bounding_cylinder test_bounding_cylinder.cpp)
 target_link_libraries(test_bounding_cylinder ${PROJECT_NAME} ${catkin_LIBRARIES} ${Boost_LIBRARIES})
