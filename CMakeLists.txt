@@ -26,29 +26,19 @@ if(NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
 endif()
 
-# TODO(henningkayser): Remove policy fix when assimp 5.1 is available
-# Suppress policy warning in assimp (https://github.com/assimp/assimp/pull/2722)
-set(CMAKE_POLICY_DEFAULT_CMP0012 NEW)
-find_package(ASSIMP QUIET)
-if(NOT ASSIMP_FOUND)
-  find_package(PkgConfig REQUIRED)
-  # assimp is required, so REQUIRE the second attempt
-  pkg_check_modules(ASSIMP_PC REQUIRED assimp)
-  set(ASSIMP_INCLUDE_DIRS ${ASSIMP_PC_INCLUDE_DIRS})
-endif()
 
 # find *absolute* paths to ASSIMP_LIBRARIES
 # Both, pkg-config and assimp's cmake-config don't provide an absolute library path.
 # For, pkg-config the path is in ASSIMP_PC_LIBRARY_DIRS, for cmake in ASSIMP_LIBRARY_DIRS.
-find_library(ASSIMP_ABS_LIBRARIES NAMES ${ASSIMP_LIBRARIES} assimp HINTS ${ASSIMP_LIBRARY_DIRS} ${ASSIMP_PC_LIBRARY_DIRS})
-set(ASSIMP_LIBRARIES "${ASSIMP_ABS_LIBRARIES}")
+find_library(assimp_ABS_LIBRARIES NAMES ${assimp_LIBRARIES} assimp HINTS ${assimp_LIBRARY_DIRS} ${assimp_PC_LIBRARY_DIRS})
+set(assimp_LIBRARIES "${assimp_ABS_LIBRARIES}")
 
 # These need to be in this order to find header files
 find_package(eigen3_cmake_module REQUIRED)
 find_package(Eigen3 REQUIRED)
 
 find_package(ament_cmake REQUIRED)
-include(ConfigExtras)
+find_package(assimp REQUIRED)
 find_package(console_bridge REQUIRED)
 find_package(console_bridge_vendor REQUIRED)
 find_package(eigen_stl_containers REQUIRED)
@@ -60,6 +50,7 @@ find_package(rclcpp REQUIRED)
 find_package(resource_retriever REQUIRED)
 find_package(shape_msgs REQUIRED)
 find_package(visualization_msgs REQUIRED)
+include(ConfigExtras)
 
 set(THIS_PACKAGE_EXPORT_DEPENDS
   eigen3_cmake_module
@@ -99,7 +90,7 @@ ament_target_dependencies(${PROJECT_NAME}
 )
 ament_target_dependencies(${PROJECT_NAME} SYSTEM
   # We don't export these dependencies because their cmake is broken
-  ASSIMP
+  assimp
   QHULL
 )
 
