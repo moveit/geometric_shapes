@@ -30,8 +30,8 @@ endif()
 # find *absolute* paths to ASSIMP_LIBRARIES
 # Both, pkg-config and assimp's cmake-config don't provide an absolute library path.
 # For, pkg-config the path is in ASSIMP_PC_LIBRARY_DIRS, for cmake in ASSIMP_LIBRARY_DIRS.
-find_library(ASSIMP_ABS_LIBRARIES NAMES ${ASSIMP_LIBRARIES} assimp HINTS ${ASSIMP_LIBRARY_DIRS} ${ASSIMP_PC_LIBRARY_DIRS})
-set(ASSIMP_LIBRARIES "${ASSIMP_ABS_LIBRARIES}")
+find_library(assimp_ABS_LIBRARIES NAMES ${assimp_LIBRARIES} assimp HINTS ${assimp_LIBRARY_DIRS} ${assimp_PC_LIBRARY_DIRS})
+set(assimp_LIBRARIES "${assimp_ABS_LIBRARIES}")
 
 # These need to be in this order to find header files
 find_package(eigen3_cmake_module REQUIRED)
@@ -93,7 +93,6 @@ ament_target_dependencies(${PROJECT_NAME} SYSTEM
   assimp
   QHULL
 )
-link_libraries(${PROJECT_NAME} assimp)
 
 if(BUILD_TESTING)
   find_package(ament_cmake_gtest REQUIRED)
