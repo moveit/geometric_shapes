@@ -2,6 +2,11 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+2.1.3 (2022-03-08)
+------------------
+* [jammy] Fix assimp linking and cmake error (`#215 <https://github.com/ros-planning/geometric_shapes/issues/215>`_)
+* Contributors: Vatan Aksoy Tezer
+
 2.1.2 (2021-12-22)
 ------------------
 * Fix cmake such that Boost::filesystem is exported properly (`#206 <https://github.com/ros-planning/geometric_shapes/issues/206>`_)
