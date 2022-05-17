@@ -20,6 +20,8 @@ jobs:
             CCOV: true
           - ROS_DISTRO: rolling
             ROS_REPO: testing
+          - ROS_DISTRO: humble
+            ROS_REPO: testing
           - ROS_DISTRO: galactic
             ROS_REPO: main
           - ROS_DISTRO: galactic
