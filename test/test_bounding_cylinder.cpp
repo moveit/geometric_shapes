@@ -30,7 +30,7 @@
 
 #include <geometric_shapes/bodies.h>
 #include <geometric_shapes/body_operations.h>
-#include <random_numbers/random_numbers.h>
+#include "geometric_shapes/random_number_utils.hpp"
 #include <gtest/gtest.h>
 
 // The magic numbers in this test were verified visually using Blender
@@ -90,17 +90,9 @@ TEST(SphereBoundingCylinder, Sphere2)
   EXPECT_NEAR(2.0, bcyl.radius, 1e-4);
   EXPECT_NEAR(4.0, bcyl.length, 1e-4);
 
-  random_numbers::RandomNumberGenerator gen;
-  double quatData[4];
-  Eigen::Quaterniond quat;
-
   for (size_t i = 0; i < 10; ++i)
   {
-    gen.quaternion(quatData);
-    quat.x() = quatData[0];
-    quat.y() = quatData[1];
-    quat.z() = quatData[2];
-    quat.w() = quatData[3];
+    auto quat = Eigen::Quaterniond::UnitRandom();
     pose.linear() = quat.toRotationMatrix();
     body.setPose(pose);
     bodies::BoundingCylinder bcyl2;

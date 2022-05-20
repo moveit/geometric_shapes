@@ -32,18 +32,20 @@
 #include <geometric_shapes/bodies.h>
 #include <geometric_shapes/shape_operations.h>
 #include <geometric_shapes/body_operations.h>
+#include "geometric_shapes/random_number_utils.hpp"
 #include <boost/filesystem.hpp>
-#include <random_numbers/random_numbers.h>
 #include <gtest/gtest.h>
 #include "resources/config.h"
 
-Eigen::Isometry3d getRandomPose(random_numbers::RandomNumberGenerator& g)
+namespace
 {
-  const Eigen::Vector3d t(g.uniformReal(-100, 100), g.uniformReal(-100, 100), g.uniformReal(-100, 100));
+thread_local auto& RNG_ = shapes::RandomNumberGenerator::getInstance();
+}  // namespace
 
-  double quat[4];
-  g.quaternion(quat);
-  const Eigen::Quaterniond r({ quat[3], quat[0], quat[1], quat[2] });
+Eigen::Isometry3d getRandomPose()
+{
+  const Eigen::Vector3d t(RNG_.uniform(-100, 100), RNG_.uniform(-100, 100), RNG_.uniform(-100, 100));
+  const auto r = Eigen::Quaterniond::UnitRandom();
 
   return Eigen::Isometry3d::TranslationType(t) * r;
 }
@@ -218,16 +220,15 @@ TEST(SphereRayIntersection, OriginInside)
   // clang-format on
 
   // any random rays that start inside the sphere should have exactly one intersection with it
-  random_numbers::RandomNumberGenerator g(0u);
   for (size_t i = 0; i < 1000; ++i)
   {
-    const Eigen::Isometry3d pos = getRandomPose(g);
+    const Eigen::Isometry3d pos = getRandomPose();
     sphere.setPose(pos);
-    sphere.setScale(g.uniformReal(0.5, 100.0));
-    sphere.setPadding(g.uniformReal(-0.1, 100.0));
+    sphere.setScale(RNG_.uniform(0.5, 100.0));
+    sphere.setPadding(RNG_.uniform(-0.1, 100.0));
 
     Eigen::Vector3d origin;
-    sphere.samplePointInside(g, 10, origin);
+    sphere.samplePointInside(10, origin);
 
     // get the scaled sphere
     bodies::BoundingSphere s;
@@ -301,13 +302,12 @@ TEST(SphereRayIntersection, OriginOutside)
   // clang-format on
 
   // generate some random rays outside the sphere and test them
-  random_numbers::RandomNumberGenerator g(0u);
   for (size_t i = 0; i < 1000; ++i)
   {
-    const Eigen::Isometry3d pos = getRandomPose(g);
+    const Eigen::Isometry3d pos = getRandomPose();
     sphere.setPose(pos);
-    sphere.setScale(g.uniformReal(0.5, 100.0));
-    sphere.setPadding(g.uniformReal(-0.1, 100.0));
+    sphere.setScale(RNG_.uniform(0.5, 100.0));
+    sphere.setPadding(RNG_.uniform(-0.1, 100.0));
 
     // choose a random direction
     const Eigen::Vector3d dir = Eigen::Vector3d::Random().normalized();
@@ -353,7 +353,7 @@ TEST(SphereRayIntersection, OriginOutside)
     perpDir.normalize();
 
     // now move origin "sideways" but still only so much that the ray will hit the sphere
-    const Eigen::Vector3d origin2 = origin + g.uniformReal(1e-6, s.radius - 1e-4) * perpDir;
+    const Eigen::Vector3d origin2 = origin + RNG_.uniform(1e-6, s.radius - 1e-4) * perpDir;
 
     intersections.clear();
     if (sphere.intersectsRay(origin2, dir, &intersections, 2))
@@ -503,16 +503,15 @@ TEST(CylinderRayIntersection, OriginInside)
   // clang-format on
 
   // any random rays that start inside the cylinder should have exactly one intersection with it
-  random_numbers::RandomNumberGenerator g(0u);
   for (size_t i = 0; i < 1000; ++i)
   {
-    const Eigen::Isometry3d pos = getRandomPose(g);
+    const Eigen::Isometry3d pos = getRandomPose();
     cylinder.setPose(pos);
-    cylinder.setScale(g.uniformReal(0.5, 100.0));
-    cylinder.setPadding(g.uniformReal(-0.1, 100.0));
+    cylinder.setScale(RNG_.uniform(0.5, 100.0));
+    cylinder.setPadding(RNG_.uniform(-0.1, 100.0));
 
     Eigen::Vector3d origin;
-    cylinder.samplePointInside(g, 10, origin);
+    cylinder.samplePointInside(10, origin);
 
     // get the bounding sphere of the scaled cylinder
     bodies::BoundingSphere s;
@@ -592,13 +591,12 @@ TEST(CylinderRayIntersection, OriginOutside)
   // clang-format on
 
   // generate some random rays outside the cylinder and test them
-  random_numbers::RandomNumberGenerator g(0u);
   for (size_t i = 0; i < 1000; ++i)
   {
-    const Eigen::Isometry3d pos = getRandomPose(g);
+    const Eigen::Isometry3d pos = getRandomPose();
     cylinder.setPose(pos);
-    cylinder.setScale(g.uniformReal(0.5, 100.0));
-    cylinder.setPadding(g.uniformReal(-0.1, 100.0));
+    cylinder.setScale(RNG_.uniform(0.5, 100.0));
+    cylinder.setPadding(RNG_.uniform(-0.1, 100.0));
 
     // choose a random direction
     const Eigen::Vector3d dir = Eigen::Vector3d::Random().normalized();
@@ -649,7 +647,7 @@ TEST(CylinderRayIntersection, OriginOutside)
 
     // now move origin "sideways" but still only so much that the ray will hit the cylinder
     auto minRadius = (std::min)(c.radius, c.length);
-    const Eigen::Vector3d origin2 = origin + g.uniformReal(1e-6, minRadius - 1e-4) * perpDir;
+    const Eigen::Vector3d origin2 = origin + RNG_.uniform(1e-6, minRadius - 1e-4) * perpDir;
 
     intersections.clear();
     if (cylinder.intersectsRay(origin2, dir, &intersections, 2))
@@ -847,13 +845,12 @@ TEST(BoxRayIntersection, OriginInside)
   // clang-format on
 
   // any random rays that start inside the box should have exactly one intersection with it
-  random_numbers::RandomNumberGenerator g(0u);
   for (size_t i = 0; i < 1000; ++i)
   {
-    const Eigen::Isometry3d pos = getRandomPose(g);
+    const Eigen::Isometry3d pos = getRandomPose();
     box.setPose(pos);
-    box.setScale(g.uniformReal(0.5, 100.0));
-    box.setPadding(g.uniformReal(-0.1, 100.0));
+    box.setScale(RNG_.uniform(0.5, 100.0));
+    box.setPadding(RNG_.uniform(-0.1, 100.0));
 
     // get the scaled dimensions of the box
     Eigen::Vector3d sizes = { box.getDimensions()[0], box.getDimensions()[1], box.getDimensions()[2] };
@@ -867,7 +864,7 @@ TEST(BoxRayIntersection, OriginInside)
     const Eigen::Vector3d boxCenter = box.getPose().translation();
 
     Eigen::Vector3d origin;
-    box.samplePointInside(g, 10, origin);
+    box.samplePointInside(10, origin);
 
     const Eigen::Vector3d dir = Eigen::Vector3d::Random().normalized();
 
@@ -939,13 +936,12 @@ TEST(BoxRayIntersection, OriginOutsideIntersects)
   // clang-format on
 
   // generate some random rays outside the box and test them
-  random_numbers::RandomNumberGenerator g(0u);
   for (size_t i = 0; i < 1000; ++i)
   {
-    const Eigen::Isometry3d pos = getRandomPose(g);
+    const Eigen::Isometry3d pos = getRandomPose();
     box.setPose(pos);
-    box.setScale(g.uniformReal(0.5, 100.0));
-    box.setPadding(g.uniformReal(-0.1, 100.0));
+    box.setScale(RNG_.uniform(0.5, 100.0));
+    box.setPadding(RNG_.uniform(-0.1, 100.0));
 
     // choose a random direction
     const Eigen::Vector3d dir = Eigen::Vector3d::Random().normalized();
@@ -1001,7 +997,7 @@ TEST(BoxRayIntersection, OriginOutsideIntersects)
     perpDir.normalize();
 
     // now move origin "sideways" but still only so much that the ray will hit the box
-    const Eigen::Vector3d origin2 = origin + g.uniformReal(1e-6, minRadius - 1e-4) * perpDir;
+    const Eigen::Vector3d origin2 = origin + RNG_.uniform(1e-6, minRadius - 1e-4) * perpDir;
 
     intersections.clear();
     if (box.intersectsRay(origin2, dir, &intersections, 2))
@@ -1180,13 +1176,12 @@ TEST(ConvexMeshRayIntersection, OriginInside)
   // clang-format on
 
   // any random rays that start inside the mesh should have exactly one intersection with it
-  random_numbers::RandomNumberGenerator g(0u);
   for (size_t i = 0; i < 1000; ++i)
   {
-    const Eigen::Isometry3d pos = getRandomPose(g);
+    const Eigen::Isometry3d pos = getRandomPose();
     mesh.setPose(pos);
-    mesh.setScale(g.uniformReal(0.5, 100.0));
-    mesh.setPadding(g.uniformReal(-0.1, 100.0));
+    mesh.setScale(RNG_.uniform(0.5, 100.0));
+    mesh.setPadding(RNG_.uniform(-0.1, 100.0));
 
     // get the scaled dimensions of the mesh
     Eigen::Vector3d sizes = { box.size[0], box.size[1], box.size[2] };
@@ -1200,7 +1195,7 @@ TEST(ConvexMeshRayIntersection, OriginInside)
     const Eigen::Vector3d meshCenter = mesh.getPose().translation();
 
     Eigen::Vector3d origin;
-    mesh.samplePointInside(g, 10000, origin);
+    mesh.samplePointInside(10000, origin);
 
     const Eigen::Vector3d dir = Eigen::Vector3d::Random().normalized();
 
@@ -1274,13 +1269,12 @@ TEST(ConvexMeshRayIntersection, OriginOutsideIntersects)
   // clang-format on
 
   // generate some random rays outside the mesh and test them
-  random_numbers::RandomNumberGenerator g(0u);
   for (size_t i = 0; i < 1000; ++i)
   {
-    const Eigen::Isometry3d pos = getRandomPose(g);
+    const Eigen::Isometry3d pos = getRandomPose();
     mesh.setPose(pos);
-    mesh.setScale(g.uniformReal(0.5, 100.0));
-    mesh.setPadding(g.uniformReal(-0.1, 100.0));
+    mesh.setScale(RNG_.uniform(0.5, 100.0));
+    mesh.setPadding(RNG_.uniform(-0.1, 100.0));
 
     // choose a random direction
     const Eigen::Vector3d dir = Eigen::Vector3d::Random().normalized();
@@ -1336,7 +1330,7 @@ TEST(ConvexMeshRayIntersection, OriginOutsideIntersects)
     perpDir.normalize();
 
     // now move origin "sideways" but still only so much that the ray will hit the mesh
-    const Eigen::Vector3d origin2 = origin + g.uniformReal(1e-6, minRadius - 1e-4) * perpDir;
+    const Eigen::Vector3d origin2 = origin + RNG_.uniform(1e-6, minRadius - 1e-4) * perpDir;
 
     intersections.clear();
     if (mesh.intersectsRay(origin2, dir, &intersections, 2))

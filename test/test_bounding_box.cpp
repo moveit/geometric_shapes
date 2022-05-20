@@ -30,7 +30,7 @@
 
 #include <geometric_shapes/bodies.h>
 #include <geometric_shapes/body_operations.h>
-#include <random_numbers/random_numbers.h>
+#include "geometric_shapes/random_number_utils.hpp"
 #include <gtest/gtest.h>
 
 // The magic numbers in this test were verified visually using Blender
@@ -80,18 +80,9 @@ TEST(SphereBoundingBox, Sphere2)
   EXPECT_NEAR(5.0, bbox.max().z(), 1e-4);
 
   // verify the bounding box is rotation-invariant
-
-  random_numbers::RandomNumberGenerator gen;
-  double quatData[4];
-  Eigen::Quaterniond quat;
-
   for (size_t i = 0; i < 10; ++i)
   {
-    gen.quaternion(quatData);
-    quat.x() = quatData[0];
-    quat.y() = quatData[1];
-    quat.z() = quatData[2];
-    quat.w() = quatData[3];
+    auto quat = Eigen::Quaterniond::UnitRandom();
     pose.linear() = quat.toRotationMatrix();
     body.setPose(pose);
     bodies::AABB bbox2;
@@ -196,8 +187,6 @@ TEST(CylinderBoundingBox, Cylinder2)
   EXPECT_NEAR(4.2761, bbox.max().z(), 1e-4);
 
   // verify the bounding box is yaw-invariant
-
-  random_numbers::RandomNumberGenerator gen(0);
   const auto rollPitch =
       Eigen::AngleAxisd(1.0, Eigen::Vector3d::UnitX()) * Eigen::AngleAxisd(1.0, Eigen::Vector3d::UnitY());
 
@@ -208,7 +197,7 @@ TEST(CylinderBoundingBox, Cylinder2)
   bodies::AABB bbox2;
   for (size_t i = 0; i < 10; ++i)
   {
-    const auto angle = gen.uniformReal(-M_PI, M_PI);
+    const auto angle = uniform(gen, -M_PI, M_PI);
     const auto yaw = Eigen::AngleAxisd(angle, Eigen::Vector3d::UnitZ());
     pose.linear() = (rollPitch * yaw).toRotationMatrix();
     body.setPose(pose);
