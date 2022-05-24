@@ -33,6 +33,9 @@ jobs:
           - ROS_DISTRO: foxy
             ROS_REPO: testing
     env:
+      # Globally disable git security
+      # https://github.blog/2022-04-12-git-security-vulnerability-announced
+      BEFORE_SETUP_UPSTREAM_WORKSPACE: 'git config --global --add safe.directory "*"'
       UPSTREAM_WORKSPACE: geometric_shapes.repos
       AFTER_SETUP_UPSTREAM_WORKSPACE: 'vcs pull $BASEDIR/upstream_ws/src'
       AFTER_RUN_TARGET_TEST: ${{ matrix.env.CCOV && './.ci.prepare_codecov' || '' }}
