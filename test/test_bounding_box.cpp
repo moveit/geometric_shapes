@@ -33,6 +33,11 @@
 #include "geometric_shapes/random_number_utils.hpp"
 #include <gtest/gtest.h>
 
+namespace
+{
+thread_local auto& RNG_ = shapes::RandomNumberGenerator::getInstance();
+}  // namespace
+
 // The magic numbers in this test were verified visually using Blender
 
 TEST(SphereBoundingBox, Sphere1)
@@ -197,7 +202,7 @@ TEST(CylinderBoundingBox, Cylinder2)
   bodies::AABB bbox2;
   for (size_t i = 0; i < 10; ++i)
   {
-    const auto angle = uniform(gen, -M_PI, M_PI);
+    const auto angle = RNG_.uniform(-M_PI, M_PI);
     const auto yaw = Eigen::AngleAxisd(angle, Eigen::Vector3d::UnitZ());
     pose.linear() = (rollPitch * yaw).toRotationMatrix();
     body.setPose(pose);

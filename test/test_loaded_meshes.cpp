@@ -35,6 +35,11 @@
 #include <gtest/gtest.h>
 #include "resources/config.h"
 
+namespace
+{
+thread_local auto& RNG_ = shapes::RandomNumberGenerator::getInstance();
+}  // namespace
+
 /**
  * Test fixture that generates meshes from the primitive shapes SPHERE, CYLINDER, CONE and BOX,
  * and load their twins from STL files. All the following tests are intended to verify that both
@@ -77,8 +82,6 @@ public:
   }
 
 protected:
-  shapes::RandomNumberGenerator rng;
-
   std::vector<shapes::Mesh*> shape_meshes;
   std::vector<shapes::Mesh*> loaded_meshes;
 
@@ -119,8 +122,8 @@ TEST_F(CompareMeshVsPrimitive, IntersectsRay)
     bool intersects = false;
     for (int i = 0; i < 100; ++i)
     {
-      Eigen::Vector3d ray_o(rng.uniform(-1.0, +1.0), rng.uniform(-1.0, +1.0), rng.uniform(-1.0, +1.0));
-      Eigen::Vector3d ray_d(rng.uniform(-1.0, +1.0), rng.uniform(-1.0, +1.0), rng.uniform(-1.0, +1.0));
+      Eigen::Vector3d ray_o(RNG_.uniform(-1.0, +1.0), RNG_.uniform(-1.0, +1.0), RNG_.uniform(-1.0, +1.0));
+      Eigen::Vector3d ray_d(RNG_.uniform(-1.0, +1.0), RNG_.uniform(-1.0, +1.0), RNG_.uniform(-1.0, +1.0));
       EigenSTL::vector_Vector3d vi1, vi2;
       shape_cms->intersectsRay(ray_o, ray_d, &vi1);
       loaded_cms->intersectsRay(ray_o, ray_d, &vi2);
