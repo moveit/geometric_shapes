@@ -39,7 +39,7 @@
 
 namespace
 {
-thread_local auto& RNG_ = shapes::RandomNumberGenerator::getInstance();
+auto& RNG_ = shapes::RandomNumberGenerator::getInstance();
 }  // namespace
 
 Eigen::Isometry3d getRandomPose()

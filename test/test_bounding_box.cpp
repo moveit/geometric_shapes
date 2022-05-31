@@ -35,7 +35,7 @@
 
 namespace
 {
-thread_local auto& RNG_ = shapes::RandomNumberGenerator::getInstance();
+auto& RNG_ = shapes::RandomNumberGenerator::getInstance();
 }  // namespace
 
 // The magic numbers in this test were verified visually using Blender

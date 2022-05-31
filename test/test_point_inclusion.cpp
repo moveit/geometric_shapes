@@ -41,7 +41,7 @@
 
 namespace
 {
-thread_local auto& RNG_ = shapes::RandomNumberGenerator::getInstance();
+auto& RNG_ = shapes::RandomNumberGenerator::getInstance();
 }  // namespace
 
 // split length into the largest number elem, such that sqrt(elem^2 + elem^2) <= length

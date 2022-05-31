@@ -71,7 +71,7 @@ public:
   static RandomNumberGenerator& getInstance()
   {
     // Static valiables with blocked scopes will be only created once
-    static RandomNumberGenerator instance;
+    thread_local RandomNumberGenerator instance;
     return instance;
   }
 
