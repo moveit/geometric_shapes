@@ -866,8 +866,8 @@ TEST(BoxRayIntersection, OriginInside)
     const Eigen::Vector3d boxCenter = box.getPose().translation();
 
     Eigen::Vector3d origin;
-    box.samplePointInside(
-        [](double lower_bound, double upper_bound) { return RNG.uniform(lower_bound, upper_bound); }, 10, origin);
+    box.samplePointInside([](double lower_bound, double upper_bound) { return RNG.uniform(lower_bound, upper_bound); },
+                          10, origin);
 
     const Eigen::Vector3d dir = Eigen::Vector3d::Random().normalized();
 
@@ -1198,8 +1198,8 @@ TEST(ConvexMeshRayIntersection, OriginInside)
     const Eigen::Vector3d meshCenter = mesh.getPose().translation();
 
     Eigen::Vector3d origin;
-    mesh.samplePointInside(
-        [](double lower_bound, double upper_bound) { return RNG.uniform(lower_bound, upper_bound); }, 10000, origin);
+    mesh.samplePointInside([](double lower_bound, double upper_bound) { return RNG.uniform(lower_bound, upper_bound); },
+                           10000, origin);
 
     const Eigen::Vector3d dir = Eigen::Vector3d::Random().normalized();
 
