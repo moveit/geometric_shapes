@@ -35,7 +35,7 @@
 
 namespace
 {
-auto& RNG_ = shapes::RandomNumberGenerator::getInstance();
+auto& RNG = shapes::RandomNumberGenerator::getInstance();
 }  // namespace
 
 // The magic numbers in this test were verified visually using Blender
@@ -202,7 +202,7 @@ TEST(CylinderBoundingBox, Cylinder2)
   bodies::AABB bbox2;
   for (size_t i = 0; i < 10; ++i)
   {
-    const auto angle = RNG_.uniform(-M_PI, M_PI);
+    const auto angle = RNG.uniform(-M_PI, M_PI);
     const auto yaw = Eigen::AngleAxisd(angle, Eigen::Vector3d::UnitZ());
     pose.linear() = (rollPitch * yaw).toRotationMatrix();
     body.setPose(pose);

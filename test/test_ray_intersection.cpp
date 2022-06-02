@@ -39,12 +39,12 @@
 
 namespace
 {
-auto& RNG_ = shapes::RandomNumberGenerator::getInstance();
+auto& RNG = shapes::RandomNumberGenerator::getInstance();
 }  // namespace
 
 Eigen::Isometry3d getRandomPose()
 {
-  const Eigen::Vector3d t(RNG_.uniform(-100, 100), RNG_.uniform(-100, 100), RNG_.uniform(-100, 100));
+  const Eigen::Vector3d t(RNG.uniform(-100, 100), RNG.uniform(-100, 100), RNG.uniform(-100, 100));
   const auto r = Eigen::Quaterniond::UnitRandom();
 
   return Eigen::Isometry3d::TranslationType(t) * r;
@@ -224,8 +224,8 @@ TEST(SphereRayIntersection, OriginInside)
   {
     const Eigen::Isometry3d pos = getRandomPose();
     sphere.setPose(pos);
-    sphere.setScale(RNG_.uniform(0.5, 100.0));
-    sphere.setPadding(RNG_.uniform(-0.1, 100.0));
+    sphere.setScale(RNG.uniform(0.5, 100.0));
+    sphere.setPadding(RNG.uniform(-0.1, 100.0));
 
     Eigen::Vector3d origin;
     sphere.samplePointInside(10, origin);
@@ -306,8 +306,8 @@ TEST(SphereRayIntersection, OriginOutside)
   {
     const Eigen::Isometry3d pos = getRandomPose();
     sphere.setPose(pos);
-    sphere.setScale(RNG_.uniform(0.5, 100.0));
-    sphere.setPadding(RNG_.uniform(-0.1, 100.0));
+    sphere.setScale(RNG.uniform(0.5, 100.0));
+    sphere.setPadding(RNG.uniform(-0.1, 100.0));
 
     // choose a random direction
     const Eigen::Vector3d dir = Eigen::Vector3d::Random().normalized();
@@ -353,7 +353,7 @@ TEST(SphereRayIntersection, OriginOutside)
     perpDir.normalize();
 
     // now move origin "sideways" but still only so much that the ray will hit the sphere
-    const Eigen::Vector3d origin2 = origin + RNG_.uniform(1e-6, s.radius - 1e-4) * perpDir;
+    const Eigen::Vector3d origin2 = origin + RNG.uniform(1e-6, s.radius - 1e-4) * perpDir;
 
     intersections.clear();
     if (sphere.intersectsRay(origin2, dir, &intersections, 2))
@@ -507,8 +507,8 @@ TEST(CylinderRayIntersection, OriginInside)
   {
     const Eigen::Isometry3d pos = getRandomPose();
     cylinder.setPose(pos);
-    cylinder.setScale(RNG_.uniform(0.5, 100.0));
-    cylinder.setPadding(RNG_.uniform(-0.1, 100.0));
+    cylinder.setScale(RNG.uniform(0.5, 100.0));
+    cylinder.setPadding(RNG.uniform(-0.1, 100.0));
 
     Eigen::Vector3d origin;
     cylinder.samplePointInside(10, origin);
@@ -595,8 +595,8 @@ TEST(CylinderRayIntersection, OriginOutside)
   {
     const Eigen::Isometry3d pos = getRandomPose();
     cylinder.setPose(pos);
-    cylinder.setScale(RNG_.uniform(0.5, 100.0));
-    cylinder.setPadding(RNG_.uniform(-0.1, 100.0));
+    cylinder.setScale(RNG.uniform(0.5, 100.0));
+    cylinder.setPadding(RNG.uniform(-0.1, 100.0));
 
     // choose a random direction
     const Eigen::Vector3d dir = Eigen::Vector3d::Random().normalized();
@@ -647,7 +647,7 @@ TEST(CylinderRayIntersection, OriginOutside)
 
     // now move origin "sideways" but still only so much that the ray will hit the cylinder
     auto minRadius = (std::min)(c.radius, c.length);
-    const Eigen::Vector3d origin2 = origin + RNG_.uniform(1e-6, minRadius - 1e-4) * perpDir;
+    const Eigen::Vector3d origin2 = origin + RNG.uniform(1e-6, minRadius - 1e-4) * perpDir;
 
     intersections.clear();
     if (cylinder.intersectsRay(origin2, dir, &intersections, 2))
@@ -849,8 +849,8 @@ TEST(BoxRayIntersection, OriginInside)
   {
     const Eigen::Isometry3d pos = getRandomPose();
     box.setPose(pos);
-    box.setScale(RNG_.uniform(0.5, 100.0));
-    box.setPadding(RNG_.uniform(-0.1, 100.0));
+    box.setScale(RNG.uniform(0.5, 100.0));
+    box.setPadding(RNG.uniform(-0.1, 100.0));
 
     // get the scaled dimensions of the box
     Eigen::Vector3d sizes = { box.getDimensions()[0], box.getDimensions()[1], box.getDimensions()[2] };
@@ -940,8 +940,8 @@ TEST(BoxRayIntersection, OriginOutsideIntersects)
   {
     const Eigen::Isometry3d pos = getRandomPose();
     box.setPose(pos);
-    box.setScale(RNG_.uniform(0.5, 100.0));
-    box.setPadding(RNG_.uniform(-0.1, 100.0));
+    box.setScale(RNG.uniform(0.5, 100.0));
+    box.setPadding(RNG.uniform(-0.1, 100.0));
 
     // choose a random direction
     const Eigen::Vector3d dir = Eigen::Vector3d::Random().normalized();
@@ -997,7 +997,7 @@ TEST(BoxRayIntersection, OriginOutsideIntersects)
     perpDir.normalize();
 
     // now move origin "sideways" but still only so much that the ray will hit the box
-    const Eigen::Vector3d origin2 = origin + RNG_.uniform(1e-6, minRadius - 1e-4) * perpDir;
+    const Eigen::Vector3d origin2 = origin + RNG.uniform(1e-6, minRadius - 1e-4) * perpDir;
 
     intersections.clear();
     if (box.intersectsRay(origin2, dir, &intersections, 2))
@@ -1180,8 +1180,8 @@ TEST(ConvexMeshRayIntersection, OriginInside)
   {
     const Eigen::Isometry3d pos = getRandomPose();
     mesh.setPose(pos);
-    mesh.setScale(RNG_.uniform(0.5, 100.0));
-    mesh.setPadding(RNG_.uniform(-0.1, 100.0));
+    mesh.setScale(RNG.uniform(0.5, 100.0));
+    mesh.setPadding(RNG.uniform(-0.1, 100.0));
 
     // get the scaled dimensions of the mesh
     Eigen::Vector3d sizes = { box.size[0], box.size[1], box.size[2] };
@@ -1273,8 +1273,8 @@ TEST(ConvexMeshRayIntersection, OriginOutsideIntersects)
   {
     const Eigen::Isometry3d pos = getRandomPose();
     mesh.setPose(pos);
-    mesh.setScale(RNG_.uniform(0.5, 100.0));
-    mesh.setPadding(RNG_.uniform(-0.1, 100.0));
+    mesh.setScale(RNG.uniform(0.5, 100.0));
+    mesh.setPadding(RNG.uniform(-0.1, 100.0));
 
     // choose a random direction
     const Eigen::Vector3d dir = Eigen::Vector3d::Random().normalized();
@@ -1330,7 +1330,7 @@ TEST(ConvexMeshRayIntersection, OriginOutsideIntersects)
     perpDir.normalize();
 
     // now move origin "sideways" but still only so much that the ray will hit the mesh
-    const Eigen::Vector3d origin2 = origin + RNG_.uniform(1e-6, minRadius - 1e-4) * perpDir;
+    const Eigen::Vector3d origin2 = origin + RNG.uniform(1e-6, minRadius - 1e-4) * perpDir;
 
     intersections.clear();
     if (mesh.intersectsRay(origin2, dir, &intersections, 2))

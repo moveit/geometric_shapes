@@ -37,7 +37,7 @@
 
 namespace
 {
-auto& RNG_ = shapes::RandomNumberGenerator::getInstance();
+auto& RNG = shapes::RandomNumberGenerator::getInstance();
 }  // namespace
 
 /**
@@ -122,8 +122,8 @@ TEST_F(CompareMeshVsPrimitive, IntersectsRay)
     bool intersects = false;
     for (int i = 0; i < 100; ++i)
     {
-      Eigen::Vector3d ray_o(RNG_.uniform(-1.0, +1.0), RNG_.uniform(-1.0, +1.0), RNG_.uniform(-1.0, +1.0));
-      Eigen::Vector3d ray_d(RNG_.uniform(-1.0, +1.0), RNG_.uniform(-1.0, +1.0), RNG_.uniform(-1.0, +1.0));
+      Eigen::Vector3d ray_o(RNG.uniform(-1.0, +1.0), RNG.uniform(-1.0, +1.0), RNG.uniform(-1.0, +1.0));
+      Eigen::Vector3d ray_d(RNG.uniform(-1.0, +1.0), RNG.uniform(-1.0, +1.0), RNG.uniform(-1.0, +1.0));
       EigenSTL::vector_Vector3d vi1, vi2;
       shape_cms->intersectsRay(ray_o, ray_d, &vi1);
       loaded_cms->intersectsRay(ray_o, ray_d, &vi2);

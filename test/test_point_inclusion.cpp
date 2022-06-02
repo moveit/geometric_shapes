@@ -41,7 +41,7 @@
 
 namespace
 {
-auto& RNG_ = shapes::RandomNumberGenerator::getInstance();
+auto& RNG = shapes::RandomNumberGenerator::getInstance();
 }  // namespace
 
 // split length into the largest number elem, such that sqrt(elem^2 + elem^2) <= length
@@ -59,7 +59,7 @@ double largestComponentForLength2D(const double length)
 
 Eigen::Isometry3d getRandomPose()
 {
-  const Eigen::Vector3d t(RNG_.uniform(-100, 100), RNG_.uniform(-100, 100), RNG_.uniform(-100, 100));
+  const Eigen::Vector3d t(RNG.uniform(-100, 100), RNG.uniform(-100, 100), RNG.uniform(-100, 100));
 
   const Eigen::Quaterniond r = Eigen::Quaterniond::UnitRandom();
 
@@ -142,8 +142,8 @@ TEST(SpherePointContainment, SimpleInside)
   {
     const Eigen::Isometry3d pos = getRandomPose();
     sphere->setPose(pos);
-    sphere->setScale(RNG_.uniform(0.1, 100.0));
-    sphere->setPadding(RNG_.uniform(-0.001, 10.0));
+    sphere->setScale(RNG.uniform(0.1, 100.0));
+    sphere->setPadding(RNG.uniform(-0.001, 10.0));
 
     EXPECT_TRUE(sphere->samplePointInside(100, p));
     EXPECT_TRUE(sphere->containsPoint(p));
@@ -301,8 +301,8 @@ TEST(BoxPointContainment, Sampled)
   {
     const Eigen::Isometry3d pos = getRandomPose();
     box.setPose(pos);
-    box.setScale(RNG_.uniform(0.1, 100.0));
-    box.setPadding(RNG_.uniform(-0.001, 10.0));
+    box.setScale(RNG.uniform(0.1, 100.0));
+    box.setPadding(RNG.uniform(-0.001, 10.0));
 
     EXPECT_TRUE(box.samplePointInside(100, p));
     EXPECT_TRUE(box.containsPoint(p));
@@ -435,8 +435,8 @@ TEST(CylinderPointContainment, Sampled)
   {
     const Eigen::Isometry3d pos = getRandomPose();
     cylinder.setPose(pos);
-    cylinder.setScale(RNG_.uniform(0.1, 100.0));
-    cylinder.setPadding(RNG_.uniform(-0.001, 10.0));
+    cylinder.setScale(RNG.uniform(0.1, 100.0));
+    cylinder.setPadding(RNG.uniform(-0.001, 10.0));
 
     EXPECT_TRUE(cylinder.samplePointInside(100, p));
     EXPECT_TRUE(cylinder.containsPoint(p));
