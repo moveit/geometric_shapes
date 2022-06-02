@@ -225,10 +225,7 @@ public:
      Sometimes multiple attempts need to be generated.
      The function terminates with failure (returns false) after \e max_attempts attempts.
      If the call is successful (returns true) the point is written to \e result */
-  virtual bool samplePointInside(unsigned int max_attempts, Eigen::Vector3d& result) const;
-
-  /** \brief Alternative version of samplePointInside function that allows using a customly seeded random number generator */
-  virtual bool samplePointInside(std::seed_seq const& seed_sequence, unsigned int max_attempts,
+  virtual bool samplePointInside(std::function<double(double, double)> random_value, unsigned int max_attempts,
                                  Eigen::Vector3d& result) const;
 
   /** \brief Compute the bounding radius for the body, in its current
@@ -305,7 +302,8 @@ public:
 
   bool containsPoint(const Eigen::Vector3d& p, bool verbose = false) const override;
   double computeVolume() const override;
-  bool samplePointInside(unsigned int max_attempts, Eigen::Vector3d& result) const override;
+  bool samplePointInside(std::function<double(double, double)> random_value, unsigned int max_attempts,
+                         Eigen::Vector3d& result) const override;
   void computeBoundingSphere(BoundingSphere& sphere) const override;
   void computeBoundingCylinder(BoundingCylinder& cylinder) const override;
   void computeBoundingBox(AABB& bbox) const override;
@@ -356,7 +354,8 @@ public:
 
   bool containsPoint(const Eigen::Vector3d& p, bool verbose = false) const override;
   double computeVolume() const override;
-  bool samplePointInside(unsigned int max_attempts, Eigen::Vector3d& result) const override;
+  bool samplePointInside(std::function<double(double, double)> random_value, unsigned int max_attempts,
+                         Eigen::Vector3d& result) const override;
   void computeBoundingSphere(BoundingSphere& sphere) const override;
   void computeBoundingCylinder(BoundingCylinder& cylinder) const override;
   void computeBoundingBox(AABB& bbox) const override;
@@ -417,7 +416,8 @@ public:
 
   bool containsPoint(const Eigen::Vector3d& p, bool verbose = false) const override;
   double computeVolume() const override;
-  bool samplePointInside(unsigned int max_attempts, Eigen::Vector3d& result) const override;
+  bool samplePointInside(std::function<double(double, double)> random_value, unsigned int max_attempts,
+                         Eigen::Vector3d& result) const override;
   void computeBoundingSphere(BoundingSphere& sphere) const override;
   void computeBoundingCylinder(BoundingCylinder& cylinder) const override;
   void computeBoundingBox(AABB& bbox) const override;

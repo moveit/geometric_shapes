@@ -145,7 +145,8 @@ TEST(SpherePointContainment, SimpleInside)
     sphere->setScale(RNG.uniform(0.1, 100.0));
     sphere->setPadding(RNG.uniform(-0.001, 10.0));
 
-    EXPECT_TRUE(sphere->samplePointInside(100, p));
+    EXPECT_TRUE(sphere->samplePointInside(
+        [](double lower_bound, double upper_bound) { return RNG.uniform(lower_bound, upper_bound); }, 100, p));
     EXPECT_TRUE(sphere->containsPoint(p));
   }
   delete sphere;
@@ -260,7 +261,8 @@ TEST(BoxPointContainment, SimpleInside)
   EXPECT_TRUE(contains);
 
   Eigen::Vector3d p;
-  EXPECT_TRUE(box->samplePointInside(100, p));
+  EXPECT_TRUE(box->samplePointInside(
+      [](double lower_bound, double upper_bound) { return RNG.uniform(lower_bound, upper_bound); }, 100, p));
   EXPECT_TRUE(box->containsPoint(p));
 
   delete box;
@@ -304,7 +306,8 @@ TEST(BoxPointContainment, Sampled)
     box.setScale(RNG.uniform(0.1, 100.0));
     box.setPadding(RNG.uniform(-0.001, 10.0));
 
-    EXPECT_TRUE(box.samplePointInside(100, p));
+    EXPECT_TRUE(box.samplePointInside(
+        [](double lower_bound, double upper_bound) { return RNG.uniform(lower_bound, upper_bound); }, 100, p));
     EXPECT_TRUE(box.containsPoint(p));
   }
 }
@@ -438,7 +441,8 @@ TEST(CylinderPointContainment, Sampled)
     cylinder.setScale(RNG.uniform(0.1, 100.0));
     cylinder.setPadding(RNG.uniform(-0.001, 10.0));
 
-    EXPECT_TRUE(cylinder.samplePointInside(100, p));
+    EXPECT_TRUE(cylinder.samplePointInside(
+        [](double lower_bound, double upper_bound) { return RNG.uniform(lower_bound, upper_bound); }, 100, p));
     EXPECT_TRUE(cylinder.containsPoint(p));
   }
 }
@@ -526,7 +530,8 @@ TEST(MeshPointContainment, Pr2Forearm)
   bool found = true;
   for (int i = 0; i < 10; ++i)
   {
-    if (m->samplePointInside(10000, p))
+    if (m->samplePointInside(
+            [](double lower_bound, double upper_bound) { return RNG.uniform(lower_bound, upper_bound); }, 10000, p))
     {
       found = true;
       EXPECT_TRUE(m->containsPoint(p));

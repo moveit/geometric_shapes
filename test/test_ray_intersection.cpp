@@ -228,7 +228,8 @@ TEST(SphereRayIntersection, OriginInside)
     sphere.setPadding(RNG.uniform(-0.1, 100.0));
 
     Eigen::Vector3d origin;
-    sphere.samplePointInside(10, origin);
+    sphere.samplePointInside(
+        [](double lower_bound, double upper_bound) { return RNG.uniform(lower_bound, upper_bound); }, 10, origin);
 
     // get the scaled sphere
     bodies::BoundingSphere s;
@@ -511,7 +512,8 @@ TEST(CylinderRayIntersection, OriginInside)
     cylinder.setPadding(RNG.uniform(-0.1, 100.0));
 
     Eigen::Vector3d origin;
-    cylinder.samplePointInside(10, origin);
+    cylinder.samplePointInside(
+        [](double lower_bound, double upper_bound) { return RNG.uniform(lower_bound, upper_bound); }, 10, origin);
 
     // get the bounding sphere of the scaled cylinder
     bodies::BoundingSphere s;
@@ -864,7 +866,8 @@ TEST(BoxRayIntersection, OriginInside)
     const Eigen::Vector3d boxCenter = box.getPose().translation();
 
     Eigen::Vector3d origin;
-    box.samplePointInside(10, origin);
+    box.samplePointInside(
+        [](double lower_bound, double upper_bound) { return RNG.uniform(lower_bound, upper_bound); }, 10, origin);
 
     const Eigen::Vector3d dir = Eigen::Vector3d::Random().normalized();
 
@@ -1195,7 +1198,8 @@ TEST(ConvexMeshRayIntersection, OriginInside)
     const Eigen::Vector3d meshCenter = mesh.getPose().translation();
 
     Eigen::Vector3d origin;
-    mesh.samplePointInside(10000, origin);
+    mesh.samplePointInside(
+        [](double lower_bound, double upper_bound) { return RNG.uniform(lower_bound, upper_bound); }, 10000, origin);
 
     const Eigen::Vector3d dir = Eigen::Vector3d::Random().normalized();
 

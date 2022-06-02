@@ -101,7 +101,11 @@ TEST_F(CompareMeshVsPrimitive, ContainsPoint)
     bool found = false;
     for (int i = 0; i < 100; ++i)
     {
-      if ((shape_cms->samplePointInside(10000, p)) || (loaded_cms->samplePointInside(10000, p)))
+      if ((shape_cms->samplePointInside([](double lower_bound,
+                                              double upper_bound) { return RNG.uniform(lower_bound, upper_bound); },
+                                        10000, p)) ||
+          (loaded_cms->samplePointInside(
+              [](double lower_bound, double upper_bound) { return RNG.uniform(lower_bound, upper_bound); }, 10000, p)))
       {
         found = true;
         EXPECT_EQ(shape_cms->containsPoint(p), loaded_cms->containsPoint(p));

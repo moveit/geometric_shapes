@@ -125,7 +125,8 @@ inline Eigen::Vector3d normalize(const Eigen::Vector3d& dir)
 }
 }  // namespace bodies
 
-bool bodies::Body::samplePointInside(unsigned int max_attempts, Eigen::Vector3d& result) const
+bool bodies::Body::samplePointInside(std::function<double(double, double)> random_value, unsigned int max_attempts,
+                                     Eigen::Vector3d& result) const
 {
   BoundingSphere bs;
   computeBoundingSphere(bs);
@@ -210,7 +211,8 @@ void bodies::Sphere::computeBoundingBox(bodies::AABB& bbox) const
   bbox.extendWithTransformedBox(transform, Eigen::Vector3d(2 * radiusU_, 2 * radiusU_, 2 * radiusU_));
 }
 
-bool bodies::Sphere::samplePointInside(unsigned int max_attempts, Eigen::Vector3d& result) const
+bool bodies::Sphere::samplePointInside(std::function<double(double, double)> random_value, unsigned int max_attempts,
+                                       Eigen::Vector3d& result) const
 {
   for (unsigned int i = 0; i < max_attempts; ++i)
   {
@@ -366,7 +368,8 @@ void bodies::Cylinder::updateInternalData()
   d2_ = tmp - length2_;
 }
 
-bool bodies::Cylinder::samplePointInside(unsigned int /* max_attempts */, Eigen::Vector3d& result) const
+bool bodies::Cylinder::samplePointInside(std::function<double(double, double)> random_value,
+                                         unsigned int /* max_attempts */, Eigen::Vector3d& result) const
 {
   // sample a point on the base disc of the cylinder
   double a = RNG.uniform(-boost::math::constants::pi<double>(), boost::math::constants::pi<double>());
@@ -543,7 +546,8 @@ bodies::Cylinder::Cylinder(const bodies::BoundingCylinder& cylinder) : Body()
   setPose(cylinder.pose);
 }
 
-bool bodies::Box::samplePointInside(unsigned int /* max_attempts */, Eigen::Vector3d& result) const
+bool bodies::Box::samplePointInside(std::function<double(double, double)> random_value, unsigned int /* max_attempts */,
+                                    Eigen::Vector3d& result) const
 {
   result = pose_ * Eigen::Vector3d(RNG.uniform(-length2_, length2_), RNG.uniform(-width2_, width2_),
                                    RNG.uniform(-height2_, height2_));
