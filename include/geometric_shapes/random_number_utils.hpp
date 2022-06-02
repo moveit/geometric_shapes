@@ -61,6 +61,12 @@ private:
       std::mt19937 generator(sequence);
       return generator;
     }() } {};
+
+  RandomNumberGenerator(std::seed_seq& seed_sequence)
+    : generator_{ [](std::seed_seq& seed_sequence) {
+      std::mt19937 generator(seed_sequence);
+      return generator;
+    }(seed_sequence) } {};
   ~RandomNumberGenerator() = default;
 
 public:
@@ -68,6 +74,13 @@ public:
   {
     // Static valiables with blocked scopes will be only created once
     thread_local RandomNumberGenerator instance;
+    return instance;
+  }
+
+  static RandomNumberGenerator& getInstance(std::seed_seq& seed_sequence)
+  {
+    // Static valiables with blocked scopes will be only created once
+    thread_local RandomNumberGenerator instance(seed_sequence);
     return instance;
   }
 

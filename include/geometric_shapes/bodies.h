@@ -227,6 +227,10 @@ public:
      If the call is successful (returns true) the point is written to \e result */
   virtual bool samplePointInside(unsigned int max_attempts, Eigen::Vector3d& result) const;
 
+  /** \brief Alternative version of samplePointInside function that allows using a customly seeded random number generator */
+  virtual bool samplePointInside(std::seed_seq const& seed_sequence, unsigned int max_attempts,
+                                 Eigen::Vector3d& result) const;
+
   /** \brief Compute the bounding radius for the body, in its current
       pose. Scaling and padding are accounted for. */
   virtual void computeBoundingSphere(BoundingSphere& sphere) const = 0;
