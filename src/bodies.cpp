@@ -132,9 +132,9 @@ bool bodies::Body::samplePointInside(std::function<double(double, double)> rando
   computeBoundingSphere(bs);
   for (unsigned int i = 0; i < max_attempts; ++i)
   {
-    result = Eigen::Vector3d(RNG.uniform(bs.center.x() - bs.radius, bs.center.x() + bs.radius),
-                             RNG.uniform(bs.center.y() - bs.radius, bs.center.y() + bs.radius),
-                             RNG.uniform(bs.center.z() - bs.radius, bs.center.z() + bs.radius));
+    result = Eigen::Vector3d(random_value(bs.center.x() - bs.radius, bs.center.x() + bs.radius),
+                             random_value(bs.center.y() - bs.radius, bs.center.y() + bs.radius),
+                             random_value(bs.center.z() - bs.radius, bs.center.z() + bs.radius));
     if (containsPoint(result))
       return true;
   }
@@ -226,7 +226,7 @@ bool bodies::Sphere::samplePointInside(std::function<double(double, double)> ran
     // to sphere volume
     for (int j = 0; j < 20; ++j)
     {
-      result = Eigen::Vector3d(RNG.uniform(minX, maxX), RNG.uniform(minY, maxY), RNG.uniform(minZ, maxZ));
+      result = Eigen::Vector3d(random_value(minX, maxX), random_value(minY, maxY), random_value(minZ, maxZ));
       if (containsPoint(result))
         return true;
     }
@@ -372,13 +372,13 @@ bool bodies::Cylinder::samplePointInside(std::function<double(double, double)> r
                                          unsigned int /* max_attempts */, Eigen::Vector3d& result) const
 {
   // sample a point on the base disc of the cylinder
-  double a = RNG.uniform(-boost::math::constants::pi<double>(), boost::math::constants::pi<double>());
-  double r = RNG.uniform(-radiusU_, radiusU_);
+  double a = random_value(-boost::math::constants::pi<double>(), boost::math::constants::pi<double>());
+  double r = random_value(-radiusU_, radiusU_);
   double x = cos(a) * r;
   double y = sin(a) * r;
 
   // sample e height
-  double z = RNG.uniform(-length2_, length2_);
+  double z = random_value(-length2_, length2_);
 
   result = pose_ * Eigen::Vector3d(x, y, z);
   return true;
@@ -549,8 +549,8 @@ bodies::Cylinder::Cylinder(const bodies::BoundingCylinder& cylinder) : Body()
 bool bodies::Box::samplePointInside(std::function<double(double, double)> random_value, unsigned int /* max_attempts */,
                                     Eigen::Vector3d& result) const
 {
-  result = pose_ * Eigen::Vector3d(RNG.uniform(-length2_, length2_), RNG.uniform(-width2_, width2_),
-                                   RNG.uniform(-height2_, height2_));
+  result = pose_ * Eigen::Vector3d(random_value(-length2_, length2_), random_value(-width2_, width2_),
+                                   random_value(-height2_, height2_));
   return true;
 }
 
