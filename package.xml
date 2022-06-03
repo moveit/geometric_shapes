@@ -29,7 +29,6 @@
   <depend>console_bridge_vendor</depend>
   <depend>libqhull</depend>
   <depend>octomap</depend>
-  <depend>random_numbers</depend>
   <depend>resource_retriever</depend>
   <depend>shape_msgs</depend>
   <depend>geometry_msgs</depend>

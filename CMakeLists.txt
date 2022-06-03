@@ -45,7 +45,6 @@ find_package(eigen_stl_containers REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(OCTOMAP REQUIRED)
 find_package(QHULL REQUIRED)
-find_package(random_numbers REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(resource_retriever REQUIRED)
 find_package(shape_msgs REQUIRED)
@@ -61,7 +60,6 @@ set(THIS_PACKAGE_EXPORT_DEPENDS
   eigen_stl_containers
   geometry_msgs
   OCTOMAP
-  random_numbers
   rclcpp
   resource_retriever
   shape_msgs

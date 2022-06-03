@@ -1,5 +1,0 @@
-repositories:
-  random_numbers:
-    type: git
-    url: https://github.com/ros-planning/random_numbers
-    version: ros2
