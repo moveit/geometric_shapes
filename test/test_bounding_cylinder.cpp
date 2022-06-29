@@ -33,6 +33,11 @@
 #include "geometric_shapes/random_number_utils.hpp"
 #include <gtest/gtest.h>
 
+namespace
+{
+auto& RNG = shapes::RandomNumberGenerator::getInstance();
+}  // namespace
+
 // The magic numbers in this test were verified visually using Blender
 
 TEST(SphereBoundingCylinder, Sphere1)
