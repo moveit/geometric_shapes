@@ -92,7 +92,7 @@ TEST(SphereBoundingCylinder, Sphere2)
 
   for (size_t i = 0; i < 10; ++i)
   {
-    auto quat = Eigen::Quaterniond::UnitRandom();
+    auto quat = RNG.getRandomQuaternion();
     pose.linear() = quat.toRotationMatrix();
     body.setPose(pose);
     bodies::BoundingCylinder bcyl2;

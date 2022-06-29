@@ -32,10 +32,13 @@
 
 #pragma once
 
-#include <random>      // for std::mt19937, random_device , seed_seq
-#include <array>       // for std::array, std::data,
-#include <algorithm>   // for std::generate_n
-#include <functional>  // for std::ref
+#include <random>       // for std::mt19937, random_device , seed_seq
+#include <array>        // for std::array, std::data,
+#include <algorithm>    // for std::generate_n
+#include <functional>   // for std::ref
+#include "Eigen/Dense"  // for Eigen::Quaterniond::UnitRandom();
+#include <time.h>       // for time
+#include <optional>     // for optional
 
 namespace shapes
 {
@@ -58,7 +61,11 @@ private:
       std::seed_seq sequence(std::begin(seed_data), std::end(seed_data));
       std::mt19937 generator(sequence);
       return generator;
-    }() } {};
+    }() }
+  {
+    // Seed srand initially
+    std::srand(time(NULL));
+  };
 
   RandomNumberGenerator(std::seed_seq& seed_sequence)
     : generator_{ [](std::seed_seq& seed_sequence) {
@@ -68,25 +75,38 @@ private:
   ~RandomNumberGenerator() = default;
 
 public:
-  static RandomNumberGenerator& getInstance()
+  [[nodiscard]] static RandomNumberGenerator& getInstance(std::optional<std::seed_seq> seed_sequence = std::nullopt)
   {
     // Static valiables with blocked scopes will be only created once
-    thread_local RandomNumberGenerator instance;
-    return instance;
+    if (seed_sequence.has_value())
+    {
+      thread_local RandomNumberGenerator instance(seed_sequence.value());
+      return instance;
+    }
+    else
+    {
+      thread_local RandomNumberGenerator instance;
+      return instance;
+    }
   }
 
-  static RandomNumberGenerator& getInstance(std::seed_seq& seed_sequence)
-  {
-    // Static valiables with blocked scopes will be only created once
-    thread_local RandomNumberGenerator instance(seed_sequence);
-    return instance;
-  }
-
-  /// \brief Return a randum number based on a bounded uniform distribution
-  auto uniform(double const lower_bound, double const upper_bound)
+  /// \brief Return a random number based on a bounded uniform distribution
+  [[nodiscard]] auto uniform(double const lower_bound, double const upper_bound)
   {
     std::uniform_real_distribution<double> distribution(lower_bound, upper_bound);
     return distribution(generator_);
+  }
+
+  /// \brief Return a random quaternion. The reason for this wrapper function is that we need to make sure, that srand()
+  /// is seeded before UnitRandom() is called. The seeding takes place in the Singleton's constructor.
+  [[nodiscard]] auto getRandomQuaternion(std::optional<unsigned int> seed = std::nullopt)
+  {
+    if (seed.has_value())
+    {
+      // Optional re-seed
+      std::srand(seed.value());
+    }
+    return Eigen::Quaterniond::UnitRandom();
   }
 };
 }  // namespace shapes

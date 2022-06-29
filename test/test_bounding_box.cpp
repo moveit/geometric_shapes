@@ -87,7 +87,7 @@ TEST(SphereBoundingBox, Sphere2)
   // verify the bounding box is rotation-invariant
   for (size_t i = 0; i < 10; ++i)
   {
-    auto quat = Eigen::Quaterniond::UnitRandom();
+    auto quat = RNG.getRandomQuaternion();
     pose.linear() = quat.toRotationMatrix();
     body.setPose(pose);
     bodies::AABB bbox2;

@@ -45,7 +45,7 @@ auto& RNG = shapes::RandomNumberGenerator::getInstance();
 Eigen::Isometry3d getRandomPose()
 {
   const Eigen::Vector3d t(RNG.uniform(-100, 100), RNG.uniform(-100, 100), RNG.uniform(-100, 100));
-  const auto r = Eigen::Quaterniond::UnitRandom();
+  const auto r = RNG.getRandomQuaternion();
 
   return Eigen::Isometry3d::TranslationType(t) * r;
 }
