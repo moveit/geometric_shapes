@@ -154,7 +154,7 @@ inline Eigen::Vector3d normalize(const Eigen::Vector3d& dir)
 #if EIGEN_VERSION_AT_LEAST(3, 3, 0)
   return ((norm - 1) > 1e-9) ? (dir / Eigen::numext::sqrt(norm)) : dir;
 #else  // used in kinetic
-  return ((norm - 1) > 1e-9) ? (dir / sqrt(norm)) : dir;
+  return ((norm - 1) > 1e-9) ? (Eigen::Vector3d)(dir / sqrt(norm)) : dir;
 #endif
 }
 }  // namespace bodies
