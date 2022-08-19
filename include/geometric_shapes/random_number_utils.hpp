@@ -76,22 +76,27 @@ private:
 
 public:
   /** The first time this function is called it creates a thread_local random number generator.
-    * If a seed sequence is provided on that first call it is used to create the generator, otherwise the random device is used to seed the generator.
-    * After the first call to this function, if a seed sequence is provided this function throws.
-    */
+   * If a seed sequence is provided on that first call it is used to create the generator, otherwise the random device
+   * is used to seed the generator. After the first call to this function, if a seed sequence is provided this function
+   * throws.
+   */
   [[nodiscard]] static RandomNumberGenerator& getInstance(std::optional<std::seed_seq> seed_sequence = std::nullopt)
   {
     bool first = false;
     thread_local RandomNumberGenerator instance = [&seed_sequence, &first]() {
       first = true;
-      if (seed_sequence.has_value()) {
-        return RandomNumberGenerator{seed_sequence};
-      } else {
-        return RandomNumberGenerator{};
+      if (seed_sequence.has_value())
+      {
+        return RandomNumberGenerator(seed_sequence.value());
+      }
+      else
+      {
+        return RandomNumberGenerator();
       }
     }();
-    if (!first && seed_sequence.has_value()) {
-      throw std::exception{"RandomNumberGenerator cannot be re-seeded"};
+    if (!first && seed_sequence.has_value())
+    {
+      throw std::runtime_error("RandomNumberGenerator cannot be re-seeded");
     }
     return instance;
   }
