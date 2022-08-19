@@ -75,19 +75,25 @@ private:
   ~RandomNumberGenerator() = default;
 
 public:
+  /** The first time this function is called it creates a thread_local random number generator.
+    * If a seed sequence is provided on that first call it is used to create the generator, otherwise the random device is used to seed the generator.
+    * After the first call to this function, if a seed sequence is provided this function throws.
+    */
   [[nodiscard]] static RandomNumberGenerator& getInstance(std::optional<std::seed_seq> seed_sequence = std::nullopt)
   {
-    // Static valiables with blocked scopes will be only created once
-    if (seed_sequence.has_value())
-    {
-      thread_local RandomNumberGenerator instance(seed_sequence.value());
-      return instance;
+    bool first = false;
+    thread_local RandomNumberGenerator instance = [&seed_sequence, &first]() {
+      first = true;
+      if (seed_sequence.has_value()) {
+        return RandomNumberGenerator{seed_sequence};
+      } else {
+        return RandomNumberGenerator{};
+      }
+    }();
+    if (!first && seed_sequence.has_value()) {
+      throw std::exception{"RandomNumberGenerator cannot be re-seeded"};
     }
-    else
-    {
-      thread_local RandomNumberGenerator instance;
-      return instance;
-    }
+    return instance;
   }
 
   /// \brief Return a random number based on a bounded uniform distribution
