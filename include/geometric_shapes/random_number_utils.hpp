@@ -42,7 +42,10 @@
 
 namespace shapes
 {
-// Singleton random number generator class based on https://www.modernescpp.com/index.php/thread-safe-initialization-of-a-singleton
+// Singleton random number generator class based on
+// https://www.modernescpp.com/index.php/thread-safe-initialization-of-a-singleton This random number generator is made
+// a thread_local singleton to increase computational speed. The construction of a random number generator is relatively
+// slow and thus it makes sense to re-use constructed objects as much as possible
 class RandomNumberGenerator
 {
 private:
@@ -53,12 +56,18 @@ private:
   // Don't allow assigning the instance of this class
   RandomNumberGenerator& operator=(const RandomNumberGenerator&) = delete;
 
+  // Constructor with default seeded random number generator
   RandomNumberGenerator()
     : generator_{ []() {
       std::array<int, std::mt19937::state_size> seed_data;
       std::random_device random_device;
+      // Populate the seed sequence with random numbers generated with random_device
+      // This is slow since random device creates random numbers by accessing the
+      // operational system's entropy pool with system calls
       std::generate_n(std::data(seed_data), std::size(seed_data), std::ref(random_device));
       std::seed_seq sequence(std::begin(seed_data), std::end(seed_data));
+
+      // Seed random number generator
       std::mt19937 generator(sequence);
       return generator;
     }() }
@@ -67,11 +76,14 @@ private:
     std::srand(time(NULL));
   };
 
-  RandomNumberGenerator(std::seed_seq& seed_sequence)
-    : generator_{ [](std::seed_seq& seed_sequence) {
-      std::mt19937 generator(seed_sequence);
-      return generator;
-    }(seed_sequence) } {};
+  // Seeded constructor
+  RandomNumberGenerator(std::seed_seq& seed_sequence) : generator_{ seed_sequence }
+  {
+    // Seed srand initially
+    std::srand(time(NULL));
+  };
+
+  // Destructor
   ~RandomNumberGenerator() = default;
 
 public:
@@ -82,6 +94,8 @@ public:
    */
   [[nodiscard]] static RandomNumberGenerator& getInstance(std::optional<std::seed_seq> seed_sequence = std::nullopt)
   {
+    // These variables are decleared thread local, to have exactly one instance of this object per thread.
+    // This way resource conflicts are avoided while the number of constructor invocations is kept low.
     thread_local bool first = false;
     thread_local RandomNumberGenerator instance = [&seed_sequence]() {
       first = true;
