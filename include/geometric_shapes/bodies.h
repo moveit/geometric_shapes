@@ -220,7 +220,7 @@ public:
       changes induced by scaling and padding */
   virtual double computeVolume() const = 0;
 
-  /** \brief Sample a point that is included in the body using a given random number generator.
+  /** \brief Sample a point that is included in the body using a given function that produces a random number
 
      Sometimes multiple attempts need to be generated.
      The function terminates with failure (returns false) after \e max_attempts attempts.
