@@ -83,7 +83,7 @@ public:
   [[nodiscard]] static RandomNumberGenerator& getInstance(std::optional<std::seed_seq> seed_sequence = std::nullopt)
   {
     thread_local bool first = false;
-    thread_local RandomNumberGenerator instance = [&seed_sequence, &first]() {
+    thread_local RandomNumberGenerator instance = [&seed_sequence]() {
       first = true;
       if (seed_sequence.has_value())
       {
