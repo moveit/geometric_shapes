@@ -92,23 +92,23 @@ public:
    * is used to seed the generator. After the first call to this function, if a seed sequence is provided this function
    * throws.
    */
-  [[nodiscard]] static RandomNumberGenerator& getInstance(std::optional<std::seed_seq> seed_sequence = std::nullopt)
+  [[nodiscard]] static RandomNumberGenerator& getInstance(std::seed_seq seed_sequence = {})
   {
     // These variables are decleared thread local, to have exactly one instance of this object per thread.
     // This way resource conflicts are avoided while the number of constructor invocations is kept low.
     thread_local bool first = false;
     thread_local RandomNumberGenerator instance = [&seed_sequence]() {
       first = true;
-      if (seed_sequence.has_value())
+      if (seed_sequence.size() > 0)
       {
-        return RandomNumberGenerator(seed_sequence.value());
+        return RandomNumberGenerator(seed_sequence);
       }
       else
       {
         return RandomNumberGenerator();
       }
     }();
-    if (!first && seed_sequence.has_value())
+    if (!first && seed_sequence.size() > 0)
     {
       throw std::runtime_error("RandomNumberGenerator cannot be re-seeded");
     }
