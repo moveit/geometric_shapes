@@ -86,6 +86,7 @@ shapes::ShapeConstPtr bodies::constructShapeFromBody(const bodies::Body* body)
   {
     case shapes::SPHERE:
     {
+      // As we already know body's type, we can skip the vtable lookup and use compile-time polymorphism
       const auto& dims = static_cast<const bodies::Sphere*>(body)->bodies::Sphere::getScaledDimensions();
       result.reset(new shapes::Sphere(dims[0]));
       break;
