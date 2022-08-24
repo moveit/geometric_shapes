@@ -193,8 +193,12 @@ void bodies::Sphere::useDimensions(const shapes::Shape* shape)  // radius
 
 std::vector<double> bodies::Sphere::getDimensions() const
 {
-  std::vector<double> d(1, radius_);
-  return d;
+  return { radius_ };
+}
+
+std::vector<double> bodies::Sphere::getScaledDimensions() const
+{
+  return { radiusU_ };
 }
 
 void bodies::Sphere::updateInternalData()
@@ -359,10 +363,12 @@ void bodies::Cylinder::useDimensions(const shapes::Shape* shape)  // (length, ra
 
 std::vector<double> bodies::Cylinder::getDimensions() const
 {
-  std::vector<double> d(2);
-  d[0] = radius_;
-  d[1] = length_;
-  return d;
+  return { radius_, length_ };
+}
+
+std::vector<double> bodies::Cylinder::getScaledDimensions() const
+{
+  return { radiusU_, 2 * length2_ };
 }
 
 void bodies::Cylinder::updateInternalData()
@@ -585,11 +591,12 @@ void bodies::Box::useDimensions(const shapes::Shape* shape)  // (x, y, z) = (len
 
 std::vector<double> bodies::Box::getDimensions() const
 {
-  std::vector<double> d(3);
-  d[0] = length_;
-  d[1] = width_;
-  d[2] = height_;
-  return d;
+  return { length_, width_, height_ };
+}
+
+std::vector<double> bodies::Box::getScaledDimensions() const
+{
+  return { 2 * length2_, 2 * width2_, 2 * height2_ };
 }
 
 void bodies::Box::updateInternalData()
@@ -978,7 +985,12 @@ void bodies::ConvexMesh::useDimensions(const shapes::Shape* shape)
 
 std::vector<double> bodies::ConvexMesh::getDimensions() const
 {
-  return std::vector<double>();
+  return {};
+}
+
+std::vector<double> bodies::ConvexMesh::getScaledDimensions() const
+{
+  return {};
 }
 
 void bodies::ConvexMesh::computeScaledVerticesFromPlaneProjections()

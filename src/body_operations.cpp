@@ -78,6 +78,72 @@ bodies::Body* bodies::createBodyFromShape(const shapes::Shape* shape)
   return body;
 }
 
+shapes::ShapeConstPtr bodies::constructShapeFromBody(const bodies::Body* body)
+{
+  shapes::ShapePtr result;
+
+  switch (body->getType())
+  {
+    case shapes::SPHERE:
+    {
+      // As we already know body's type, we can skip the vtable lookup and use compile-time polymorphism
+      const auto& dims = static_cast<const bodies::Sphere*>(body)->bodies::Sphere::getScaledDimensions();
+      result.reset(new shapes::Sphere(dims[0]));
+      break;
+    }
+    case shapes::BOX:
+    {
+      const auto& dims = static_cast<const bodies::Box*>(body)->bodies::Box::getScaledDimensions();
+      result.reset(new shapes::Box(dims[0], dims[1], dims[2]));
+      break;
+    }
+    case shapes::CYLINDER:
+    {
+      const auto& dims = static_cast<const bodies::Cylinder*>(body)->bodies::Cylinder::getScaledDimensions();
+      result.reset(new shapes::Cylinder(dims[0], dims[1]));
+      break;
+    }
+    case shapes::MESH:
+    {
+      const auto mesh = static_cast<const bodies::ConvexMesh*>(body);
+      const auto& scaledVertices = mesh->getScaledVertices();
+
+      // createMeshFromVertices requires an "expanded" list of triangles where each triangle is
+      // represented by its three vertex positions
+      EigenSTL::vector_Vector3d vertexList;
+      vertexList.reserve(3 * mesh->getTriangles().size());
+      for (const auto& triangle : mesh->getTriangles())
+        vertexList.push_back(scaledVertices[triangle]);
+
+      result.reset(shapes::createMeshFromVertices(vertexList));
+      break;
+    }
+    default:
+    {
+      CONSOLE_BRIDGE_logError("Unknown body type: %d", (int)body->getType());
+      break;
+    }
+  }
+  return result;
+}
+
+void bodies::constructMarkerFromBody(const bodies::Body* body, visualization_msgs::Marker& msg)
+{
+  auto shape = bodies::constructShapeFromBody(body);
+  shapes::constructMarkerFromShape(shape.get(), msg, true);
+  const auto& pose = body->getPose();
+  msg.pose.position.x = pose.translation().x();
+  msg.pose.position.y = pose.translation().y();
+  msg.pose.position.z = pose.translation().z();
+
+  ASSERT_ISOMETRY(pose);
+  Eigen::Quaterniond quat(pose.linear().matrix());
+  msg.pose.orientation.x = quat.x();
+  msg.pose.orientation.y = quat.y();
+  msg.pose.orientation.z = quat.z();
+  msg.pose.orientation.w = quat.w();
+}
+
 void bodies::mergeBoundingSpheres(const std::vector<BoundingSphere>& spheres, BoundingSphere& mergedSphere)
 {
   if (spheres.empty())
