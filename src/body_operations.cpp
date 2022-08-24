@@ -86,19 +86,20 @@ shapes::ShapeConstPtr bodies::constructShapeFromBody(const bodies::Body* body)
   {
     case shapes::SPHERE:
     {
-      const auto& dims = static_cast<const bodies::Sphere*>(body)->getScaledDimensions();
+      // As we already know body's type, we can skip the vtable lookup and use compile-time polymorphism
+      const auto& dims = static_cast<const bodies::Sphere*>(body)->bodies::Sphere::getScaledDimensions();
       result.reset(new shapes::Sphere(dims[0]));
       break;
     }
     case shapes::BOX:
     {
-      const auto& dims = static_cast<const bodies::Box*>(body)->getScaledDimensions();
+      const auto& dims = static_cast<const bodies::Box*>(body)->bodies::Box::getScaledDimensions();
       result.reset(new shapes::Box(dims[0], dims[1], dims[2]));
       break;
     }
     case shapes::CYLINDER:
     {
-      const auto& dims = static_cast<const bodies::Cylinder*>(body)->getScaledDimensions();
+      const auto& dims = static_cast<const bodies::Cylinder*>(body)->bodies::Cylinder::getScaledDimensions();
       result.reset(new shapes::Cylinder(dims[0], dims[1]));
       break;
     }
