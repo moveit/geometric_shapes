@@ -35,7 +35,7 @@
 #include <console_bridge/console.h>
 
 extern "C" {
-#include <libqhull_r.h>
+#include <libqhull_r/libqhull_r.h>
 }
 
 #include <boost/math/constants/constants.hpp>
