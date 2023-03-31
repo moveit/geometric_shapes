@@ -2,6 +2,14 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.7.4 (2023-03-31)
+------------------
+* Body::getScaledDimensions(): avoid vtable lookup (`#225 <https://github.com/ros-planning/geometric_shapes/issues/225>`_)
+* Add Body::computeBoundingBox (oriented box version) (`#210 <https://github.com/ros-planning/geometric_shapes/issues/210>`_)
+
+  This adds the dependency on FCL, provide support for FCL 0.6 if available
+* Contributors: Martin Pecka, Robert Haschke
+
 0.7.3 (2021-05-19)
 ------------------
 * [fix]   Fix memory leak (`#168 <https://github.com/ros-planning/geometric_shapes/issues/168>`_)
