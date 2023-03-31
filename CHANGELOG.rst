@@ -2,6 +2,15 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.6.5 (2023-03-31)
+------------------
+* Add bodies::Body::computeBoundingBox (oriented box version) (`#210 <https://github.com/ros-planning/geometric_shapes/issues/210>`_)
+
+  This adds the dependency on FCL, provide support for FCL 0.6 if available
+* Add body operations constructShapeFromBody() and constructMarkerFromBody() (`#209 <https://github.com/ros-planning/geometric_shapes/issues/209>`_)
+* Eigen < 3.3.0 needs explicit cast (`#224 <https://github.com/ros-planning/geometric_shapes/issues/224>`_)
+* Contributors: Kei Okada, Martin Pecka, Robert Haschke
+
 0.6.4 (2021-05-19)
 ------------------
 * [fix]   Fix memory leak (`#168 <https://github.com/ros-planning/geometric_shapes/issues/168>`_)
