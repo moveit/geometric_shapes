@@ -538,6 +538,7 @@ TEST(MergeBoundingBoxes, OBBApprox1)
   boxes.emplace_back(pose, Eigen::Vector3d(1, 1, 1));
 
   bodies::OBB bbox;
+  bbox.setPoseAndExtents(Eigen::Isometry3d::Identity(), Eigen::Vector3d::Zero());
   bodies::mergeBoundingBoxesApprox(boxes, bbox);
 
   // the resulting bounding box is not tight, so we only do some sanity checks
