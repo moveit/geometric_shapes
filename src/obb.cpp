@@ -43,6 +43,13 @@ public:
 OBB::OBB()
 {
   this->obb_.reset(new OBBPrivate);
+#if FCL_MAJOR_VERSION > 0 || FCL_MINOR_VERSION > 5
+  // Zero-initialize the OBB. This is done to unify the behavior of FCL 0.5 (which zero-initializes by default) and
+  // FCL 0.6, which leaves the fields uninitialized.
+  this->obb_->extent.setZero();
+  this->obb_->To.setZero();
+  this->obb_->axis.setZero();
+#endif
 }
 
 OBB::OBB(const OBB& other) : OBB()
@@ -132,18 +139,68 @@ void OBB::toAABB(AABB& aabb) const
 
 OBB* OBB::extendApprox(const OBB& box)
 {
+  if (this->getExtents() == Eigen::Vector3d::Zero())
+  {
+    *obb_ = *box.obb_;
+    return this;
+  }
+
+  if (this->contains(box))
+    return this;
+
+  if (box.contains(*this))
+  {
+    *obb_ = *box.obb_;
+    return this;
+  }
+
   *this->obb_ += *box.obb_;
   return this;
 }
 
-bool OBB::contains(const Eigen::Vector3d& point)
+bool OBB::contains(const Eigen::Vector3d& point) const
 {
   return obb_->contain(toFcl(point));
 }
 
-bool OBB::overlaps(const bodies::OBB& other)
+bool OBB::overlaps(const bodies::OBB& other) const
 {
   return obb_->overlap(*other.obb_);
+}
+
+EigenSTL::vector_Vector3d OBB::computeVertices() const
+{
+  const Eigen::Vector3d e = getExtents() / 2;  // do not use auto type, Eigen would be inefficient
+  // clang-format off
+  EigenSTL::vector_Vector3d result = {
+    { -e[0], -e[1], -e[2] },
+    { -e[0], -e[1],  e[2] },
+    { -e[0],  e[1], -e[2] },
+    { -e[0],  e[1],  e[2] },
+    {  e[0], -e[1], -e[2] },
+    {  e[0], -e[1],  e[2] },
+    {  e[0],  e[1], -e[2] },
+    {  e[0],  e[1],  e[2] },
+  };
+  // clang-format on
+
+  const auto pose = getPose();
+  for (auto& v : result)
+  {
+    v = pose * v;
+  }
+
+  return result;
+}
+
+bool OBB::contains(const OBB& obb) const
+{
+  for (const auto& v : obb.computeVertices())
+  {
+    if (!contains(v))
+      return false;
+  }
+  return true;
 }
 
 OBB::~OBB() = default;
