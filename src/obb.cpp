@@ -42,23 +42,30 @@ public:
 
 OBB::OBB()
 {
-  this->obb_.reset(new OBBPrivate);
+  obb_.reset(new OBBPrivate);
+  // Initialize the OBB to position 0, with 0 extents and identity rotation
 #if FCL_MAJOR_VERSION > 0 || FCL_MINOR_VERSION > 5
-  // Zero-initialize the OBB. This is done to unify the behavior of FCL 0.5 (which zero-initializes by default) and
-  // FCL 0.6, which leaves the fields uninitialized.
-  this->obb_->extent.setZero();
-  this->obb_->To.setZero();
-  this->obb_->axis.setZero();
+  // FCL 0.6+ does not zero-initialize the OBB.
+  obb_->extent.setZero();
+  obb_->To.setZero();
+  obb_->axis.setIdentity();
+#else
+  // FCL 0.5 zero-initializes the OBB, so we just put the identity into orientation.
+  obb_->axis[0][0] = 1.0;
+  obb_->axis[1][1] = 1.0;
+  obb_->axis[2][2] = 1.0;
 #endif
 }
 
-OBB::OBB(const OBB& other) : OBB()
+OBB::OBB(const OBB& other)
 {
+  obb_.reset(new OBBPrivate);
   *obb_ = *other.obb_;
 }
 
-OBB::OBB(const Eigen::Isometry3d& pose, const Eigen::Vector3d& extents) : OBB()
+OBB::OBB(const Eigen::Isometry3d& pose, const Eigen::Vector3d& extents)
 {
+  obb_.reset(new OBBPrivate);
   setPoseAndExtents(pose, extents);
 }
 
@@ -101,20 +108,12 @@ void OBB::getPose(Eigen::Isometry3d& pose) const
 {
   pose = Eigen::Isometry3d::Identity();
   pose.translation() = fromFcl(obb_->To);
-  // If all axes are zero, we report the rotation as identity
-  // This happens if OBB is default-constructed
 #if FCL_MAJOR_VERSION == 0 && FCL_MINOR_VERSION == 5
-  if (!obb_->axis[0].isZero() && !obb_->axis[3].isZero() && !obb_->axis[2].isZero())
-  {
-    pose.linear().col(0) = fromFcl(obb_->axis[0]);
-    pose.linear().col(1) = fromFcl(obb_->axis[1]);
-    pose.linear().col(2) = fromFcl(obb_->axis[2]);
-  }
+  pose.linear().col(0) = fromFcl(obb_->axis[0]);
+  pose.linear().col(1) = fromFcl(obb_->axis[1]);
+  pose.linear().col(2) = fromFcl(obb_->axis[2]);
 #else
-  if (!obb_->axis.isApprox(fcl::Matrix3d::Zero()))
-  {
-    pose.linear() = obb_->axis;
-  }
+  pose.linear() = obb_->axis;
 #endif
 }
 
