@@ -59,8 +59,7 @@ OBB::OBB()
 
 OBB::OBB(const OBB& other)
 {
-  obb_.reset(new OBBPrivate);
-  *obb_ = *other.obb_;
+  obb_.reset(new OBBPrivate(*other.obb_));
 }
 
 OBB::OBB(const Eigen::Isometry3d& pose, const Eigen::Vector3d& extents)
