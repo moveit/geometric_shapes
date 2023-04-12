@@ -1,6 +1,6 @@
 <package format="3">
   <name>geometric_shapes</name>
-  <version>0.6.5</version>
+  <version>0.6.6</version>
   <description>Generic definitions of geometric shapes and bodies.</description>
 
   <author email="isucan@google.com">Ioan Sucan</author>

@@ -2,6 +2,12 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.6.6 (2023-04-12)
+------------------
+* Limit indefinite growth of OBBs during merging (`#233 <https://github.com/ros-planning/geometric_shapes/issues/233>`_)
+* Correctly initialize OBB with default constructor
+* Contributors: Martin Pecka
+
 0.6.5 (2023-03-31)
 ------------------
 * Add bodies::Body::computeBoundingBox (oriented box version) (`#210 <https://github.com/ros-planning/geometric_shapes/issues/210>`_)
