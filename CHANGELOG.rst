@@ -2,6 +2,12 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.7.5 (2023-04-12)
+------------------
+* Limit indefinite growth of OBBs during merging (`#232 <https://github.com/ros-planning/geometric_shapes/issues/232>`_)
+* Correctly initialize OBB with default constructor
+* Contributors: Martin Pecka
+
 0.7.4 (2023-03-31)
 ------------------
 * Body::getScaledDimensions(): avoid vtable lookup (`#225 <https://github.com/ros-planning/geometric_shapes/issues/225>`_)
