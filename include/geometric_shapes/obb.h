@@ -42,6 +42,7 @@
 #include <Eigen/Core>
 #include <Eigen/Geometry>
 
+#include <eigen_stl_containers/eigen_stl_containers.h>
 #include <geometric_shapes/aabb.h>
 
 namespace bodies
@@ -52,6 +53,7 @@ class OBBPrivate;
 class OBB
 {
 public:
+  /** Initialize an oriented bounding box at position 0, with 0 extents and identity orientation. */
   OBB();
   OBB(const OBB& other);
   OBB(const Eigen::Isometry3d& pose, const Eigen::Vector3d& extents);
@@ -114,14 +116,27 @@ public:
    * \param point The point to check.
    * \return Whether the point is inside or not.
    */
-  bool contains(const Eigen::Vector3d& point);
+  bool contains(const Eigen::Vector3d& point) const;
 
   /**
    * \brief Check whether this and the given OBBs have nonempty intersection.
    * \param other The other OBB to check.
    * \return Whether the OBBs overlap.
    */
-  bool overlaps(const OBB& other);
+  bool overlaps(const OBB& other) const;
+
+  /**
+   * \brief Check if this OBB contains whole other OBB.
+   * \param point The point to check.
+   * \return Whether the point is inside or not.
+   */
+  bool contains(const OBB& obb) const;
+
+  /**
+   * \brief Compute coordinates of the 8 vertices of this OBB.
+   * \return The vertices.
+   */
+  EigenSTL::vector_Vector3d computeVertices() const;
 
 protected:
   /** \brief PIMPL pointer */

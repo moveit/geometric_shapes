@@ -527,6 +527,94 @@ TEST(MergeBoundingBoxes, Merge1)
   EXPECT_NEAR(1.0, bbox.max().z(), 1e-4);
 }
 
+TEST(MergeBoundingBoxes, OBBInvalid)
+{
+  auto pose = Eigen::Isometry3d::Identity();
+  pose.linear() = Eigen::AngleAxisd(M_PI_2, Eigen::Vector3d(1, 1, 1).normalized()).matrix();
+
+  bodies::OBB b1;  // uninitialized OBB, extents == 0 and invalid rotation
+  pose.translation() = -0.6 * Eigen::Vector3d::Ones();
+  bodies::OBB b2(pose, Eigen::Vector3d(0.1, 0.1, 0.1));
+
+  // invalid b1 extended with valid b2 should equal b2
+  b1.extendApprox(b2);
+
+  EXPECT_TRUE(b1.overlaps(b2));
+  EXPECT_TRUE(b2.overlaps(b1));
+
+  EXPECT_NEAR(0.1, b1.getExtents().x(), 1e-12);
+  EXPECT_NEAR(0.1, b1.getExtents().y(), 1e-12);
+  EXPECT_NEAR(0.1, b1.getExtents().z(), 1e-12);
+  EXPECT_NEAR(-0.6, b1.getPose().translation().x(), 1e-12);
+  EXPECT_NEAR(-0.6, b1.getPose().translation().y(), 1e-12);
+  EXPECT_NEAR(-0.6, b1.getPose().translation().z(), 1e-12);
+  EXPECT_TRUE(b1.getPose().linear().isApprox(pose.linear(), 1e-12));
+}
+
+TEST(MergeBoundingBoxes, OBBContains1)
+{
+  auto pose = Eigen::Isometry3d::Identity();
+
+  pose.translation() = -0.5 * Eigen::Vector3d::Ones();
+  bodies::OBB b1(pose, Eigen::Vector3d(1, 1, 1));
+  pose.translation() = -0.6 * Eigen::Vector3d::Ones();
+  pose.linear() = Eigen::AngleAxisd(M_PI_2, Eigen::Vector3d(1, 1, 1).normalized()).matrix();
+  bodies::OBB b2(pose, Eigen::Vector3d(0.1, 0.1, 0.1));
+
+  EXPECT_TRUE(b1.contains(b2));
+  EXPECT_FALSE(b2.contains(b1));
+  EXPECT_TRUE(b1.overlaps(b2));
+  EXPECT_TRUE(b2.overlaps(b1));
+
+  // b1 contains whole b2, so the extended b1 should be equal to the original b1
+  b1.extendApprox(b2);
+
+  EXPECT_TRUE(b1.contains(b2));
+  EXPECT_FALSE(b2.contains(b1));
+  EXPECT_TRUE(b1.overlaps(b2));
+  EXPECT_TRUE(b2.overlaps(b1));
+
+  auto u = b1.computeVertices();
+  auto v = b2.computeVertices();
+  EXPECT_NEAR(1, b1.getExtents().x(), 1e-12);
+  EXPECT_NEAR(1, b1.getExtents().y(), 1e-12);
+  EXPECT_NEAR(1, b1.getExtents().z(), 1e-12);
+  EXPECT_NEAR(-0.5, b1.getPose().translation().x(), 1e-12);
+  EXPECT_NEAR(-0.5, b1.getPose().translation().y(), 1e-12);
+  EXPECT_NEAR(-0.5, b1.getPose().translation().z(), 1e-12);
+  EXPECT_TRUE(b1.getPose().linear().isApprox(Eigen::Matrix3d::Identity(), 1e-12));
+}
+
+TEST(MergeBoundingBoxes, OBBContains2)
+{
+  auto pose = Eigen::Isometry3d::Identity();
+
+  pose.translation() = -0.5 * Eigen::Vector3d::Ones();
+  bodies::OBB b1(pose, Eigen::Vector3d(1, 1, 1));
+  pose.translation() = -0.6 * Eigen::Vector3d::Ones();
+  pose.linear() = Eigen::AngleAxisd(M_PI_2, Eigen::Vector3d(1, 1, 1).normalized()).matrix();
+  bodies::OBB b2(pose, Eigen::Vector3d(0.1, 0.1, 0.1));
+
+  EXPECT_TRUE(b1.contains(b2));
+  EXPECT_FALSE(b2.contains(b1));
+  EXPECT_TRUE(b1.overlaps(b2));
+  EXPECT_TRUE(b2.overlaps(b1));
+
+  // b1 contains whole b2, so the extended b2 should be equal to the original b1
+  b2.extendApprox(b1);
+
+  EXPECT_TRUE(b1.overlaps(b2));
+  EXPECT_TRUE(b2.overlaps(b1));
+
+  EXPECT_NEAR(1, b2.getExtents().x(), 1e-12);
+  EXPECT_NEAR(1, b2.getExtents().y(), 1e-12);
+  EXPECT_NEAR(1, b2.getExtents().z(), 1e-12);
+  EXPECT_NEAR(-0.5, b2.getPose().translation().x(), 1e-12);
+  EXPECT_NEAR(-0.5, b2.getPose().translation().y(), 1e-12);
+  EXPECT_NEAR(-0.5, b2.getPose().translation().z(), 1e-12);
+  EXPECT_TRUE(b2.getPose().linear().isApprox(Eigen::Matrix3d::Identity(), 1e-12));
+}
+
 TEST(MergeBoundingBoxes, OBBApprox1)
 {
   std::vector<bodies::OBB> boxes;
@@ -538,16 +626,31 @@ TEST(MergeBoundingBoxes, OBBApprox1)
   boxes.emplace_back(pose, Eigen::Vector3d(1, 1, 1));
 
   bodies::OBB bbox;
+  // check that the empty constructor constructs a valid empty OBB
+  EXPECT_EQ(0.0, bbox.getPose().translation().x());
+  EXPECT_EQ(0.0, bbox.getPose().translation().y());
+  EXPECT_EQ(0.0, bbox.getPose().translation().z());
+  EXPECT_EQ(0.0, bbox.getExtents().x());
+  EXPECT_EQ(0.0, bbox.getExtents().y());
+  EXPECT_EQ(0.0, bbox.getExtents().z());
+  EXPECT_TRUE(bbox.getPose().rotation().isApprox(Eigen::Matrix3d::Identity()));
+
   bodies::mergeBoundingBoxesApprox(boxes, bbox);
 
-  // the resulting bounding box is not tight, so we only do some sanity checks
+  // the resulting bounding box might not be tight, so we only do some sanity checks
 
-  EXPECT_GE(4.0, bbox.getExtents().x());
-  EXPECT_GE(4.0, bbox.getExtents().y());
-  EXPECT_GE(4.0, bbox.getExtents().z());
+  EXPECT_GE(2.1, bbox.getExtents().x());
+  EXPECT_GE(2.1, bbox.getExtents().y());
+  EXPECT_GE(2.1, bbox.getExtents().z());
+  EXPECT_GE(0.1, bbox.getPose().translation().x());
+  EXPECT_GE(0.1, bbox.getPose().translation().y());
+  EXPECT_GE(0.1, bbox.getPose().translation().z());
   EXPECT_LE(2.0, bbox.getExtents().x());
   EXPECT_LE(2.0, bbox.getExtents().y());
   EXPECT_LE(2.0, bbox.getExtents().z());
+  EXPECT_LE(-0.1, bbox.getPose().translation().x());
+  EXPECT_LE(-0.1, bbox.getPose().translation().y());
+  EXPECT_LE(-0.1, bbox.getPose().translation().z());
 
   EXPECT_TRUE(bbox.contains(boxes[0].getPose().translation()));
   EXPECT_TRUE(bbox.contains(boxes[1].getPose().translation()));
