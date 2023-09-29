@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(geometric_shapes)
 
-add_compile_options(-std=c++11)
-
 # Set compile options
 set(PROJECT_COMPILE_OPTIONS
   -Wall
