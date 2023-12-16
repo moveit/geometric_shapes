@@ -54,9 +54,9 @@ jobs:
         uses: pat-s/always-upload-cache@v2.1.5
         with:
           path: ${{ env.BASEDIR }}/upstream_ws
-          key: upstream_ws-${{ env.CACHE_PREFIX }}-${{ hashFiles('geometric_shapes.repos') }}-${{ github.run_id }}
+          key: upstream_ws-${{ env.CACHE_PREFIX }}-${{ github.run_id }}
           restore-keys: |
-            upstream_ws-${{ env.CACHE_PREFIX }}-${{ hashFiles('geometric_shapes.repos') }}
+            upstream_ws-${{ env.CACHE_PREFIX }}
       # The target directory cache doesn't include the source directory because
       # that comes from the checkout.  See "prepare target_ws for cache" task below
       - name: cache target_ws
