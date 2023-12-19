@@ -451,7 +451,7 @@ void Cone::print(std::ostream& out) const
 
 void Box::print(std::ostream& out) const
 {
-  out << "Box[x=length=" << size[0] << ", y=width=" << size[1] << "z=height=" << size[2] << "]" << std::endl;
+  out << "Box[x=length=" << size[0] << ", y=width=" << size[1] << ", z=height=" << size[2] << "]" << std::endl;
 }
 
 void Mesh::print(std::ostream& out) const
