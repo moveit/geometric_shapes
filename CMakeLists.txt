@@ -30,21 +30,20 @@ endif()
 # find *absolute* paths to ASSIMP_LIBRARIES
 # Both, pkg-config and assimp's cmake-config don't provide an absolute library path.
 # For, pkg-config the path is in ASSIMP_PC_LIBRARY_DIRS, for cmake in ASSIMP_LIBRARY_DIRS.
-find_library(assimp_ABS_LIBRARIES NAMES ${assimp_LIBRARIES} assimp HINTS ${assimp_LIBRARY_DIRS} ${assimp_PC_LIBRARY_DIRS})
-set(assimp_LIBRARIES "${assimp_ABS_LIBRARIES}")
 
+find_package(assimp)
 # These need to be in this order to find header files
-find_package(eigen3_cmake_module REQUIRED)
 find_package(Eigen3 REQUIRED)
 
 find_package(ament_cmake REQUIRED)
 find_package(assimp REQUIRED)
+find_package(Boost CONFIG REQUIRED)
 find_package(console_bridge REQUIRED)
 find_package(console_bridge_vendor REQUIRED)
 find_package(eigen_stl_containers REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(OCTOMAP REQUIRED)
-find_package(QHULL REQUIRED)
+find_package(Qhull REQUIRED)
 find_package(random_numbers REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(resource_retriever REQUIRED)
@@ -53,7 +52,6 @@ find_package(visualization_msgs REQUIRED)
 include(ConfigExtras)
 
 set(THIS_PACKAGE_EXPORT_DEPENDS
-  eigen3_cmake_module
   Eigen3
   Boost
   console_bridge
@@ -66,6 +64,8 @@ set(THIS_PACKAGE_EXPORT_DEPENDS
   resource_retriever
   shape_msgs
   visualization_msgs
+  assimp
+  Qhull
 )
 
 # Set VERSION from package.xml
@@ -85,14 +85,20 @@ add_library(${PROJECT_NAME} SHARED
 )
 set_target_properties(${PROJECT_NAME} PROPERTIES VERSION ${${PROJECT_NAME}_VERSION} WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 target_compile_options(${PROJECT_NAME} PRIVATE ${PROJECT_COMPILE_OPTIONS})
-ament_target_dependencies(${PROJECT_NAME}
-  ${THIS_PACKAGE_EXPORT_DEPENDS}
+target_link_libraries(${PROJECT_NAME} PUBLIC
+    Eigen3::Eigen
+    Boost::boost
+    Boost::filesystem
+    ${shape_msgs_TARGETS}
+    ${visualization_msgs_TARGETS}
+    resource_retriever::resource_retriever
+    ${random_numbers_LIBRARIES}
+    console_bridge::console_bridge
+    assimp
+    Qhull::qhull_r
 )
-ament_target_dependencies(${PROJECT_NAME} SYSTEM
-  # We don't export these dependencies because their cmake is broken
-  assimp
-  QHULL
-)
+
+target_include_directories(${PROJECT_NAME} PUBLIC ${eigen_stl_containers_INCLUDE_DIRS})
 
 if(BUILD_TESTING)
   find_package(ament_cmake_gtest REQUIRED)
