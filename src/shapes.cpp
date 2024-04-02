@@ -400,23 +400,15 @@ void Mesh::scaleAndPadd(double scaleX, double scaleY, double scaleZ, double padd
     double dy = vertices[i3 + 1] - sy;
     double dz = vertices[i3 + 2] - sz;
 
-    // length of vector
-    double norm = sqrt(dx * dx + dy * dy + dz * dz);
-    if (norm > 1e-6)
-    {
-      vertices[i3] = sx + dx * (scaleX + paddX / norm);
-      vertices[i3 + 1] = sy + dy * (scaleY + paddY / norm);
-      vertices[i3 + 2] = sz + dz * (scaleZ + paddZ / norm);
-    }
-    else
-    {
-      double ndx = ((dx > 0) ? dx + paddX : dx - paddX);
-      double ndy = ((dy > 0) ? dy + paddY : dy - paddY);
-      double ndz = ((dz > 0) ? dz + paddZ : dz - paddZ);
-      vertices[i3] = sx + ndx;
-      vertices[i3 + 1] = sy + ndy;
-      vertices[i3 + 2] = sz + ndz;
-    }
+    // Scaled coordinate
+    double scaledX = sx + dx * scaleX;
+    double scaledY = sy + dy * scaleY;
+    double scaledZ = sz + dz * scaleZ;
+
+    // Padding in each direction
+    vertices[i3] = scaledX + vertex_normals[i3] * paddX;
+    vertices[i3+1] = scaledY + vertex_normals[i3+1] * paddY;
+    vertices[i3+2] = scaledZ + vertex_normals[i3+2] * paddZ;
   }
 }
 
