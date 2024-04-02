@@ -118,7 +118,7 @@ Mesh* createMeshFromVertices(const EigenSTL::vector_Vector3d& vertices, const st
 
   std::copy(triangles.begin(), triangles.end(), mesh->triangles);
   mesh->computeTriangleNormals();
-  mesh->computeVertexNormals();
+  mesh->computeWeightedVertexNormals();
 
   return mesh;
 }
@@ -194,7 +194,7 @@ Mesh* createMeshFromVertices(const EigenSTL::vector_Vector3d& source)
 
   std::copy(triangles.begin(), triangles.end(), mesh->triangles);
   mesh->computeTriangleNormals();
-  mesh->computeVertexNormals();
+  mesh->computeWeightedVertexNormals();
 
   return mesh;
 }
@@ -414,7 +414,7 @@ Mesh* createMeshFromShape(const Box& box)
                                       3, 4, 5, 5, 0, 3, 0, 5, 7, 7, 1, 0, 7, 5, 4, 4, 6, 7 };
   memcpy(result->triangles, tri, sizeof(unsigned int) * 36);
   result->computeTriangleNormals();
-  result->computeVertexNormals();
+  result->computeWeightedVertexNormals();
   return result;
 }
 
