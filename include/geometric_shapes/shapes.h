@@ -331,14 +331,11 @@ public:
   /** \brief Compute the normals of each triangle from its vertices via cross product. */
   void computeTriangleNormals();
 
-  /** \brief Compute vertex normals by averaging from adjacent triangle normals.
+  /** \brief Compute vertex normals by averaging from adjacent triangle normals, weighted using magnitude of
+   * angles formed by adjacent triangles at the vertex.
 
      Calls computeTriangleNormals() if needed. */
   void computeVertexNormals();
-
-  /** \brief Compute vertex normals by averaging from adjacent triangle normals, weighted using magnitude of
-   * angles formed by adjacent triangles at the vertex. Provides a more accurate result than computeVertexNormals() */
-  void computeWeightedVertexNormals();
 
   /** \brief Merge vertices that are very close to each other, up to a threshold*/
   void mergeVertices(double threshold);

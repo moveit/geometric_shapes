@@ -521,47 +521,6 @@ void Mesh::computeVertexNormals()
     computeTriangleNormals();
   if (vertex_count && !vertex_normals)
     vertex_normals = new double[vertex_count * 3];
-  EigenSTL::vector_Vector3d avg_normals(vertex_count, Eigen::Vector3d(0, 0, 0));
-
-  for (unsigned int tIdx = 0; tIdx < triangle_count; ++tIdx)
-  {
-    unsigned int tIdx3 = 3 * tIdx;
-    unsigned int tIdx3_1 = tIdx3 + 1;
-    unsigned int tIdx3_2 = tIdx3 + 2;
-
-    unsigned int v1 = triangles[tIdx3];
-    unsigned int v2 = triangles[tIdx3_1];
-    unsigned int v3 = triangles[tIdx3_2];
-
-    avg_normals[v1][0] += triangle_normals[tIdx3];
-    avg_normals[v1][1] += triangle_normals[tIdx3_1];
-    avg_normals[v1][2] += triangle_normals[tIdx3_2];
-
-    avg_normals[v2][0] += triangle_normals[tIdx3];
-    avg_normals[v2][1] += triangle_normals[tIdx3_1];
-    avg_normals[v2][2] += triangle_normals[tIdx3_2];
-
-    avg_normals[v3][0] += triangle_normals[tIdx3];
-    avg_normals[v3][1] += triangle_normals[tIdx3_1];
-    avg_normals[v3][2] += triangle_normals[tIdx3_2];
-  }
-  for (std::size_t i = 0; i < avg_normals.size(); ++i)
-  {
-    if (avg_normals[i].squaredNorm() > 0.0)
-      avg_normals[i].normalize();
-    unsigned int i3 = i * 3;
-    vertex_normals[i3] = avg_normals[i][0];
-    vertex_normals[i3 + 1] = avg_normals[i][1];
-    vertex_normals[i3 + 2] = avg_normals[i][2];
-  }
-}
-
-void Mesh::computeWeightedVertexNormals()
-{
-  if (!triangle_normals)
-    computeTriangleNormals();
-  if (vertex_count && !vertex_normals)
-    vertex_normals = new double[vertex_count * 3];
   Eigen::Map<Eigen::Matrix<double, 3, Eigen::Dynamic>> mapped_normals(vertex_normals, 3, vertex_count);
   mapped_normals.setZero();
 
@@ -681,7 +640,7 @@ void Mesh::mergeVertices(double threshold)
   if (triangle_normals)
     computeTriangleNormals();
   if (vertex_normals)
-    computeWeightedVertexNormals();
+    computeVertexNormals();
 }
 
 } /* namespace shapes */

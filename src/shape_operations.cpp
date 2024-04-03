@@ -535,7 +535,7 @@ Shape* constructShapeFromText(std::istream& in)
           in >> m->triangles[i3] >> m->triangles[i3 + 1] >> m->triangles[i3 + 2];
         }
         m->computeTriangleNormals();
-        m->computeWeightedVertexNormals();
+        m->computeVertexNormals();
       }
       else
         CONSOLE_BRIDGE_logError("Unknown shape type: '%s'", type.c_str());
