@@ -562,7 +562,8 @@ void Mesh::computeWeightedVertexNormals()
     computeTriangleNormals();
   if (vertex_count && !vertex_normals)
     vertex_normals = new double[vertex_count * 3];
-  EigenSTL::vector_Vector3d avg_normals(vertex_count, Eigen::Vector3d(0, 0, 0));
+  Eigen::Map<Eigen::Matrix<double, 3, Eigen::Dynamic>> mapped_normals(vertex_normals, 3, vertex_count);
+  mapped_normals.setZero();
 
   for (unsigned int tIdx = 0; tIdx < triangle_count; ++tIdx)
   {
@@ -575,48 +576,49 @@ void Mesh::computeWeightedVertexNormals()
     unsigned int v3 = triangles[tIdx3_2];
 
     // Get angles for each vertex at this triangle
-    Eigen::Vector3d p1{ vertices[3 * v1], vertices[3 * v1 + 1], vertices[3 * v1 + 2] };
-    Eigen::Vector3d p2{ vertices[3 * v2], vertices[3 * v2 + 1], vertices[3 * v2 + 2] };
-    Eigen::Vector3d p3{ vertices[3 * v3], vertices[3 * v3 + 1], vertices[3 * v3 + 2] };
+    Eigen::Map<Eigen::Vector3d> p1{ vertices + 3 * v1, 3 };
+    Eigen::Map<Eigen::Vector3d> p2{ vertices + 3 * v2, 3 };
+    Eigen::Map<Eigen::Vector3d> p3{ vertices + 3 * v3, 3 };
 
-    {
-      // Use re-arranged dot product equation to calculate angle between two vectors
-      auto angleBetweenVectors = [](const Eigen::Vector3d& v1, const Eigen::Vector3d& v2) -> double {
-        return std::acos(v1.dot(v2) / (v1.norm() * v2.norm()));
-      };
+    // Use re-arranged dot product equation to calculate angle between two vectors
+    auto angleBetweenVectors = [](const Eigen::Vector3d& vec1, const Eigen::Vector3d& vec2) -> double {
+      double vec1_norm = vec1.norm();
+      double vec2_norm = vec2.norm();
 
-      // Use law of cosines to compute angles
-      auto ang1 = angleBetweenVectors(p2 - p1, p3 - p1);
-      auto ang2 = angleBetweenVectors(p1 - p2, p3 - p2);
-      auto ang3 = angleBetweenVectors(p1 - p3, p2 - p3);
+      // Handle the case where either vector has zero length, to prevent division-by-zero
+      if (vec1_norm == 0.0 || vec2_norm == 0.0)
+        return 0.0;
 
-      // Weight normal with angle
-      avg_normals[v1][0] += triangle_normals[tIdx3] * ang1;
-      avg_normals[v1][1] += triangle_normals[tIdx3_1] * ang1;
-      avg_normals[v1][2] += triangle_normals[tIdx3_2] * ang1;
+      return std::acos(vec1.dot(vec2) / (vec1_norm * vec2_norm));
+    };
 
-      avg_normals[v2][0] += triangle_normals[tIdx3] * ang2;
-      avg_normals[v2][1] += triangle_normals[tIdx3_1] * ang2;
-      avg_normals[v2][2] += triangle_normals[tIdx3_2] * ang2;
+    // Use law of cosines to compute angles
+    auto ang1 = angleBetweenVectors(p2 - p1, p3 - p1);
+    auto ang2 = angleBetweenVectors(p1 - p2, p3 - p2);
+    auto ang3 = angleBetweenVectors(p1 - p3, p2 - p3);
 
-      avg_normals[v3][0] += triangle_normals[tIdx3] * ang3;
-      avg_normals[v3][1] += triangle_normals[tIdx3_1] * ang3;
-      avg_normals[v3][2] += triangle_normals[tIdx3_2] * ang3;
-    }
+    // Weight normal with angle
+    mapped_normals.col(v1)[0] += triangle_normals[tIdx3] * ang1;
+    mapped_normals.col(v1)[1] += triangle_normals[tIdx3_1] * ang1;
+    mapped_normals.col(v1)[2] += triangle_normals[tIdx3_2] * ang1;
+
+    mapped_normals.col(v2)[0] += triangle_normals[tIdx3] * ang2;
+    mapped_normals.col(v2)[1] += triangle_normals[tIdx3_1] * ang2;
+    mapped_normals.col(v2)[2] += triangle_normals[tIdx3_2] * ang2;
+
+    mapped_normals.col(v3)[0] += triangle_normals[tIdx3] * ang3;
+    mapped_normals.col(v3)[1] += triangle_normals[tIdx3_1] * ang3;
+    mapped_normals.col(v3)[2] += triangle_normals[tIdx3_2] * ang3;
   }
 
-  for (std::size_t i = 0; i < avg_normals.size(); ++i)
+  // Normalize each column of the matrix
+  for (int i = 0; i < mapped_normals.cols(); ++i)
   {
-    auto& avg_normal = avg_normals[i];
-    if (avg_normal.squaredNorm() != 0.0)
+    auto mapped_normal = mapped_normals.col(i);
+    if (mapped_normal.squaredNorm() != 0.0)
     {
-      avg_normal.normalize();
+      mapped_normal.normalize();
     }
-
-    unsigned int i3 = i * 3;
-    vertex_normals[i3] = avg_normal[0];
-    vertex_normals[i3 + 1] = avg_normal[1];
-    vertex_normals[i3 + 2] = avg_normal[2];
   }
 }
 
