@@ -407,8 +407,8 @@ void Mesh::scaleAndPadd(double scaleX, double scaleY, double scaleZ, double padd
 
     // Padding in each direction
     vertices[i3] = scaledX + vertex_normals[i3] * paddX;
-    vertices[i3+1] = scaledY + vertex_normals[i3+1] * paddY;
-    vertices[i3+2] = scaledZ + vertex_normals[i3+2] * paddZ;
+    vertices[i3 + 1] = scaledY + vertex_normals[i3 + 1] * paddY;
+    vertices[i3 + 2] = scaledZ + vertex_normals[i3 + 2] * paddZ;
   }
 }
 
