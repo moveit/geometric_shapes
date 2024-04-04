@@ -557,17 +557,10 @@ void Mesh::computeVertexNormals()
     auto ang3 = angleBetweenVectors(p1 - p3, p2 - p3);
 
     // Weight normal with angle
-    mapped_normals.col(v1)[0] += triangle_normals[tIdx3] * ang1;
-    mapped_normals.col(v1)[1] += triangle_normals[tIdx3_1] * ang1;
-    mapped_normals.col(v1)[2] += triangle_normals[tIdx3_2] * ang1;
-
-    mapped_normals.col(v2)[0] += triangle_normals[tIdx3] * ang2;
-    mapped_normals.col(v2)[1] += triangle_normals[tIdx3_1] * ang2;
-    mapped_normals.col(v2)[2] += triangle_normals[tIdx3_2] * ang2;
-
-    mapped_normals.col(v3)[0] += triangle_normals[tIdx3] * ang3;
-    mapped_normals.col(v3)[1] += triangle_normals[tIdx3_1] * ang3;
-    mapped_normals.col(v3)[2] += triangle_normals[tIdx3_2] * ang3;
+    Eigen::Map<Eigen::Vector3d> triangle_normal{ triangle_normals + tIdx3, 3 };
+    mapped_normals.col(v1) += triangle_normal * ang1;
+    mapped_normals.col(v2) += triangle_normal * ang2;
+    mapped_normals.col(v3) += triangle_normal * ang3;
   }
 
   // Normalize each column of the matrix
