@@ -50,16 +50,8 @@ find_package(rclcpp REQUIRED)
 find_package(resource_retriever REQUIRED)
 find_package(shape_msgs REQUIRED)
 find_package(visualization_msgs REQUIRED)
+find_package(fcl REQUIRED)
 include(ConfigExtras)
-
-# pkg_check_modules(LIBFCL_PC REQUIRED fcl)
-# # find *absolute* paths to LIBFCL_* paths
-# find_path(LIBFCL_INCLUDE_DIRS fcl/config.h HINTS ${LIBFCL_PC_INCLUDE_DIR} ${LIBFCL_PC_INCLUDE_DIRS})
-# set(LIBFCL_LIBRARIES)
-# foreach(_lib ${LIBFCL_PC_LIBRARIES})
-#   find_library(_lib_${_lib} ${_lib} HINTS ${LIBFCL_PC_LIBRARY_DIRS})
-#   list(APPEND LIBFCL_LIBRARIES ${_lib_${_lib}})
-# endforeach()
 
 set(THIS_PACKAGE_EXPORT_DEPENDS
   eigen3_cmake_module
@@ -75,6 +67,7 @@ set(THIS_PACKAGE_EXPORT_DEPENDS
   resource_retriever
   shape_msgs
   visualization_msgs
+  fcl
 )
 
 # Set VERSION from package.xml
@@ -87,6 +80,7 @@ add_library(${PROJECT_NAME} SHARED
   src/bodies.cpp
   src/body_operations.cpp
   src/mesh_operations.cpp
+  src/obb.cpp
   src/shape_extents.cpp
   src/shape_operations.cpp
   src/shape_to_marker.cpp
@@ -94,6 +88,7 @@ add_library(${PROJECT_NAME} SHARED
 )
 set_target_properties(${PROJECT_NAME} PROPERTIES VERSION ${${PROJECT_NAME}_VERSION} WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 target_compile_options(${PROJECT_NAME} PRIVATE ${PROJECT_COMPILE_OPTIONS})
+target_link_libraries(${PROJECT_NAME} fcl)
 ament_target_dependencies(${PROJECT_NAME}
   ${THIS_PACKAGE_EXPORT_DEPENDS}
 )
