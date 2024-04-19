@@ -241,8 +241,8 @@ public:
       pose. Scaling and padding are accounted for. */
   virtual void computeBoundingBox(AABB& bbox) const = 0;
 
-   /** \brief Compute the oriented bounding box for the body, in its current
-      pose. Scaling and padding are accounted for. */
+  /** \brief Compute the oriented bounding box for the body, in its current
+     pose. Scaling and padding are accounted for. */
   virtual void computeBoundingBox(OBB& bbox) const = 0;
 
   /** \brief Get a clone of this body, but one that is located at the pose \e pose */
