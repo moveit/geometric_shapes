@@ -1,30 +1,36 @@
-// Copyright 2008 Willow Garage, Inc.
-//
-// Redistribution and use in source and binary forms, with or without
-// modification, are permitted provided that the following conditions are met:
-//
-//    * Redistributions of source code must retain the above copyright
-//      notice, this list of conditions and the following disclaimer.
-//
-//    * Redistributions in binary form must reproduce the above copyright
-//      notice, this list of conditions and the following disclaimer in the
-//      documentation and/or other materials provided with the distribution.
-//
-//    * Neither the name of the Willow Garage, Inc. nor the names of its
-//      contributors may be used to endorse or promote products derived from
-//      this software without specific prior written permission.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
-// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-// POSSIBILITY OF SUCH DAMAGE.
+/*********************************************************************
+ * Software License Agreement (BSD License)
+ *
+ *  Copyright (c) 2008, Willow Garage, Inc.
+ *  All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without
+ *  modification, are permitted provided that the following conditions
+ *  are met:
+ *
+ *   * Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ *   * Redistributions in binary form must reproduce the above
+ *     copyright notice, this list of conditions and the following
+ *     disclaimer in the documentation and/or other materials provided
+ *     with the distribution.
+ *   * Neither the name of the Willow Garage nor the names of its
+ *     contributors may be used to endorse or promote products derived
+ *     from this software without specific prior written permission.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ *  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ *  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ *  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ *  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ *  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ *  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ *  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ *  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ *  POSSIBILITY OF SUCH DAMAGE.
+ *********************************************************************/
 
 /* Author: Ioan Sucan */
 
@@ -204,6 +210,15 @@ void bodies::Sphere::computeBoundingBox(bodies::AABB& bbox) const
   transform.translation() = getPose().translation();
 
   bbox.extendWithTransformedBox(transform, Eigen::Vector3d(2 * radiusU_, 2 * radiusU_, 2 * radiusU_));
+}
+
+void bodies::Sphere::computeBoundingBox(bodies::OBB& bbox) const
+{
+  // it's a sphere, so we do not rotate the bounding box
+  Eigen::Isometry3d transform = Eigen::Isometry3d::Identity();
+  transform.translation() = getPose().translation();
+
+  bbox.setPoseAndExtents(transform, 2 * Eigen::Vector3d(radiusU_, radiusU_, radiusU_));
 }
 
 bool bodies::Sphere::samplePointInside(random_numbers::RandomNumberGenerator& rng, unsigned int max_attempts,
@@ -425,6 +440,11 @@ void bodies::Cylinder::computeBoundingBox(bodies::AABB& bbox) const
   bbox.extend(pa + e);
   bbox.extend(pb - e);
   bbox.extend(pb + e);
+}
+
+void bodies::Cylinder::computeBoundingBox(bodies::OBB& bbox) const
+{
+  bbox.setPoseAndExtents(getPose(), 2 * Eigen::Vector3d(radiusU_, radiusU_, length2_));
 }
 
 bool bodies::Cylinder::intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vector3d& dir,
@@ -661,6 +681,11 @@ void bodies::Box::computeBoundingBox(bodies::AABB& bbox) const
   bbox.setEmpty();
 
   bbox.extendWithTransformedBox(getPose(), 2 * Eigen::Vector3d(length2_, width2_, height2_));
+}
+
+void bodies::Box::computeBoundingBox(bodies::OBB& bbox) const
+{
+  bbox.setPoseAndExtents(getPose(), 2 * Eigen::Vector3d(length2_, width2_, height2_));
 }
 
 bool bodies::Box::intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vector3d& dir,
@@ -1152,6 +1177,11 @@ void bodies::ConvexMesh::computeBoundingBox(bodies::AABB& bbox) const
 {
   bbox.setEmpty();
 
+  bounding_box_.computeBoundingBox(bbox);
+}
+
+void bodies::ConvexMesh::computeBoundingBox(bodies::OBB& bbox) const
+{
   bounding_box_.computeBoundingBox(bbox);
 }
 

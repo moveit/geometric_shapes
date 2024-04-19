@@ -42,29 +42,16 @@ public:
 
 OBB::OBB()
 {
-  obb_.reset(new OBBPrivate);
-  // Initialize the OBB to position 0, with 0 extents and identity rotation
-#if FCL_MAJOR_VERSION > 0 || FCL_MINOR_VERSION > 5
-  // FCL 0.6+ does not zero-initialize the OBB.
-  obb_->extent.setZero();
-  obb_->To.setZero();
-  obb_->axis.setIdentity();
-#else
-  // FCL 0.5 zero-initializes the OBB, so we just put the identity into orientation.
-  obb_->axis[0][0] = 1.0;
-  obb_->axis[1][1] = 1.0;
-  obb_->axis[2][2] = 1.0;
-#endif
+  this->obb_.reset(new OBBPrivate);
 }
 
-OBB::OBB(const OBB& other)
+OBB::OBB(const OBB& other) : OBB()
 {
-  obb_.reset(new OBBPrivate(*other.obb_));
+  *obb_ = *other.obb_;
 }
 
-OBB::OBB(const Eigen::Isometry3d& pose, const Eigen::Vector3d& extents)
+OBB::OBB(const Eigen::Isometry3d& pose, const Eigen::Vector3d& extents) : OBB()
 {
-  obb_.reset(new OBBPrivate);
   setPoseAndExtents(pose, extents);
 }
 
@@ -107,12 +94,20 @@ void OBB::getPose(Eigen::Isometry3d& pose) const
 {
   pose = Eigen::Isometry3d::Identity();
   pose.translation() = fromFcl(obb_->To);
+  // If all axes are zero, we report the rotation as identity
+  // This happens if OBB is default-constructed
 #if FCL_MAJOR_VERSION == 0 && FCL_MINOR_VERSION == 5
-  pose.linear().col(0) = fromFcl(obb_->axis[0]);
-  pose.linear().col(1) = fromFcl(obb_->axis[1]);
-  pose.linear().col(2) = fromFcl(obb_->axis[2]);
+  if (!obb_->axis[0].isZero() && !obb_->axis[3].isZero() && !obb_->axis[2].isZero())
+  {
+    pose.linear().col(0) = fromFcl(obb_->axis[0]);
+    pose.linear().col(1) = fromFcl(obb_->axis[1]);
+    pose.linear().col(2) = fromFcl(obb_->axis[2]);
+  }
 #else
-  pose.linear() = obb_->axis;
+  if (!obb_->axis.isApprox(fcl::Matrix3d::Zero()))
+  {
+    pose.linear() = obb_->axis;
+  }
 #endif
 }
 
@@ -137,68 +132,18 @@ void OBB::toAABB(AABB& aabb) const
 
 OBB* OBB::extendApprox(const OBB& box)
 {
-  if (this->getExtents() == Eigen::Vector3d::Zero())
-  {
-    *obb_ = *box.obb_;
-    return this;
-  }
-
-  if (this->contains(box))
-    return this;
-
-  if (box.contains(*this))
-  {
-    *obb_ = *box.obb_;
-    return this;
-  }
-
   *this->obb_ += *box.obb_;
   return this;
 }
 
-bool OBB::contains(const Eigen::Vector3d& point) const
+bool OBB::contains(const Eigen::Vector3d& point)
 {
   return obb_->contain(toFcl(point));
 }
 
-bool OBB::overlaps(const bodies::OBB& other) const
+bool OBB::overlaps(const bodies::OBB& other)
 {
   return obb_->overlap(*other.obb_);
-}
-
-EigenSTL::vector_Vector3d OBB::computeVertices() const
-{
-  const Eigen::Vector3d e = getExtents() / 2;  // do not use auto type, Eigen would be inefficient
-  // clang-format off
-  EigenSTL::vector_Vector3d result = {
-    { -e[0], -e[1], -e[2] },
-    { -e[0], -e[1],  e[2] },
-    { -e[0],  e[1], -e[2] },
-    { -e[0],  e[1],  e[2] },
-    {  e[0], -e[1], -e[2] },
-    {  e[0], -e[1],  e[2] },
-    {  e[0],  e[1], -e[2] },
-    {  e[0],  e[1],  e[2] },
-  };
-  // clang-format on
-
-  const auto pose = getPose();
-  for (auto& v : result)
-  {
-    v = pose * v;
-  }
-
-  return result;
-}
-
-bool OBB::contains(const OBB& obb) const
-{
-  for (const auto& v : obb.computeVertices())
-  {
-    if (!contains(v))
-      return false;
-  }
-  return true;
 }
 
 OBB::~OBB() = default;
