@@ -52,14 +52,14 @@ find_package(shape_msgs REQUIRED)
 find_package(visualization_msgs REQUIRED)
 include(ConfigExtras)
 
-pkg_check_modules(LIBFCL_PC REQUIRED fcl)
-# find *absolute* paths to LIBFCL_* paths
-find_path(LIBFCL_INCLUDE_DIRS fcl/config.h HINTS ${LIBFCL_PC_INCLUDE_DIR} ${LIBFCL_PC_INCLUDE_DIRS})
-set(LIBFCL_LIBRARIES)
-foreach(_lib ${LIBFCL_PC_LIBRARIES})
-  find_library(_lib_${_lib} ${_lib} HINTS ${LIBFCL_PC_LIBRARY_DIRS})
-  list(APPEND LIBFCL_LIBRARIES ${_lib_${_lib}})
-endforeach()
+# pkg_check_modules(LIBFCL_PC REQUIRED fcl)
+# # find *absolute* paths to LIBFCL_* paths
+# find_path(LIBFCL_INCLUDE_DIRS fcl/config.h HINTS ${LIBFCL_PC_INCLUDE_DIR} ${LIBFCL_PC_INCLUDE_DIRS})
+# set(LIBFCL_LIBRARIES)
+# foreach(_lib ${LIBFCL_PC_LIBRARIES})
+#   find_library(_lib_${_lib} ${_lib} HINTS ${LIBFCL_PC_LIBRARY_DIRS})
+#   list(APPEND LIBFCL_LIBRARIES ${_lib_${_lib}})
+# endforeach()
 
 set(THIS_PACKAGE_EXPORT_DEPENDS
   eigen3_cmake_module

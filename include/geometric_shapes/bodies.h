@@ -33,6 +33,7 @@
 
 #define _USE_MATH_DEFINES
 #include "geometric_shapes/aabb.h"
+#include "geometric_shapes/obb.h"
 #include "geometric_shapes/shapes.h"
 #include <eigen_stl_containers/eigen_stl_containers.h>
 #include <random_numbers/random_numbers.h>
