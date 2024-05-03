@@ -31,13 +31,10 @@
 #include <geometric_shapes/aabb.h>
 
 #include <fcl/config.h>
-#if FCL_MAJOR_VERSION > 0 || FCL_MINOR_VERSION > 5
 #include <fcl/geometry/shape/utility.h>
-#endif
 
 void bodies::AABB::extendWithTransformedBox(const Eigen::Isometry3d& transform, const Eigen::Vector3d& box)
 {
-#if FCL_MAJOR_VERSION == 0 && FCL_MINOR_VERSION == 5
   // Method adapted from FCL src/shape/geometric_shapes_utility.cpp#computeBV<AABB, Box>(...) (BSD-licensed code):
   // https://github.com/flexible-collision-library/fcl/blob/fcl-0.4/src/shape/geometric_shapes_utility.cpp#L292
   // We don't call their code because it would need creating temporary objects, and their method is in floats in FCL 0.5
@@ -53,10 +50,4 @@ void bodies::AABB::extendWithTransformedBox(const Eigen::Isometry3d& transform, 
   const Eigen::Vector3d v_delta(x_range, y_range, z_range);
   extend(t + v_delta);
   extend(t - v_delta);
-#else
-  fcl::AABBd aabb;
-  fcl::computeBV(fcl::Boxd(box), transform, aabb);
-  extend(aabb.min_);
-  extend(aabb.max_);
-#endif
 }
