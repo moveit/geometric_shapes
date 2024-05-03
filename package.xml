@@ -36,14 +36,7 @@
   <depend>visualization_msgs</depend>
 
   <build_depend>assimp-dev</build_depend>
-  <!-- <build_depend>boost</build_depend> -->
-  <!-- <build_depend>eigen</build_depend>
-  <build_depend>eigen_stl_containers</build_depend> -->
-  <!-- <build_depend>libconsole-bridge-dev</build_depend> -->
-  <!--
-  <build_depend condition="$ROS_DISTRO == noetic">fcl</build_depend> -->
-  <!-- <build_depend>libqhull</build_depend>
-  <build_depend>octomap</build_depend> -->
+  <build_depend>eigen</build_depend>
   <build_depend>libfcl-dev</build_depend>
   <build_depend>pkg-config</build_depend>
   <build_depend>libboost-dev</build_depend>
