@@ -2,6 +2,12 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.7.6 (2024-05-07)
+------------------
+* Improve padding of meshes using weighted vertex normals (`#238 <https://github.com/ros-planning/geometric_shapes/issues/238>`_)
+* Drop obsolete C++ standard definition (`#235 <https://github.com/ros-planning/geometric_shapes/issues/235>`_)
+* Contributors: Kenji Brameld (TRACLabs), Michael Görner
+
 0.7.5 (2023-04-12)
 ------------------
 * Limit indefinite growth of OBBs during merging (`#232 <https://github.com/ros-planning/geometric_shapes/issues/232>`_)
