@@ -30,9 +30,6 @@
 
 #include <geometric_shapes/aabb.h>
 
-#include <fcl/config.h>
-#include <fcl/geometry/shape/utility.h>
-
 void bodies::AABB::extendWithTransformedBox(const Eigen::Isometry3d& transform, const Eigen::Vector3d& box)
 {
   // Method adapted from FCL src/shape/geometric_shapes_utility.cpp#computeBV<AABB, Box>(...) (BSD-licensed code):
