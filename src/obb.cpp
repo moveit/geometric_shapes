@@ -48,6 +48,8 @@ void OBB::setPoseAndExtents(const Eigen::Isometry3d& pose, const Eigen::Vector3d
 
   obb_->axis = rotation;
 
+  obb_->To = pose.translation();
+
   obb_->extent = { extents[0] / 2.0, extents[1] / 2.0, extents[2] / 2.0 };
 }
 
