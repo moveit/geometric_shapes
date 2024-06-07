@@ -2,6 +2,18 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+2.2.0 (2024-06-07)
+------------------
+* Jazzy Support (`#241 <https://github.com/moveit/geometric_shapes/issues/241>`_)
+  * Update CI workflows to Rolling, Jazzy, Humble
+  * Fix octomap dependency version to 1.9.7...<1.10.0
+* Fix Box::print (`#237 <https://github.com/moveit/geometric_shapes/issues/237>`_)
+* CI: Fix cache key (`#236 <https://github.com/moveit/geometric_shapes/issues/236>`_)
+* Switch to clang-format-14 (`#228 <https://github.com/moveit/geometric_shapes/issues/228>`_)
+* Add humble testing (`#221 <https://github.com/moveit/geometric_shapes/issues/221>`_)
+* Update black version (`#218 <https://github.com/moveit/geometric_shapes/issues/218>`_)
+* Contributors: Henning Kayser, Matthijs van der Burgh, Stephanie Eng, Vatan Aksoy Tezer, Robert Haschke, Jafar Abdi
+
 2.1.3 (2022-03-08)
 ------------------
 * [jammy] Fix assimp linking and cmake error (`#215 <https://github.com/ros-planning/geometric_shapes/issues/215>`_)
