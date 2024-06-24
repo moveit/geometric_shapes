@@ -28,16 +28,7 @@
   <depend>eigen_stl_containers</depend>
   <depend>console_bridge_vendor</depend>
   <depend>libqhull</depend>
-  <!-- The ros-octomap package version is ABI-incompatible with
-       the liboctomap-dev system dependency of FCL (libfcl-dev)
-       used by MoveIt. Until this conflict is resolved, we are
-       enforcing the use of liboctomap-dev by declaring the
-       libfcl-dev dependency here (lacking a liboctomap-dev target)
-       and by setting a library version filter in the CMakeLists.txt.
-       See https://github.com/moveit/moveit2/issues/2862
-  <depend>octomap</depend>
-   -->
-  <depend>libfcl-dev</depend>
+  <depend>liboctomap-dev</depend>
   <depend>random_numbers</depend>
   <depend>resource_retriever</depend>
   <depend>shape_msgs</depend>
