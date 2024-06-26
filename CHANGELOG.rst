@@ -2,6 +2,11 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+2.2.1 (2024-06-26)
+------------------
+* Use the system version of octomap (`#244 <https://github.com/ros-planning/geometric_shapes/issues/244>`_)
+* Contributors: Chris Lalancette
+
 2.2.0 (2024-06-07)
 ------------------
 * Jazzy Support (`#241 <https://github.com/moveit/geometric_shapes/issues/241>`_)
