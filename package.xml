@@ -2,7 +2,7 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>geometric_shapes</name>
-  <version>2.1.3</version>
+  <version>2.2.1</version>
   <description>This package contains generic definitions of geometric shapes and bodies.</description>
 
   <author email="isucan@google.com">Ioan Sucan</author>
@@ -28,7 +28,7 @@
   <depend>eigen_stl_containers</depend>
   <depend>console_bridge_vendor</depend>
   <depend>libqhull</depend>
-  <depend>octomap</depend>
+  <depend>liboctomap-dev</depend>
   <depend>random_numbers</depend>
   <depend>resource_retriever</depend>
   <depend>shape_msgs</depend>
