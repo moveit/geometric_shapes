@@ -404,7 +404,6 @@ void Mesh::scaleAndPadd(double scaleX, double scaleY, double scaleZ, double padd
     double scaledX = sx + dx * scaleX;
     double scaledY = sy + dy * scaleY;
     double scaledZ = sz + dz * scaleZ;
-
     // Padding in each direction
     vertices[i3] = scaledX + vertex_normals[i3] * paddX;
     vertices[i3 + 1] = scaledY + vertex_normals[i3 + 1] * paddY;
@@ -539,19 +538,11 @@ void Mesh::computeVertexNormals()
     Eigen::Map<Eigen::Vector3d> p2{ vertices + 3 * v2, 3 };
     Eigen::Map<Eigen::Vector3d> p3{ vertices + 3 * v3, 3 };
 
-    // Use re-arranged dot product equation to calculate angle between two vectors
+    // Use eigen to calculate angle between the two vectors
     auto angleBetweenVectors = [](const Eigen::Vector3d& vec1, const Eigen::Vector3d& vec2) -> double {
-      double vec1_norm = vec1.norm();
-      double vec2_norm = vec2.norm();
-
-      // Handle the case where either vector has zero length, to prevent division-by-zero
-      if (vec1_norm == 0.0 || vec2_norm == 0.0)
-        return 0.0;
-
-      return std::acos(vec1.dot(vec2) / (vec1_norm * vec2_norm));
+      Eigen::AngleAxisd a(Eigen::Quaterniond::FromTwoVectors(vec1, vec2));
+      return a.angle();
     };
-
-    // Use law of cosines to compute angles
     auto ang1 = angleBetweenVectors(p2 - p1, p3 - p1);
     auto ang2 = angleBetweenVectors(p1 - p2, p3 - p2);
     auto ang3 = angleBetweenVectors(p1 - p3, p2 - p3);
