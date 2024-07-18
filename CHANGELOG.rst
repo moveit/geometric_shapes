@@ -2,6 +2,11 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.7.7 (2024-07-18)
+------------------
+* Use Eigen to robustly compute the angle between vertex normals (`#246 <https://github.com/ros-planning/geometric_shapes/issues/246>`_)
+* Contributors: Mike Lanighan
+
 0.7.6 (2024-05-07)
 ------------------
 * Improve padding of meshes using weighted vertex normals (`#238 <https://github.com/ros-planning/geometric_shapes/issues/238>`_)
