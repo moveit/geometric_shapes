@@ -270,10 +270,10 @@ TEST(Mesh, ScaleAndPadd)
   EXPECT_DOUBLE_EQ(mesh2->vertices[22], -2.0);
   EXPECT_DOUBLE_EQ(mesh2->vertices[23], 2.0);
 
-  // padding actually means extending each vertices' direction vector by the padding value,
-  // not extending it along each axis by the same amount
+  // for a right-angled corner, the vertex normal vector points away equally from the three sides, and hence
+  // padding is applied equally in x, y and z, such that the total distance the vertex moves is equal to 1.0.
   mesh2->padd(1.0);
-  const double pos = 2.0 * (1 + 1.0 / sqrt(12));
+  const double pos = 2.0 + 1.0 / sqrt(3);
 
   EXPECT_DOUBLE_EQ(mesh2->vertices[0], pos);
   EXPECT_DOUBLE_EQ(mesh2->vertices[1], pos);
@@ -308,7 +308,7 @@ TEST(Mesh, ScaleAndPadd)
   EXPECT_DOUBLE_EQ(mesh2->vertices[23], pos);
 
   mesh2->scaleAndPadd(2.0, 1.0);
-  const double pos2 = pos * (2.0 + 1.0 / sqrt(3 * pos * pos));
+  const double pos2 = pos * 2.0 + 1.0 / sqrt(3);
 
   EXPECT_DOUBLE_EQ(mesh2->vertices[0], pos2);
   EXPECT_DOUBLE_EQ(mesh2->vertices[1], pos2);
@@ -417,10 +417,9 @@ TEST(Mesh, ScaleAndPadd)
   EXPECT_DOUBLE_EQ(mesh2->vertices[23], pos4z);
 
   mesh2->padd(1.0, 2.0, 3.0);
-  const double norm5 = sqrt(pos4x * pos4x + pos4y * pos4y + pos4z * pos4z);
-  const double pos5x = pos4x * (1.0 + 1.0 / norm5);
-  const double pos5y = pos4y * (1.0 + 2.0 / norm5);
-  const double pos5z = pos4z * (1.0 + 3.0 / norm5);
+  const double pos5x = pos4x + (1.0 / sqrt(3));
+  const double pos5y = pos4y + (2.0 / sqrt(3));
+  const double pos5z = pos4z + (3.0 / sqrt(3));
 
   EXPECT_DOUBLE_EQ(mesh2->vertices[0], pos5x);
   EXPECT_DOUBLE_EQ(mesh2->vertices[1], pos5y);

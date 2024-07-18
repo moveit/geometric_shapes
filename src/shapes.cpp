@@ -394,23 +394,14 @@ void Mesh::scaleAndPadd(double scaleX, double scaleY, double scaleZ, double padd
     double dy = vertices[i3 + 1] - sy;
     double dz = vertices[i3 + 2] - sz;
 
-    // length of vector
-    double norm = sqrt(dx * dx + dy * dy + dz * dz);
-    if (norm > 1e-6)
-    {
-      vertices[i3] = sx + dx * (scaleX + paddX / norm);
-      vertices[i3 + 1] = sy + dy * (scaleY + paddY / norm);
-      vertices[i3 + 2] = sz + dz * (scaleZ + paddZ / norm);
-    }
-    else
-    {
-      double ndx = ((dx > 0) ? dx + paddX : dx - paddX);
-      double ndy = ((dy > 0) ? dy + paddY : dy - paddY);
-      double ndz = ((dz > 0) ? dz + paddZ : dz - paddZ);
-      vertices[i3] = sx + ndx;
-      vertices[i3 + 1] = sy + ndy;
-      vertices[i3 + 2] = sz + ndz;
-    }
+    // Scaled coordinate
+    double scaledX = sx + dx * scaleX;
+    double scaledY = sy + dy * scaleY;
+    double scaledZ = sz + dz * scaleZ;
+    // Padding in each direction
+    vertices[i3] = scaledX + vertex_normals[i3] * paddX;
+    vertices[i3 + 1] = scaledY + vertex_normals[i3 + 1] * paddY;
+    vertices[i3 + 2] = scaledZ + vertex_normals[i3 + 2] * paddZ;
   }
 }
 
@@ -523,7 +514,8 @@ void Mesh::computeVertexNormals()
     computeTriangleNormals();
   if (vertex_count && !vertex_normals)
     vertex_normals = new double[vertex_count * 3];
-  EigenSTL::vector_Vector3d avg_normals(vertex_count, Eigen::Vector3d(0, 0, 0));
+  Eigen::Map<Eigen::Matrix<double, 3, Eigen::Dynamic>> mapped_normals(vertex_normals, 3, vertex_count);
+  mapped_normals.setZero();
 
   for (unsigned int tIdx = 0; tIdx < triangle_count; ++tIdx)
   {
@@ -535,26 +527,35 @@ void Mesh::computeVertexNormals()
     unsigned int v2 = triangles[tIdx3_1];
     unsigned int v3 = triangles[tIdx3_2];
 
-    avg_normals[v1][0] += triangle_normals[tIdx3];
-    avg_normals[v1][1] += triangle_normals[tIdx3_1];
-    avg_normals[v1][2] += triangle_normals[tIdx3_2];
+    // Get angles for each vertex at this triangle
+    Eigen::Map<Eigen::Vector3d> p1{ vertices + 3 * v1, 3 };
+    Eigen::Map<Eigen::Vector3d> p2{ vertices + 3 * v2, 3 };
+    Eigen::Map<Eigen::Vector3d> p3{ vertices + 3 * v3, 3 };
 
-    avg_normals[v2][0] += triangle_normals[tIdx3];
-    avg_normals[v2][1] += triangle_normals[tIdx3_1];
-    avg_normals[v2][2] += triangle_normals[tIdx3_2];
+    // Use eigen to calculate angle between the two vectors
+    auto angleBetweenVectors = [](const Eigen::Vector3d& vec1, const Eigen::Vector3d& vec2) -> double {
+      Eigen::AngleAxisd a(Eigen::Quaterniond::FromTwoVectors(vec1, vec2));
+      return a.angle();
+    };
+    auto ang1 = angleBetweenVectors(p2 - p1, p3 - p1);
+    auto ang2 = angleBetweenVectors(p1 - p2, p3 - p2);
+    auto ang3 = angleBetweenVectors(p1 - p3, p2 - p3);
 
-    avg_normals[v3][0] += triangle_normals[tIdx3];
-    avg_normals[v3][1] += triangle_normals[tIdx3_1];
-    avg_normals[v3][2] += triangle_normals[tIdx3_2];
+    // Weight normal with angle
+    Eigen::Map<Eigen::Vector3d> triangle_normal{ triangle_normals + tIdx3, 3 };
+    mapped_normals.col(v1) += triangle_normal * ang1;
+    mapped_normals.col(v2) += triangle_normal * ang2;
+    mapped_normals.col(v3) += triangle_normal * ang3;
   }
-  for (std::size_t i = 0; i < avg_normals.size(); ++i)
+
+  // Normalize each column of the matrix
+  for (int i = 0; i < mapped_normals.cols(); ++i)
   {
-    if (avg_normals[i].squaredNorm() > 0.0)
-      avg_normals[i].normalize();
-    unsigned int i3 = i * 3;
-    vertex_normals[i3] = avg_normals[i][0];
-    vertex_normals[i3 + 1] = avg_normals[i][1];
-    vertex_normals[i3 + 2] = avg_normals[i][2];
+    auto mapped_normal = mapped_normals.col(i);
+    if (mapped_normal.squaredNorm() != 0.0)
+    {
+      mapped_normal.normalize();
+    }
   }
 }
 
