@@ -69,7 +69,6 @@ set(THIS_PACKAGE_EXPORT_DEPENDS
   resource_retriever
   shape_msgs
   visualization_msgs
-  fcl
 )
 
 # Set VERSION from package.xml
