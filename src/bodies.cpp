@@ -206,6 +206,15 @@ void bodies::Sphere::computeBoundingBox(bodies::AABB& bbox) const
   bbox.extendWithTransformedBox(transform, Eigen::Vector3d(2 * radiusU_, 2 * radiusU_, 2 * radiusU_));
 }
 
+void bodies::Sphere::computeBoundingBox(bodies::OBB& bbox) const
+{
+  // it's a sphere, so we do not rotate the bounding box
+  Eigen::Isometry3d transform = Eigen::Isometry3d::Identity();
+  transform.translation() = getPose().translation();
+
+  bbox.setPoseAndExtents(transform, 2 * Eigen::Vector3d(radiusU_, radiusU_, radiusU_));
+}
+
 bool bodies::Sphere::samplePointInside(random_numbers::RandomNumberGenerator& rng, unsigned int max_attempts,
                                        Eigen::Vector3d& result) const
 {
@@ -425,6 +434,11 @@ void bodies::Cylinder::computeBoundingBox(bodies::AABB& bbox) const
   bbox.extend(pa + e);
   bbox.extend(pb - e);
   bbox.extend(pb + e);
+}
+
+void bodies::Cylinder::computeBoundingBox(bodies::OBB& bbox) const
+{
+  bbox.setPoseAndExtents(getPose(), 2 * Eigen::Vector3d(radiusU_, radiusU_, length2_));
 }
 
 bool bodies::Cylinder::intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vector3d& dir,
@@ -661,6 +675,11 @@ void bodies::Box::computeBoundingBox(bodies::AABB& bbox) const
   bbox.setEmpty();
 
   bbox.extendWithTransformedBox(getPose(), 2 * Eigen::Vector3d(length2_, width2_, height2_));
+}
+
+void bodies::Box::computeBoundingBox(bodies::OBB& bbox) const
+{
+  bbox.setPoseAndExtents(getPose(), 2 * Eigen::Vector3d(length2_, width2_, height2_));
 }
 
 bool bodies::Box::intersectsRay(const Eigen::Vector3d& origin, const Eigen::Vector3d& dir,
@@ -1152,6 +1171,11 @@ void bodies::ConvexMesh::computeBoundingBox(bodies::AABB& bbox) const
 {
   bbox.setEmpty();
 
+  bounding_box_.computeBoundingBox(bbox);
+}
+
+void bodies::ConvexMesh::computeBoundingBox(bodies::OBB& bbox) const
+{
   bounding_box_.computeBoundingBox(bbox);
 }
 

@@ -259,3 +259,9 @@ void bodies::mergeBoundingBoxes(const std::vector<bodies::AABB>& boxes, bodies::
   for (const auto& box : boxes)
     mergedBox.extend(box);
 }
+
+void bodies::mergeBoundingBoxesApprox(const std::vector<bodies::OBB>& boxes, bodies::OBB& mergedBox)
+{
+  for (const auto& box : boxes)
+    mergedBox.extendApprox(box);
+}
