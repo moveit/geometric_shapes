@@ -67,6 +67,9 @@ void mergeBoundingSpheres(const std::vector<BoundingSphere>& spheres, BoundingSp
 /** \brief Compute an axis-aligned bounding box to enclose a set of bounding boxes. */
 void mergeBoundingBoxes(const std::vector<AABB>& boxes, AABB& mergedBox);
 
+/** \brief Compute an approximate oriented bounding box to enclose a set of bounding boxes. */
+void mergeBoundingBoxesApprox(const std::vector<OBB>& boxes, OBB& mergedBox);
+
 /** \brief Compute the bounding sphere for a set of \e bodies and store the resulting sphere in \e mergedSphere */
 void computeBoundingSphere(const std::vector<const Body*>& bodies, BoundingSphere& mergedSphere);
 }  // namespace bodies

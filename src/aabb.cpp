@@ -30,14 +30,15 @@
 
 #include <geometric_shapes/aabb.h>
 
+#include <fcl/geometry/shape/utility.h>
+
 void bodies::AABB::extendWithTransformedBox(const Eigen::Isometry3d& transform, const Eigen::Vector3d& box)
 {
   // Method adapted from FCL src/shape/geometric_shapes_utility.cpp#computeBV<AABB, Box>(...) (BSD-licensed code):
   // https://github.com/flexible-collision-library/fcl/blob/fcl-0.4/src/shape/geometric_shapes_utility.cpp#L292
-  // We don't call their code because it would need creating temporary objects, and their method is in floats.
+  // We don't call their code because it would need creating temporary objects, and their method is in floats in FCL 0.5
   //
   // Here's a nice explanation why it works: https://zeuxcg.org/2010/10/17/aabb-from-obb-with-component-wise-abs/
-
   const Eigen::Matrix3d& r = transform.rotation();
   const Eigen::Vector3d& t = transform.translation();
 
@@ -45,7 +46,8 @@ void bodies::AABB::extendWithTransformedBox(const Eigen::Isometry3d& transform, 
   double y_range = 0.5 * (fabs(r(1, 0) * box[0]) + fabs(r(1, 1) * box[1]) + fabs(r(1, 2) * box[2]));
   double z_range = 0.5 * (fabs(r(2, 0) * box[0]) + fabs(r(2, 1) * box[1]) + fabs(r(2, 2) * box[2]));
 
-  const Eigen::Vector3d v_delta(x_range, y_range, z_range);
-  extend(t + v_delta);
-  extend(t - v_delta);
+  fcl::AABBd aabb;
+  fcl::computeBV(fcl::Boxd(box), transform, aabb);
+  extend(aabb.min_);
+  extend(aabb.max_);
 }
