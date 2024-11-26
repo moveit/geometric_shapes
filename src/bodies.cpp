@@ -136,6 +136,30 @@ bool bodies::Body::samplePointInside(random_numbers::RandomNumberGenerator& rng,
   return false;
 }
 
+void bodies::Body::computeBoundingBox(bodies::OBB& bbox) const
+{
+  // NOTE: this switch is needed only because computeBoundingBox(OBB) could not be defined virtual to keep ABI
+  // compatibility; if porting to new ROS (2) releases, this function should have no base implementation for a generic
+  // body and should be pure virtual
+  switch (this->getType())
+  {
+    case shapes::SPHERE:
+      static_cast<const bodies::Sphere*>(this)->computeBoundingBox(bbox);
+      break;
+    case shapes::CYLINDER:
+      static_cast<const bodies::Cylinder*>(this)->computeBoundingBox(bbox);
+      break;
+    case shapes::BOX:
+      static_cast<const bodies::Box*>(this)->computeBoundingBox(bbox);
+      break;
+    case shapes::MESH:
+      static_cast<const bodies::ConvexMesh*>(this)->computeBoundingBox(bbox);
+      break;
+    default:
+      throw std::runtime_error("Unknown body type: " + std::to_string(this->getType()));
+  }
+}
+
 bool bodies::Sphere::containsPoint(const Eigen::Vector3d& p, bool /* verbose */) const
 {
   return (center_ - p).squaredNorm() <= radius2_;
