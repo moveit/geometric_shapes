@@ -7,6 +7,7 @@ configure_file(resources/config.h.in "${CMAKE_CURRENT_BINARY_DIR}/resources/conf
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 ament_add_gtest(test_basics test_basics.cpp)
+target_link_libraries(test_basics ${PROJECT_NAME})
 ament_target_dependencies(test_basics Eigen3)
 
 ament_add_gtest(test_point_inclusion test_point_inclusion.cpp)
