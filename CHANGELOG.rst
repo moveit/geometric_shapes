@@ -5,25 +5,9 @@ Changelog for package geometric_shapes
 2.3.0 (2024-11-29)
 ------------------
 * Install headers into subdirectory (`#253 <https://github.com/moveit/geometric_shapes/issues/253>`_)
-  * Revert "Forward port ABI compatibility workaround with OBBs to ros2 branch (`#252 <https://github.com/moveit/geometric_shapes/issues/252>`_)"
-  This reverts commit 3bece3463e93bedca882eb2459b754eb146b1558.
-  * Install headers into subdirectory
-  ... following the standard defined in
-  https://colcon.readthedocs.io/en/released/user/overriding-packages.html#install-headers-to-a-unique-include-directory
-  * Declare missing include dependency for a test
-* Forward port ABI compatibility workaround with OBBs to ros2 branch (`#252 <https://github.com/moveit/geometric_shapes/issues/252>`_)
-  Co-authored-by: Martin Pecka <peci1@seznam.cz>
 * Added bodies::Body::computeBoundingBox (oriented box version) (`#239 <https://github.com/moveit/geometric_shapes/issues/239>`_)
-  Co-authored-by: Tyler <tyler@tylermayoff.com>
-  Co-authored-by: Martin Pecka <peci1@seznam.cz>
-  Co-authored-by: Robert Haschke <rhaschke@techfak.uni-bielefeld.de>
-* CI: Update actions
 * Improve padding of meshes using weighted vertex normals (`#240 <https://github.com/moveit/geometric_shapes/issues/240>`_)
-  * Improve padding of meshes using weighted vertex normals (`#238 <https://github.com/moveit/geometric_shapes/issues/238>`_)
-  * Use eigen to compute angle between vertex normals to avoid nans
-  ---------
-  Co-authored-by: Mike Lanighan <mlanighan@traclabs.com>
-* Contributors: Kenji Brameld (TRACLabs), Robert Haschke, Sebastian Castro, Sebastian Pelletier
+* Contributors: Kenji Brameld (TRACLabs), Robert Haschke, Sebastian Castro, Sebastian Pelletier, Tyler Mayoff
 
 2.2.1 (2024-06-26)
 ------------------
