@@ -2,8 +2,8 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.3.0 (2024-11-29)
+------------------
 * Install headers into subdirectory (`#253 <https://github.com/moveit/geometric_shapes/issues/253>`_)
   * Revert "Forward port ABI compatibility workaround with OBBs to ros2 branch (`#252 <https://github.com/moveit/geometric_shapes/issues/252>`_)"
   This reverts commit 3bece3463e93bedca882eb2459b754eb146b1558.
