@@ -2,6 +2,13 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+2.3.0 (2024-11-29)
+------------------
+* Install headers into subdirectory (`#253 <https://github.com/moveit/geometric_shapes/issues/253>`_)
+* Added bodies::Body::computeBoundingBox (oriented box version) (`#239 <https://github.com/moveit/geometric_shapes/issues/239>`_)
+* Improve padding of meshes using weighted vertex normals (`#240 <https://github.com/moveit/geometric_shapes/issues/240>`_)
+* Contributors: Kenji Brameld (TRACLabs), Robert Haschke, Sebastian Castro, Sebastian Pelletier, Tyler Mayoff
+
 2.2.1 (2024-06-26)
 ------------------
 * Use the system version of octomap (`#244 <https://github.com/ros-planning/geometric_shapes/issues/244>`_)
