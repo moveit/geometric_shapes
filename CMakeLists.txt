@@ -90,7 +90,7 @@ target_compile_options(${PROJECT_NAME} PRIVATE ${PROJECT_COMPILE_OPTIONS})
 target_include_directories(${PROJECT_NAME}
     PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
            $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
-target_link_libraries(${PROJECT_NAME} fcl)
+target_link_libraries(${PROJECT_NAME} PRIVATE fcl)
 ament_target_dependencies(${PROJECT_NAME}
   ${THIS_PACKAGE_EXPORT_DEPENDS}
 )
