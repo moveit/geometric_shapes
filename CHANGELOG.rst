@@ -2,6 +2,12 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+2.3.1 (2024-12-06)
+------------------
+* Fix dependency handling (`#256 <https://github.com/ros-planning/geometric_shapes/issues/256>`_)
+  Declare fcl, qhull, and assimp as non-transitive, build-only dependencies. They are not exposed in headers.
+* Contributors: Martin Pecka
+
 2.3.0 (2024-11-29)
 ------------------
 * Install headers into subdirectory (`#253 <https://github.com/moveit/geometric_shapes/issues/253>`_)
@@ -64,7 +70,7 @@ Changelog for package geometric_shapes
 * Contributors: Tyler Weaver
 
 2.0.0 (2020-11-20)
------------
+------------------
 * [maint] Travis: Disable warnings as gcc warns about redundant declarations in qhull includes
 * [maint] Inherit package VERSION (for library soname) from package.xml
 * [maint] Trim boost dependencies `#156 <https://github.com/ros-planning/geometric_shapes/issues/156>`_
