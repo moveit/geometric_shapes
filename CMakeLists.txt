@@ -90,15 +90,12 @@ target_compile_options(${PROJECT_NAME} PRIVATE ${PROJECT_COMPILE_OPTIONS})
 target_include_directories(${PROJECT_NAME}
     PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
            $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
-target_link_libraries(${PROJECT_NAME} fcl)
-ament_target_dependencies(${PROJECT_NAME}
+ament_target_dependencies(${PROJECT_NAME} PUBLIC
   ${THIS_PACKAGE_EXPORT_DEPENDS}
 )
-ament_target_dependencies(${PROJECT_NAME} SYSTEM
-  # We don't export these dependencies because their cmake is broken
-  assimp
-  QHULL
-)
+# Private libraries that are not transitively needed by downstream projects
+target_link_libraries(${PROJECT_NAME} PRIVATE assimp::assimp fcl ${QHULL_LIBRARIES})
+target_include_directories(${PROJECT_NAME} PRIVATE ${QHULL_INCLUDE_DIRS})
 
 if(BUILD_TESTING)
   find_package(ament_cmake_gtest REQUIRED)
