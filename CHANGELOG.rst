@@ -2,6 +2,11 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Remove unnecessary code in `aabb.cpp` (`#258 <https://github.com/moveit/geometric_shapes/issues/258>`_)
+* Contributors: Sebastian Castro
+
 2.3.1 (2024-12-06)
 ------------------
 * Fix dependency handling (`#256 <https://github.com/ros-planning/geometric_shapes/issues/256>`_)
