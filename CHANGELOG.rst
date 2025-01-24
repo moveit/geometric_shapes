@@ -2,8 +2,8 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.3.2 (2025-01-23)
+------------------
 * Remove unnecessary code in `aabb.cpp` (`#258 <https://github.com/moveit/geometric_shapes/issues/258>`_)
 * Contributors: Sebastian Castro
 
