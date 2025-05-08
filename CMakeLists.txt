@@ -90,11 +90,11 @@ target_compile_options(${PROJECT_NAME} PRIVATE ${PROJECT_COMPILE_OPTIONS})
 target_include_directories(${PROJECT_NAME}
     PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
            $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
-target_link_libraries(${PROJECT_NAME} PUBLIC
-  ${THIS_PACKAGE_EXPORT_DEPENDS}
-)
 # Private libraries that are not transitively needed by downstream projects
-target_link_libraries(${PROJECT_NAME} PRIVATE assimp::assimp fcl ${QHULL_LIBRARIES})
+target_link_libraries(${PROJECT_NAME}
+  PUBLIC ${THIS_PACKAGE_EXPORT_DEPENDS}
+  PRIVATE assimp::assimp fcl ${QHULL_LIBRARIES}
+)
 target_include_directories(${PROJECT_NAME} PRIVATE ${QHULL_INCLUDE_DIRS})
 
 if(BUILD_TESTING)
