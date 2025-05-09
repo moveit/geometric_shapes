@@ -92,8 +92,18 @@ target_include_directories(${PROJECT_NAME}
            $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
 # Private libraries that are not transitively needed by downstream projects
 target_link_libraries(${PROJECT_NAME}
-  PUBLIC ${THIS_PACKAGE_EXPORT_DEPENDS}
-  PRIVATE assimp::assimp fcl ${QHULL_LIBRARIES}
+  PRIVATE
+    assimp::assimp
+    fcl
+    ${QHULL_LIBRARIES}
+  PUBLIC
+    ${geometry_msgs_TARGETS}
+    ${shape_msgs_TARGETS}
+    ${visualization_msgs_TARGETS}
+    eigen_stl_containers::eigen_stl_containers
+    # random_numbers::random_numbers
+    rclcpp::rclcpp
+    resource_retriever::resource_retriever
 )
 target_include_directories(${PROJECT_NAME} PRIVATE ${QHULL_INCLUDE_DIRS})
 
