@@ -36,7 +36,7 @@ set(assimp_LIBRARIES "${assimp_ABS_LIBRARIES}")
 # These need to be in this order to find header files
 find_package(eigen3_cmake_module REQUIRED)
 find_package(Eigen3 REQUIRED)
-
+find_package(Boost REQUIRED COMPONENTS random filesystem)
 find_package(ament_cmake REQUIRED)
 find_package(assimp REQUIRED)
 find_package(console_bridge REQUIRED)
