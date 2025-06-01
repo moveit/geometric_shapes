@@ -101,6 +101,8 @@ target_link_libraries(${PROJECT_NAME}
     ${geometry_msgs_TARGETS}
     ${shape_msgs_TARGETS}
     ${visualization_msgs_TARGETS}
+    ${console_bridge_TARGETS}
+    Boost::filesystem
     eigen_stl_containers::eigen_stl_containers
     random_numbers::random_numbers
     rclcpp::rclcpp
