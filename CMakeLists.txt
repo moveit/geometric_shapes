@@ -101,7 +101,7 @@ target_link_libraries(${PROJECT_NAME}
     ${shape_msgs_TARGETS}
     ${visualization_msgs_TARGETS}
     eigen_stl_containers::eigen_stl_containers
-    # random_numbers::random_numbers
+    random_numbers::random_numbers
     rclcpp::rclcpp
     resource_retriever::resource_retriever
 )
