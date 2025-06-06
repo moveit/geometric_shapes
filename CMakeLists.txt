@@ -39,7 +39,6 @@ find_package(Eigen3 REQUIRED)
 
 find_package(ament_cmake REQUIRED)
 find_package(assimp REQUIRED)
-find_package(Boost REQUIRED COMPONENTS random filesystem)
 find_package(console_bridge REQUIRED)
 find_package(console_bridge_vendor REQUIRED)
 find_package(eigen_stl_containers REQUIRED)
@@ -54,7 +53,6 @@ find_package(resource_retriever REQUIRED)
 find_package(shape_msgs REQUIRED)
 find_package(visualization_msgs REQUIRED)
 find_package(fcl REQUIRED)
-include(ConfigExtras)
 
 set(THIS_PACKAGE_EXPORT_DEPENDS
   eigen3_cmake_module
@@ -102,7 +100,6 @@ target_link_libraries(${PROJECT_NAME}
     ${shape_msgs_TARGETS}
     ${visualization_msgs_TARGETS}
     ${console_bridge_TARGETS}
-    Boost::filesystem
     eigen_stl_containers::eigen_stl_containers
     random_numbers::random_numbers
     rclcpp::rclcpp
@@ -111,7 +108,6 @@ target_link_libraries(${PROJECT_NAME}
 target_include_directories(${PROJECT_NAME} PRIVATE ${QHULL_INCLUDE_DIRS})
 
 if(BUILD_TESTING)
-  find_package(ament_cmake_gtest REQUIRED)
   # Unit tests
   add_subdirectory(test)
 
@@ -133,4 +129,4 @@ install(DIRECTORY include/ DESTINATION include/${PROJECT_NAME})
 ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
 ament_export_dependencies(${THIS_PACKAGE_EXPORT_DEPENDS})
 
-ament_package(CONFIG_EXTRAS "cmake/ConfigExtras.cmake")
+ament_package()
