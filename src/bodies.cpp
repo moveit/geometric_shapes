@@ -868,7 +868,7 @@ void bodies::ConvexMesh::useDimensions(const shapes::Shape* shape)
   mesh_data_->triangles_.clear();
   mesh_data_->vertices_.clear();
   mesh_data_->mesh_radiusB_ = 0.0;
-  mesh_data_->mesh_center_ = Eigen::Vector3d();
+  mesh_data_->mesh_center_ = Eigen::Vector3d::Zero();
 
   double xdim = maxX - minX;
   double ydim = maxY - minY;

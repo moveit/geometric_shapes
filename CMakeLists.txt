@@ -105,7 +105,7 @@ target_link_libraries(${PROJECT_NAME}
     rclcpp::rclcpp
     resource_retriever::resource_retriever
 )
-target_include_directories(${PROJECT_NAME} PRIVATE ${QHULL_INCLUDE_DIRS})
+target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE ${QHULL_INCLUDE_DIRS})
 
 if(BUILD_TESTING)
   # Unit tests
