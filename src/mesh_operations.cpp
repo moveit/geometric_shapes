@@ -46,6 +46,10 @@
 #include <resource_retriever/retriever.h>
 #endif
 
+#if __has_include(<resource_retriever/resource.hpp>)
+#define NEW_RESOURCE_RETRIEVER
+#endif
+
 #include <assimp/scene.h>
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
@@ -267,10 +271,18 @@ Mesh* createMeshFromBinary(const char* buffer, std::size_t size, const Eigen::Ve
 Mesh* createMeshFromResource(const std::string& resource, const Eigen::Vector3d& scale)
 {
   resource_retriever::Retriever retriever;
+#ifdef NEW_RESOURCE_RETRIEVER
+  resource_retriever::ResourceSharedPtr res;
+#else
   resource_retriever::MemoryResource res;
+#endif
   try
   {
+#ifdef NEW_RESOURCE_RETRIEVER
+    res = retriever.get_shared(resource);
+#else
     res = retriever.get(resource);
+#endif
   }
   catch (resource_retriever::Exception& e)
   {
@@ -278,13 +290,21 @@ Mesh* createMeshFromResource(const std::string& resource, const Eigen::Vector3d&
     return nullptr;
   }
 
+#ifdef NEW_RESOURCE_RETRIEVER
+  if (res->data.empty())
+#else
   if (res.size == 0)
+#endif
   {
     CONSOLE_BRIDGE_logWarn("Retrieved empty mesh for resource '%s'", resource.c_str());
     return nullptr;
   }
 
+#ifdef NEW_RESOURCE_RETRIEVER
+  Mesh* m = createMeshFromBinary(reinterpret_cast<const char*>(res->data.data()), res->data.size(), scale, resource);
+#else
   Mesh* m = createMeshFromBinary(reinterpret_cast<const char*>(res.data.get()), res.size, scale, resource);
+#endif
   if (!m)
   {
     CONSOLE_BRIDGE_logWarn("Assimp reports no scene in %s.", resource.c_str());
