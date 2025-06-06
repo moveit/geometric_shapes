@@ -2,6 +2,13 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+2.3.3 (2025-06-06)
+------------------
+* Replace deprecated MemoryResource -> ResourceSharedPtr (`#263 <https://github.com/ros-planning/geometric_shapes/issues/263>`_)
+* Fix dependencies (`#262 <https://github.com/ros-planning/geometric_shapes/issues/262>`_)
+* CI: Revert to custom cache action
+* Contributors: Robert Haschke, David V. Lu
+
 2.3.2 (2025-01-23)
 ------------------
 * Remove unnecessary code in `aabb.cpp` (`#258 <https://github.com/moveit/geometric_shapes/issues/258>`_)
