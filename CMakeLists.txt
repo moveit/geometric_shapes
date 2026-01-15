@@ -85,7 +85,8 @@ set_target_properties(${PROJECT_NAME} PROPERTIES VERSION ${${PROJECT_NAME}_VERSI
 target_compile_options(${PROJECT_NAME} PRIVATE ${PROJECT_COMPILE_OPTIONS})
 target_include_directories(${PROJECT_NAME}
     PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-           $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
+           $<INSTALL_INTERFACE:include/${PROJECT_NAME}> ${OCTOMAP_INCLUDE_DIRS})
+
 # Private libraries that are not transitively needed by downstream projects
 target_link_libraries(${PROJECT_NAME}
   PRIVATE
@@ -94,6 +95,7 @@ target_link_libraries(${PROJECT_NAME}
     ${QHULL_LIBRARIES}
   PUBLIC
     ${geometry_msgs_TARGETS}
+    ${OCTOMAP_LIBRARIES}
     ${shape_msgs_TARGETS}
     ${visualization_msgs_TARGETS}
     ${console_bridge_TARGETS}
