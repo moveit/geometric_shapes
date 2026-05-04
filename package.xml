@@ -27,7 +27,6 @@
   <depend>rclcpp</depend>
   <depend>eigen_stl_containers</depend>
   <depend>console_bridge_vendor</depend>
-  <depend>liboctomap-dev</depend>
   <depend>random_numbers</depend>
   <depend>resource_retriever</depend>
   <depend>shape_msgs</depend>
