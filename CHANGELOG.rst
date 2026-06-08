@@ -2,6 +2,13 @@
 Changelog for package geometric_shapes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+2.3.4 (2026-06-08)
+------------------
+* Remove octomap dependency (`#269 <https://github.com/ros-planning/geometric_shapes/issues/269>`_)
+* Bump minimum cmake version (`#265 <https://github.com/ros-planning/geometric_shapes/issues/265>`_)
+* Fix compiler warnings
+* Contributors: Felix Exner, Nathan Brooks, Robert Haschke, mosfet80
+
 2.3.3 (2025-06-06)
 ------------------
 * Replace deprecated MemoryResource -> ResourceSharedPtr (`#263 <https://github.com/ros-planning/geometric_shapes/issues/263>`_)
