@@ -25,6 +25,6 @@ jobs:
     name: "${{ inputs.ROS_DISTRO }}"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: industrial_ci
         uses: ros-industrial/industrial_ci@master
