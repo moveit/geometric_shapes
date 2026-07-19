@@ -32,7 +32,7 @@
 #define GEOMETRIC_SHAPES_CHECK_ISOMETRY_H
 
 #include <algorithm>
-#include <assert.h>
+#include <cassert>
 #include <iostream>
 #include <math.h>
 #include <Eigen/Core>
