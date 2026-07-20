@@ -38,7 +38,7 @@ endif()
 find_library(ASSIMP_ABS_LIBRARIES NAMES ${ASSIMP_LIBRARIES} assimp HINTS ${ASSIMP_LIBRARY_DIRS} ${ASSIMP_PC_LIBRARY_DIRS})
 set(ASSIMP_LIBRARIES "${ASSIMP_ABS_LIBRARIES}")
 
-find_package(Boost REQUIRED system filesystem)
+find_package(Boost REQUIRED filesystem)
 
 find_package(console_bridge REQUIRED)
 
